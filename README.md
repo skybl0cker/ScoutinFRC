@@ -1,16 +1,13 @@
-# scouting2024
+# HVA-FRC-SCOUTING2024
 
-A new Flutter project.
+A FRC Scouting app programmed through flutter
 
-## Getting Started
+## Short Introduction
 
-This project is a starting point for a Flutter application.
+This project is a work in progress flutter application for team 3824's scouting framework
 
-A few resources to get you started if this is your first Flutter project:
+Our links:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- [Site: Visit our team's external site](https://rohawktics.org/home/)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- [Bluealliance: Visit our page on Blue Alliance](https://www.thebluealliance.com/team/3824)
