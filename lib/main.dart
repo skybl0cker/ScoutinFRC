@@ -12,18 +12,16 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Scouting 2024!',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Home Page'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
-
 
   final String title;
 
@@ -47,25 +45,61 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
+      body: Container(
+        child: ListView(
+          children: [
+            TextButton(onPressed: () {}, child: Text("Cash Egley")),
+            TextButton(onPressed: () {}, child: Text("Luke Daniel")),
+            TextButton(onPressed: () {}, child: Text("Kate Crass")),
+            TextButton(onPressed: () {}, child: Text("Zane Maples")),
+            TextButton(onPressed: () {}, child: Text("Jonathan DeJong")),
+            TextButton(onPressed: () {}, child: Text("Chase Mayton")),
+            TextButton(onPressed: () {}, child: Text("Michael Hart")),
+            TextButton(onPressed: () {}, child: Text("Graham Boswell")),
+            TextButton(onPressed: () {}, child: Text("Andrea Torres")),
+            TextButton(onPressed: () {}, child: Text("Mrs.Kinkead")),
+            TextButton(onPressed: () {}, child: Text("Mr.Follis")),
+            TextButton(onPressed: () {}, child: Text("Gavin St.Pierre")),
+            TextButton(onPressed: () {}, child: Text("Sam Keener")),
+            TextButton(onPressed: () {}, child: Text("Mrs.Boswell")),
+            TextButton(onPressed: () {}, child: Text("Mr.Torres")),
+            TextButton(onPressed: () {}, child: Text("Rowshin St.Pierre")),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), 
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: SizedBox.fromSize(
+        child: HomeRow(),
+      ),
+    );
+  }
+}
+
+class HomeRow extends StatefulWidget {
+  const HomeRow({super.key});
+
+  @override
+  State<HomeRow> createState() => _HomeRowState();
+}
+
+class _HomeRowState extends State<HomeRow> {
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        TextButton(
+          onPressed: () {},
+          child: Icon(Icons.comment),
+        ),
+        TextButton(
+          onPressed: () {},
+          child: Icon(Icons.numbers),
+        ),
+        TextButton(
+          onPressed: () {},
+          child: Icon(Icons.checklist),
+        ),
+      ],
     );
   }
 }
