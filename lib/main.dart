@@ -11,11 +11,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Scouting 2024!',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+      theme: ThemeData(fontFamily: 'ComicNeue',
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlue),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Home Page'),
+      home: const MyHomePage(title: 'Direct Messages'),
     );
   }
 }
@@ -30,13 +30,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,17 +80,25 @@ class _HomeRowState extends State<HomeRow> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        TextButton(
+        FloatingActionButton(
           onPressed: () {},
           child: Icon(Icons.comment),
         ),
-        TextButton(
+        FloatingActionButton(
           onPressed: () {},
           child: Icon(Icons.numbers),
         ),
-        TextButton(
+        FloatingActionButton(
           onPressed: () {},
           child: Icon(Icons.checklist),
+        ),
+        FloatingActionButton(
+          onPressed: () {},
+          child: Icon(Icons.scoreboard),
+        ),
+                FloatingActionButton(
+          onPressed: () {},
+          child: Icon(Icons.settings),
         ),
       ],
     );
