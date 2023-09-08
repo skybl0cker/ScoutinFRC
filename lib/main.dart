@@ -41,28 +41,28 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Container(
         child: ListView(
           children: [
-            TextButton(onPressed: () {}, child: Text("Cash Egley")),
-            TextButton(onPressed: () {}, child: Text("Luke Daniel")),
-            TextButton(onPressed: () {}, child: Text("Kate Crass")),
-            TextButton(onPressed: () {}, child: Text("Zane Maples")),
-            TextButton(onPressed: () {}, child: Text("Jonathan DeJong")),
-            TextButton(onPressed: () {}, child: Text("Chase Mayton")),
-            TextButton(onPressed: () {}, child: Text("Michael Hart")),
-            TextButton(onPressed: () {}, child: Text("Graham Boswell")),
-            TextButton(onPressed: () {}, child: Text("Andrea Torres")),
-            TextButton(onPressed: () {}, child: Text("Mrs.Kinkead")),
-            TextButton(onPressed: () {}, child: Text("Mr.Follis")),
-            TextButton(onPressed: () {}, child: Text("Gavin St.Pierre")),
-            TextButton(onPressed: () {}, child: Text("Sam Keener")),
-            TextButton(onPressed: () {}, child: Text("Mrs.Boswell")),
-            TextButton(onPressed: () {}, child: Text("Mr.Torres")),
-            TextButton(onPressed: () {}, child: Text("Rowshin St.Pierre")),
+            TextButton(onPressed: () {}, child: const Text("Cash Egley")),
+            TextButton(onPressed: () {}, child: const Text("Luke Daniel")),
+            TextButton(onPressed: () {}, child: const Text("Kate Crass")),
+            TextButton(onPressed: () {}, child: const Text("Zane Maples")),
+            TextButton(onPressed: () {}, child: const Text("Jonathan DeJong")),
+            TextButton(onPressed: () {}, child: const Text("Chase Mayton")),
+            TextButton(onPressed: () {}, child: const Text("Michael Hart")),
+            TextButton(onPressed: () {}, child: const Text("Graham Boswell")),
+            TextButton(onPressed: () {}, child: const Text("Andrea Torres")),
+            TextButton(onPressed: () {}, child: const Text("Mrs.Kinkead")),
+            TextButton(onPressed: () {}, child: const Text("Mr.Follis")),
+            TextButton(onPressed: () {}, child: const Text("Gavin St.Pierre")),
+            TextButton(onPressed: () {}, child: const Text("Sam Keener")),
+            TextButton(onPressed: () {}, child: const Text("Mrs.Boswell")),
+            TextButton(onPressed: () {}, child: const Text("Mr.Torres")),
+            TextButton(onPressed: () {}, child: const Text("Rowshin St.Pierre")),
           ],
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: SizedBox.fromSize(
-        child: HomeRow(),
+        child: const HomeRow(),
       ),
     );
   }
@@ -76,33 +76,34 @@ class HomeRow extends StatefulWidget {
 }
 
 class _HomeRowState extends State<HomeRow> {
+  @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         FloatingActionButton(
           onPressed: () {},
-          child: Icon(Icons.person),
+          child: const Icon(Icons.person),
         ),
         FloatingActionButton(
           onPressed: () {},
-          child: Icon(Icons.comment),
+          child: const Icon(Icons.comment),
         ),
         FloatingActionButton(
           onPressed: () {},
-          child: Icon(Icons.numbers),
+          child: const Icon(Icons.numbers),
         ),
         FloatingActionButton(
           onPressed: () {},
-          child: Icon(Icons.checklist),
+          child: const Icon(Icons.checklist),
         ),
                 FloatingActionButton(
           onPressed: () {},
-          child: Icon(Icons.scoreboard),
+          child: const Icon(Icons.scoreboard),
         ),
                 FloatingActionButton(
           onPressed: () {},
-          child: Icon(Icons.settings),
+          child: const Icon(Icons.settings),
         ),
       ],
     );
