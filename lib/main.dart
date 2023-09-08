@@ -82,6 +82,10 @@ class _HomeRowState extends State<HomeRow> {
       children: <Widget>[
         FloatingActionButton(
           onPressed: () {},
+          child: Icon(Icons.person),
+        ),
+        FloatingActionButton(
+          onPressed: () {},
           child: Icon(Icons.comment),
         ),
         FloatingActionButton(
@@ -92,7 +96,7 @@ class _HomeRowState extends State<HomeRow> {
           onPressed: () {},
           child: Icon(Icons.checklist),
         ),
-        FloatingActionButton(
+                FloatingActionButton(
           onPressed: () {},
           child: Icon(Icons.scoreboard),
         ),
