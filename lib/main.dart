@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Scouting 2024!',
       theme: ThemeData(fontFamily: 'ComicNeue',
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlue),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromRGBO(72, 75, 82, 1.0)),
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'Direct Messages'),
@@ -35,30 +35,28 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: const Color.fromRGBO(17, 44, 94, 10),
         title: Text(widget.title),
       ),
-      body: Container(
-        child: ListView(
-          children: [
-            TextButton(onPressed: () {}, child: const Text("Cash Egley")),
-            TextButton(onPressed: () {}, child: const Text("Luke Daniel")),
-            TextButton(onPressed: () {}, child: const Text("Kate Crass")),
-            TextButton(onPressed: () {}, child: const Text("Zane Maples")),
-            TextButton(onPressed: () {}, child: const Text("Jonathan DeJong")),
-            TextButton(onPressed: () {}, child: const Text("Chase Mayton")),
-            TextButton(onPressed: () {}, child: const Text("Michael Hart")),
-            TextButton(onPressed: () {}, child: const Text("Graham Boswell")),
-            TextButton(onPressed: () {}, child: const Text("Andrea Torres")),
-            TextButton(onPressed: () {}, child: const Text("Mrs.Kinkead")),
-            TextButton(onPressed: () {}, child: const Text("Mr.Follis")),
-            TextButton(onPressed: () {}, child: const Text("Gavin St.Pierre")),
-            TextButton(onPressed: () {}, child: const Text("Sam Keener")),
-            TextButton(onPressed: () {}, child: const Text("Mrs.Boswell")),
-            TextButton(onPressed: () {}, child: const Text("Mr.Torres")),
-            TextButton(onPressed: () {}, child: const Text("Rowshin St.Pierre")),
-          ],
-        ),
+      body: ListView(
+        children: [
+          TextButton(onPressed: () {}, child: const Text("Cash Egley")),
+          TextButton(onPressed: () {}, child: const Text("Luke Daniel")),
+          TextButton(onPressed: () {}, child: const Text("Kate Crass")),
+          TextButton(onPressed: () {}, child: const Text("Zane Maples")),
+          TextButton(onPressed: () {}, child: const Text("Jonathan DeJong")),
+          TextButton(onPressed: () {}, child: const Text("Chase Mayton")),
+          TextButton(onPressed: () {}, child: const Text("Michael Hart")),
+          TextButton(onPressed: () {}, child: const Text("Graham Boswell")),
+          TextButton(onPressed: () {}, child: const Text("Andrea Torres")),
+          TextButton(onPressed: () {}, child: const Text("Mrs.Kinkead")),
+          TextButton(onPressed: () {}, child: const Text("Mr.Follis")),
+          TextButton(onPressed: () {}, child: const Text("Gavin St.Pierre")),
+          TextButton(onPressed: () {}, child: const Text("Sam Keener")),
+          TextButton(onPressed: () {}, child: const Text("Mrs.Boswell")),
+          TextButton(onPressed: () {}, child: const Text("Mr.Torres")),
+          TextButton(onPressed: () {}, child: const Text("Rowshin")),
+        ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: SizedBox.fromSize(
@@ -83,10 +81,6 @@ class _HomeRowState extends State<HomeRow> {
       children: <Widget>[
         FloatingActionButton(
           onPressed: () {},
-          child: const Icon(Icons.person),
-        ),
-        FloatingActionButton(
-          onPressed: () {},
           child: const Icon(Icons.comment),
         ),
         FloatingActionButton(
@@ -100,10 +94,6 @@ class _HomeRowState extends State<HomeRow> {
                 FloatingActionButton(
           onPressed: () {},
           child: const Icon(Icons.scoreboard),
-        ),
-                FloatingActionButton(
-          onPressed: () {},
-          child: const Icon(Icons.settings),
         ),
       ],
     );
