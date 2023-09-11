@@ -1,3 +1,6 @@
+// import 'dart:js_interop_unsafe';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -6,39 +9,90 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Scouting 2024!',
-      theme: ThemeData(fontFamily: 'ComicNeue',
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromRGBO(72, 75, 82, 1.0)),
+      theme: ThemeData(
+        fontFamily: 'ComicNeue',
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color.fromRGBO(72, 75, 82, 1.0)),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Direct Messages'),
+      home: const MyHomePage(
+        title: 'Direct Messages',
+      ),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  const MyHomePage({
+    super.key,
+    required this.title,
+  });
 
   final String title;
-
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
+  final pageState = new ValueNotifier("Direct Messages");
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(17, 44, 94, 10),
-        title: Text(widget.title),
-      ),
-      body: ListView(
+    return ValueListenableBuilder<String>(
+      valueListenable: pageState,
+      builder: (context, value, child) {
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: const Color.fromRGBO(17, 44, 94, 10),
+            title: Text(widget.title),
+          ),
+          body: HomeBody(
+            state: "Direct Messages",
+          ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat,
+          floatingActionButton: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              FloatingActionButton(
+                onPressed: () {},
+                child: const Icon(Icons.comment),
+              ),
+              FloatingActionButton(
+                onPressed: () {},
+                child: const Icon(Icons.numbers),
+              ),
+              FloatingActionButton(
+                onPressed: () {},
+                child: const Icon(Icons.checklist),
+              ),
+              FloatingActionButton(
+                onPressed: () {},
+                child: const Icon(Icons.scoreboard),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+class HomeBody extends StatefulWidget {
+  const HomeBody({super.key, required this.state});
+  final String state;
+  @override
+  State<HomeBody> createState() => _HomeBodyState();
+}
+
+class _HomeBodyState extends State<HomeBody> {
+  @override
+  Widget build(BuildContext context) {
+    if (widget.state == "Direct Messages") {
+      return ListView(
         children: [
           TextButton(onPressed: () {}, child: const Text("Cash Egley")),
           TextButton(onPressed: () {}, child: const Text("Luke Daniel")),
@@ -57,45 +111,29 @@ class _MyHomePageState extends State<MyHomePage> {
           TextButton(onPressed: () {}, child: const Text("Mr.Torres")),
           TextButton(onPressed: () {}, child: const Text("Rowshin")),
         ],
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: SizedBox.fromSize(
-        child: const HomeRow(),
-      ),
-    );
-  }
-}
-
-class HomeRow extends StatefulWidget {
-  const HomeRow({super.key});
-
-  @override
-  State<HomeRow> createState() => _HomeRowState();
-}
-
-class _HomeRowState extends State<HomeRow> {
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        FloatingActionButton(
-          onPressed: () {},
-          child: const Icon(Icons.comment),
-        ),
-        FloatingActionButton(
-          onPressed: () {},
-          child: const Icon(Icons.numbers),
-        ),
-        FloatingActionButton(
-          onPressed: () {},
-          child: const Icon(Icons.checklist),
-        ),
-                FloatingActionButton(
-          onPressed: () {},
-          child: const Icon(Icons.scoreboard),
-        ),
-      ],
-    );
+      );
+    } else {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          FloatingActionButton(
+            onPressed: () {},
+            child: const Icon(Icons.comment),
+          ),
+          FloatingActionButton(
+            onPressed: () {},
+            child: const Icon(Icons.numbers),
+          ),
+          FloatingActionButton(
+            onPressed: () {},
+            child: const Icon(Icons.checklist),
+          ),
+          FloatingActionButton(
+            onPressed: () {},
+            child: const Icon(Icons.scoreboard),
+          ),
+        ],
+      );
+    }
   }
 }
