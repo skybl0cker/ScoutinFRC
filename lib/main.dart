@@ -1,6 +1,7 @@
 // // import 'dart:js_interop_unsafe';
+// ignore_for_file: avoid_unnecessary_containers
+
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 
 void main() {
   runApp(const ScoutingApp());
@@ -38,13 +39,26 @@ class _ScoutingHomePageState extends State<ScoutingHomePage>{
         backgroundColor: Colors.lightBlue,
         title: Text(widget.title),
       ),
-      body: Container(
-        
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {},
+        backgroundColor: Colors.redAccent,
+        label: const Text('Scouting'),
+        shape: RoundedRectangleBorder(side: const BorderSide(width: 3, color: Colors.red),borderRadius: BorderRadius.circular(25)),
+        tooltip: 'This is where you scout matches and collect data!',
       ),
-      
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      body: Center(
+        child: Column(
+          children: <Widget>[
+            TextButton(
+              onPressed: () {}, child: const Text("Hello"),
+              ), 
+            
+            
+            ],
+        ),
+      ),
     );
   }
-  
- 
 }
 
