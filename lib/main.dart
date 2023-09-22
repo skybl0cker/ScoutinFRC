@@ -39,23 +39,40 @@ class _ScoutingHomePageState extends State<ScoutingHomePage>{
         backgroundColor: Colors.lightBlue,
         title: Text(widget.title),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
-        backgroundColor: Colors.redAccent,
-        label: const Text('Scouting'),
-        shape: RoundedRectangleBorder(side: const BorderSide(width: 3, color: Colors.red),borderRadius: BorderRadius.circular(25)),
-        tooltip: 'This is where you scout matches and collect data!',
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: Center(
         child: Column(
           children: <Widget>[
             TextButton(
-              onPressed: () {}, child: const Text("Hello"),
-              ), 
-            
-            
-            ],
+              onPressed: () {},
+              style: TextButton.styleFrom(
+              textStyle: const TextStyle(fontSize: 40),
+              ), child: const Text("Scouting"),
+            ),
+            TextButton(
+              onPressed: () {},
+              style: TextButton.styleFrom(
+              textStyle: const TextStyle(fontSize: 40),
+              ), child: const Text("Schedule"),
+            ),
+            TextButton(
+              onPressed: () {},
+              style: TextButton.styleFrom(
+              textStyle: const TextStyle(fontSize: 40),
+              ), child: const Text("Analytics"),
+            ),
+            TextButton(
+              onPressed: () {},
+              style: TextButton.styleFrom(
+              textStyle: const TextStyle(fontSize: 40),
+              ), child: const Text("Pit Scouting"),
+            ),
+            TextButton(
+              onPressed: () {},
+              style: TextButton.styleFrom(
+              textStyle: const TextStyle(fontSize: 40),
+              ), child: const Text("Super Scouting"),
+            ),
+          ],
         ),
       ),
     );
