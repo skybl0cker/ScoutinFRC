@@ -37,40 +37,65 @@ class _ScoutingHomePageState extends State<ScoutingHomePage>{
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.lightBlue,
-        title: Text(widget.title),
+        title: Text(widget.title,),
       ),
       body: Center(
         child: Column(
           children: <Widget>[
-            TextButton(
+            const SizedBox(height: 20,),
+            ElevatedButton(
               onPressed: () {},
               style: TextButton.styleFrom(
-              textStyle: const TextStyle(fontSize: 40),
+              textStyle: const TextStyle(fontSize: 40,),
+              padding: const EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
+              backgroundColor: Colors.redAccent,
+              side: const BorderSide(width:3, color: Color.fromRGBO(198, 65, 65, 1)),
               ), child: const Text("Scouting"),
             ),
-            TextButton(
+            const SizedBox(height: 20,),
+            ElevatedButton(
               onPressed: () {},
               style: TextButton.styleFrom(
               textStyle: const TextStyle(fontSize: 40),
+              padding: const EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
+              backgroundColor: Colors.blue,
+              side: const BorderSide(width:3, color: Color.fromRGBO(65, 104, 196, 1)),
               ), child: const Text("Schedule"),
             ),
-            TextButton(
+            const SizedBox(height: 20,),
+            ElevatedButton(
               onPressed: () {},
               style: TextButton.styleFrom(
               textStyle: const TextStyle(fontSize: 40),
+              padding: const EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
+              backgroundColor: Colors.yellow,
+              side: const BorderSide(width:3, color: Color.fromRGBO(196, 188, 65, 1)),
               ), child: const Text("Analytics"),
             ),
-            TextButton(
+            const SizedBox(height: 20,),
+            ElevatedButton(
               onPressed: () {},
               style: TextButton.styleFrom(
               textStyle: const TextStyle(fontSize: 40),
+              padding: const EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
+              backgroundColor: Colors.green,
+              side: const BorderSide(width:3, color: Color.fromRGBO(50, 87, 39, 1)),
               ), child: const Text("Pit Scouting"),
             ),
-            TextButton(
+            const SizedBox(height: 20,),
+            ElevatedButton(
               onPressed: () {},
               style: TextButton.styleFrom(
-              textStyle: const TextStyle(fontSize: 40),
+              textStyle: const TextStyle(fontSize: 40,),
+              padding: const EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
+              backgroundColor: Colors.orange,
+              side: const BorderSide(width:3, color: Color.fromRGBO(158, 90, 38, 1)),
               ), child: const Text("Super Scouting"),
+            ),
+            const SizedBox(height: 20,),
+            Image.asset("assets/images/rohawktics.png",
+            height: 300,
+            width: 300,
             ),
           ],
         ),
