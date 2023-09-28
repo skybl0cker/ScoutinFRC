@@ -36,15 +36,36 @@ class _ScoutingHomePageState extends State<ScoutingHomePage>{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.lightBlue,
-        title: Text(widget.title,),
+        backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
+        title: Image.asset('assets/images/rohawktics.png',
+        width: 75,
+        height: 75,
+        ),
       ),
       body: Center(
         child: Column(
           children: <Widget>[
+            const Text('Cash Egley (Admin)',
+            textScaleFactor: 1.5,),
             const SizedBox(height: 20,),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('Woops!'),
+                    content: const Text(
+                      'This page is still under development.'
+                    ),
+                    actions: [
+                      TextButton(
+                        child: const Text('OK'),
+                        onPressed: () => Navigator.pop(context),
+                      )
+                    ],
+                  ),
+                );
+              },
               style: TextButton.styleFrom(
               textStyle: const TextStyle(fontSize: 40,),
               padding: const EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
@@ -54,7 +75,23 @@ class _ScoutingHomePageState extends State<ScoutingHomePage>{
             ),
             const SizedBox(height: 20,),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('Woops!'),
+                    content: const Text(
+                      'This page is still under development.'
+                    ),
+                    actions: [
+                      TextButton(
+                        child: const Text('OK'),
+                        onPressed: () => Navigator.pop(context),
+                      )
+                    ],
+                  ),
+                );
+              },
               style: TextButton.styleFrom(
               textStyle: const TextStyle(fontSize: 40),
               padding: const EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
@@ -64,7 +101,23 @@ class _ScoutingHomePageState extends State<ScoutingHomePage>{
             ),
             const SizedBox(height: 20,),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('Woops!'),
+                    content: const Text(
+                      'This page is still under development.'
+                    ),
+                    actions: [
+                      TextButton(
+                        child: const Text('OK'),
+                        onPressed: () => Navigator.pop(context),
+                      )
+                    ],
+                  ),
+                );
+              },
               style: TextButton.styleFrom(
               textStyle: const TextStyle(fontSize: 40),
               padding: const EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
@@ -74,7 +127,23 @@ class _ScoutingHomePageState extends State<ScoutingHomePage>{
             ),
             const SizedBox(height: 20,),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('Woops!'),
+                    content: const Text(
+                      'This page is still under development.'
+                    ),
+                    actions: [
+                      TextButton(
+                        child: const Text('OK'),
+                        onPressed: () => Navigator.pop(context),
+                      )
+                    ],
+                  ),
+                );
+              },
               style: TextButton.styleFrom(
               textStyle: const TextStyle(fontSize: 40),
               padding: const EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
@@ -84,18 +153,29 @@ class _ScoutingHomePageState extends State<ScoutingHomePage>{
             ),
             const SizedBox(height: 20,),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('Woops!'),
+                    content: const Text(
+                      'This page is still under development.'
+                    ),
+                    actions: [
+                      TextButton(
+                        child: const Text('OK'),
+                        onPressed: () => Navigator.pop(context),
+                      )
+                    ],
+                  ),
+                );
+              },
               style: TextButton.styleFrom(
               textStyle: const TextStyle(fontSize: 40,),
               padding: const EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
               backgroundColor: Colors.orange,
               side: const BorderSide(width:3, color: Color.fromRGBO(158, 90, 38, 1)),
               ), child: const Text("Super Scouting"),
-            ),
-            const SizedBox(height: 20,),
-            Image.asset("assets/images/rohawktics.png",
-            height: 255,
-            width: 255,
             ),
           ],
         ),
