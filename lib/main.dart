@@ -177,6 +177,32 @@ class _ScoutingHomePageState extends State<ScoutingHomePage>{
               side: const BorderSide(width:3, color: Color.fromRGBO(158, 90, 38, 1)),
               ), child: const Text("Super Scouting"),
             ),
+            const SizedBox(height: 20,),
+            ElevatedButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('Woops!'),
+                    content: const Text(
+                      'This page is still under development.'
+                    ) , 
+                    actions: [
+                      TextButton(
+                        child: const Text('OK'),
+                        onPressed: () => Navigator.pop(context),
+                      )
+                    ],
+                  ),
+                );            
+              },
+              style: TextButton.styleFrom(
+              textStyle: const TextStyle(fontSize: 40,color: Colors.black),
+              padding: const EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
+              backgroundColor: Colors.pinkAccent,
+              side: const BorderSide(width: 3, color: Color.fromARGB(255, 165, 34, 160))
+              ), child: const Text("Dr.Pepper"),
+            ),
           ],
         ),
       ),
