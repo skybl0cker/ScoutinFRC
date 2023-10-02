@@ -13,7 +13,7 @@ class ScoutingApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Scouting',
-      theme: ThemeData(
+      theme: ThemeData(scaffoldBackgroundColor: const Color.fromRGBO(65, 68, 73, 1),
       useMaterial3: true,
       ),
       home: const ScoutingHomePage(
@@ -36,6 +36,21 @@ class _ScoutingHomePageState extends State<ScoutingHomePage>{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          Container(
+            child: const Icon(Icons.settings,
+            color: Color.fromRGBO(165, 176, 168, 1),
+            size: 50,
+            ),
+          )
+        ],
+        leading: 
+          Container(
+            child: const Icon(Icons.face, 
+            color: Color.fromRGBO(165, 176, 168, 1),
+            size: 50,
+          )
+        ),
         backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
         title: Image.asset('assets/images/rohawktics.png',
         width: 75,
@@ -46,7 +61,9 @@ class _ScoutingHomePageState extends State<ScoutingHomePage>{
         child: Column(
           children: <Widget>[
             const Text('Cash Egley (Admin)',
-            textScaleFactor: 1.5,),
+            textScaleFactor: 1.5,
+            style: TextStyle(color: Colors.white),
+            ),
             const SizedBox(height: 20,),
             ElevatedButton(
               onPressed: () {
@@ -67,11 +84,15 @@ class _ScoutingHomePageState extends State<ScoutingHomePage>{
                 );
               },
               style: TextButton.styleFrom(
-              textStyle: const TextStyle(fontSize: 40,),
+              textStyle: const TextStyle(fontSize: 40),
               padding: const EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
               backgroundColor: Colors.redAccent,
               side: const BorderSide(width:3, color: Color.fromRGBO(198, 65, 65, 1)),
-              ), child: const Text("Scouting"),
+              ),  child: const Text("Scouting",
+              style: TextStyle(
+                color: Colors.white
+              ),
+              ),
             ),
             const SizedBox(height: 20,),
             ElevatedButton(
@@ -97,7 +118,11 @@ class _ScoutingHomePageState extends State<ScoutingHomePage>{
               padding: const EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
               backgroundColor: Colors.blue,
               side: const BorderSide(width:3, color: Color.fromRGBO(65, 104, 196, 1)),
-              ), child: const Text("Schedule"),
+              ), child: const Text("Schedule",
+                style: TextStyle(
+                color: Colors.white
+              ),
+              ),
             ),
             const SizedBox(height: 20,),
             ElevatedButton(
@@ -123,7 +148,11 @@ class _ScoutingHomePageState extends State<ScoutingHomePage>{
               padding: const EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
               backgroundColor: Colors.yellow,
               side: const BorderSide(width:3, color: Color.fromRGBO(196, 188, 65, 1)),
-              ), child: const Text("Analytics"),
+              ), child: const Text("Analytics",
+                style: TextStyle(
+                color: Colors.white
+              ),
+              ),
             ),
             const SizedBox(height: 20,),
             ElevatedButton(
@@ -149,7 +178,11 @@ class _ScoutingHomePageState extends State<ScoutingHomePage>{
               padding: const EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
               backgroundColor: Colors.green,
               side: const BorderSide(width:3, color: Color.fromRGBO(50, 87, 39, 1)),
-              ), child: const Text("Pit Scouting"),
+              ), child: const Text("Pit Scouting",
+                style: TextStyle(
+                color: Colors.white
+              ),
+              ),
             ),
             const SizedBox(height: 20,),
             ElevatedButton(
@@ -175,7 +208,11 @@ class _ScoutingHomePageState extends State<ScoutingHomePage>{
               padding: const EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
               backgroundColor: Colors.orange,
               side: const BorderSide(width:3, color: Color.fromRGBO(158, 90, 38, 1)),
-              ), child: const Text("Super Scouting"),
+              ), child: const Text("Super Scouting",
+                style: TextStyle(
+                color: Colors.white
+              ),
+              ),
             ),
             const SizedBox(height: 20,),
             ElevatedButton(
@@ -201,7 +238,11 @@ class _ScoutingHomePageState extends State<ScoutingHomePage>{
               padding: const EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
               backgroundColor: Colors.pinkAccent,
               side: const BorderSide(width: 3, color: Color.fromARGB(255, 165, 34, 160))
-              ), child: const Text("Dr.Pepper"),
+              ), child: const Text("Placeholder",
+                style: TextStyle(
+                color: Colors.white
+              ),
+              ),
             ),
           ],
         ),
