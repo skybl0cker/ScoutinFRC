@@ -1,4 +1,4 @@
-# HVA-FRC-SCOUTING2025
+# HVA-FRC-SCOUTING2024
 
 FRC 3824's Scouting App, for the 2023-2024 First Robotics Competition.
 
