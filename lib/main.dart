@@ -13,6 +13,12 @@ class ScoutingApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Scouting',
+      initialRoute: "/",
+      routes: {
+        '/':(context) => const ScoutingHomePage(title: '',),
+
+        '/analytics':(context) => const AnalyticsPage(title: '',)
+      },
       theme: ThemeData(scaffoldBackgroundColor: const Color.fromRGBO(65, 68, 73, 1),
       useMaterial3: true,
       ),
@@ -127,21 +133,7 @@ class _ScoutingHomePageState extends State<ScoutingHomePage>{
             const SizedBox(height: 20,),
             ElevatedButton(
               onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text('Woops!'),
-                    content: const Text(
-                      'This page is still under development.'
-                    ),
-                    actions: [
-                      TextButton(
-                        child: const Text('OK'),
-                        onPressed: () => Navigator.pop(context),
-                      )
-                    ],
-                  ),
-                );
+              Navigator.pushNamed(context, '/analytics');
               },
               style: TextButton.styleFrom(
               textStyle: const TextStyle(fontSize: 40),
@@ -251,3 +243,40 @@ class _ScoutingHomePageState extends State<ScoutingHomePage>{
   }
 }
 
+class AnalyticsPage extends StatefulWidget {
+  const AnalyticsPage({super.key, required this.title});
+  final String title;
+  @override
+  State<ScoutingHomePage> createState() => _AnalyticsHomePageState();
+
+}
+
+class _AnalyticsHomePageState extends State<ScoutingHomePage>{
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        actions: [
+          Container(
+            child: const Icon(Icons.settings,
+            color: Color.fromRGBO(165, 176, 168, 1),
+            size: 50,
+            ),
+          )
+        ],
+        leading: 
+          Container(
+            child: const Icon(Icons.face, 
+            color: Color.fromRGBO(165, 176, 168, 1),
+            size: 50,
+          )
+        ),
+        backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
+        title: Image.asset('assets/images/rohawktics.png',
+        width: 75,
+        height: 75,
+        ),
+      )
+    );
+  }
+}
