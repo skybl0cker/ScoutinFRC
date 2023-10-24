@@ -13,11 +13,11 @@ class ScoutingApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Scouting',
-      initialRoute: "/",
-      routes: {
-        '/':(context) => const ScoutingHomePage(title: '',),
+      initialRoute: '/',
+      routes: <String, WidgetBuilder> {
+        '/':(context) =>  const ScoutingHomePage(title: '',),
 
-        '/analytics':(context) => const AnalyticsPage(title: '',)
+        '/analytics':(context) => const AnalyticsPage(title: '',),
       },
       theme: ThemeData(scaffoldBackgroundColor: const Color.fromRGBO(65, 68, 73, 1),
       useMaterial3: true,
@@ -247,11 +247,11 @@ class AnalyticsPage extends StatefulWidget {
   const AnalyticsPage({super.key, required this.title});
   final String title;
   @override
-  State<ScoutingHomePage> createState() => _AnalyticsHomePageState();
+  State<AnalyticsPage> createState() => _AnalyticsHomePageState();
 
 }
 
-class _AnalyticsHomePageState extends State<ScoutingHomePage>{
+class _AnalyticsHomePageState extends State<AnalyticsPage>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
