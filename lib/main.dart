@@ -258,10 +258,7 @@ class _AnalyticsHomePageState extends State<AnalyticsPage>{
       appBar: AppBar(
         actions: [
           Container(
-            child: const Icon(Icons.settings,
-            color: Color.fromRGBO(165, 176, 168, 1),
-            size: 50,
-            ),
+            child: IconButton(onPressed: () => Navigator.pushNamed(context, '/'), icon: const Icon(Icons.settings))
           )
         ],
         leading: 
