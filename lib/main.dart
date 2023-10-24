@@ -18,14 +18,13 @@ class ScoutingApp extends StatelessWidget {
         '/':(context) =>  const ScoutingHomePage(title: '',),
 
         '/analytics':(context) => const AnalyticsPage(title: '',),
+
+
       },
       theme: ThemeData(scaffoldBackgroundColor: const Color.fromRGBO(65, 68, 73, 1),
       useMaterial3: true,
       ),
-      home: const ScoutingHomePage(
-        title: 'Home Page',
-      )        
-      );
+      );        
   }
 }
 
@@ -61,6 +60,7 @@ class _ScoutingHomePageState extends State<ScoutingHomePage>{
         title: Image.asset('assets/images/rohawktics.png',
         width: 75,
         height: 75,
+        alignment: Alignment.center,
         ),
       ),
       body: Center(
@@ -275,6 +275,7 @@ class _AnalyticsHomePageState extends State<AnalyticsPage>{
         title: Image.asset('assets/images/rohawktics.png',
         width: 75,
         height: 75,
+        alignment: Alignment.center,
         ),
       )
     );
