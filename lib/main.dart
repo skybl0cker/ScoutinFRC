@@ -19,7 +19,13 @@ class ScoutingApp extends StatelessWidget {
 
         '/analytics':(context) => const AnalyticsPage(title: '',),
 
+        '/scouting':(context) => const ScoutingPage(title: '',),
 
+        '/schedule':(context) => const SchedulePage(title: '',),
+
+        '/pitscouting':(context) => const PitScoutingPage(title: '',),
+
+        '/sscouting': (context) => const SScoutingPage(title: '',),
       },
       theme: ThemeData(scaffoldBackgroundColor: const Color.fromRGBO(65, 68, 73, 1),
       useMaterial3: true,
@@ -73,22 +79,7 @@ class _ScoutingHomePageState extends State<ScoutingHomePage>{
             const SizedBox(height: 20,),
             ElevatedButton(
               onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text('Woops!'),
-                    content: const Text(
-                      'This page is still under development.'
-                    ),
-                    actions: [
-                      TextButton(
-                        child: const Text('OK'),
-                        onPressed: () => Navigator.pop(context),
-                      )
-                    ],
-                  ),
-                );
-              },
+                Navigator.pushNamed(context, '/scouting');},
               style: TextButton.styleFrom(
               textStyle: const TextStyle(fontSize: 40),
               padding: const EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
@@ -103,22 +94,7 @@ class _ScoutingHomePageState extends State<ScoutingHomePage>{
             const SizedBox(height: 20,),
             ElevatedButton(
               onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text('Woops!'),
-                    content: const Text(
-                      'This page is still under development.'
-                    ),
-                    actions: [
-                      TextButton(
-                        child: const Text('OK'),
-                        onPressed: () => Navigator.pop(context),
-                      )
-                    ],
-                  ),
-                );
-              },
+                Navigator.pushNamed(context, '/schedule');},
               style: TextButton.styleFrom(
               textStyle: const TextStyle(fontSize: 40),
               padding: const EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
@@ -148,23 +124,8 @@ class _ScoutingHomePageState extends State<ScoutingHomePage>{
             ),
             const SizedBox(height: 20,),
             ElevatedButton(
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text('Woops!'),
-                    content: const Text(
-                      'This page is still under development.'
-                    ),
-                    actions: [
-                      TextButton(
-                        child: const Text('OK'),
-                        onPressed: () => Navigator.pop(context),
-                      )
-                    ],
-                  ),
-                );
-              },
+              onPressed: () {           
+                Navigator.pushNamed(context, '/pitscouting');},
               style: TextButton.styleFrom(
               textStyle: const TextStyle(fontSize: 40),
               padding: const EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
@@ -178,23 +139,8 @@ class _ScoutingHomePageState extends State<ScoutingHomePage>{
             ),
             const SizedBox(height: 20,),
             ElevatedButton(
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text('Woops!'),
-                    content: const Text(
-                      'This page is still under development.'
-                    ),
-                    actions: [
-                      TextButton(
-                        child: const Text('OK'),
-                        onPressed: () => Navigator.pop(context),
-                      )
-                    ],
-                  ),
-                );
-              },
+              onPressed: () {              
+                Navigator.pushNamed(context, '/sscouting');},
               style: TextButton.styleFrom(
               textStyle: const TextStyle(fontSize: 40,),
               padding: const EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
@@ -258,7 +204,161 @@ class _AnalyticsHomePageState extends State<AnalyticsPage>{
       appBar: AppBar(
         actions: [
           Container(
-            child: IconButton(onPressed: () => Navigator.pushNamed(context, '/'), icon: const Icon(Icons.settings))
+            child: IconButton(
+              onPressed: () => Navigator.pushNamed(context, '/'),
+             icon: const Icon(Icons.arrow_back))
+          )
+        ],
+        leading: 
+          Container(
+            child: const Icon(Icons.face, 
+            color: Color.fromRGBO(165, 176, 168, 1),
+            size: 50,
+          )
+        ),
+        backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
+        title: Image.asset('assets/images/rohawktics.png',
+        width: 75,
+        height: 75,
+        alignment: Alignment.center,
+        ),
+      )
+    );
+  }
+}
+
+class ScoutingPage extends StatefulWidget {
+  const ScoutingPage({super.key, required this.title});
+  final String title;
+  @override
+  State<ScoutingPage> createState() => _ScoutingPageState();
+
+}
+
+class _ScoutingPageState extends State<ScoutingPage>{
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        actions: [
+          Container(
+            child: IconButton(
+              onPressed: () => Navigator.pushNamed(context, '/'),
+             icon: const Icon(Icons.arrow_back))
+          )
+        ],
+        leading: 
+          Container(
+            child: const Icon(Icons.face, 
+            color: Color.fromRGBO(165, 176, 168, 1),
+            size: 50,
+          )
+        ),
+        backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
+        title: Image.asset('assets/images/rohawktics.png',
+        width: 75,
+        height: 75,
+        alignment: Alignment.center,
+        ),
+      )
+    );
+  }
+}
+
+class SchedulePage extends StatefulWidget {
+  const SchedulePage({super.key, required this.title});
+  final String title;
+  @override
+  State<SchedulePage> createState() => _SchedulePageState();
+
+}
+
+class _SchedulePageState extends State<SchedulePage>{
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        actions: [
+          Container(
+            child: IconButton(
+              onPressed: () => Navigator.pushNamed(context, '/'),
+             icon: const Icon(Icons.arrow_back))
+          )
+        ],
+        leading: 
+          Container(
+            child: const Icon(Icons.face, 
+            color: Color.fromRGBO(165, 176, 168, 1),
+            size: 50,
+          )
+        ),
+        backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
+        title: Image.asset('assets/images/rohawktics.png',
+        width: 75,
+        height: 75,
+        alignment: Alignment.center,
+        ),
+      )
+    );
+  }
+}
+
+class PitScoutingPage extends StatefulWidget {
+  const PitScoutingPage({super.key, required this.title});
+  final String title;
+  @override
+  State<PitScoutingPage> createState() => _PitScoutingPageState();
+
+}
+
+class _PitScoutingPageState extends State<PitScoutingPage>{
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        actions: [
+          Container(
+            child: IconButton(
+              onPressed: () => Navigator.pushNamed(context, '/'),
+             icon: const Icon(Icons.arrow_back))
+          )
+        ],
+        leading: 
+          Container(
+            child: const Icon(Icons.face, 
+            color: Color.fromRGBO(165, 176, 168, 1),
+            size: 50,
+          )
+        ),
+        backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
+        title: Image.asset('assets/images/rohawktics.png',
+        width: 75,
+        height: 75,
+        alignment: Alignment.center,
+        ),
+      )
+    );
+  }
+}
+
+class SScoutingPage extends StatefulWidget {
+  const SScoutingPage({super.key, required this.title});
+  final String title;
+  @override
+  State<SScoutingPage> createState() => _SScoutingPageState();
+
+}
+
+class _SScoutingPageState extends State<SScoutingPage>{
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        actions: [
+          Container(
+            child: IconButton(
+              onPressed: () => Navigator.pushNamed(context, '/'),
+             icon: const Icon(Icons.arrow_back))
           )
         ],
         leading: 
