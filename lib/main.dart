@@ -14,23 +14,31 @@ class ScoutingApp extends StatelessWidget {
     return MaterialApp(
       title: 'Scouting',
       initialRoute: '/',
-      routes: <String, WidgetBuilder> {
-        '/':(context) =>  const ScoutingHomePage(title: '',),
-
-        '/analytics':(context) => const AnalyticsPage(title: '',),
-
-        '/scouting':(context) => const ScoutingPage(title: '',),
-
-        '/schedule':(context) => const SchedulePage(title: '',),
-
-        '/pitscouting':(context) => const PitScoutingPage(title: '',),
-
-        '/sscouting': (context) => const SScoutingPage(title: '',),
+      routes: <String, WidgetBuilder>{
+        '/': (context) => const ScoutingHomePage(
+              title: '',
+            ),
+        '/analytics': (context) => const AnalyticsPage(
+              title: '',
+            ),
+        '/scouting': (context) => const ScoutingPage(
+              title: '',
+            ),
+        '/schedule': (context) => const SchedulePage(
+              title: '',
+            ),
+        '/pitscouting': (context) => const PitScoutingPage(
+              title: '',
+            ),
+        '/sscouting': (context) => const SScoutingPage(
+              title: '',
+            ),
       },
-      theme: ThemeData(scaffoldBackgroundColor: const Color.fromRGBO(65, 68, 73, 1),
-      useMaterial3: true,
+      theme: ThemeData(
+        scaffoldBackgroundColor: const Color.fromRGBO(65, 68, 73, 1),
+        useMaterial3: true,
       ),
-      );        
+    );
   }
 }
 
@@ -39,129 +47,157 @@ class ScoutingHomePage extends StatefulWidget {
   final String title;
   @override
   State<ScoutingHomePage> createState() => _ScoutingHomePageState();
-  
 }
 
-class _ScoutingHomePageState extends State<ScoutingHomePage>{
+class _ScoutingHomePageState extends State<ScoutingHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         actions: [
           Container(
-            child: const Icon(Icons.settings,
-            color: Color.fromRGBO(165, 176, 168, 1),
-            size: 50,
+            child: const Icon(
+              Icons.settings,
+              color: Color.fromRGBO(165, 176, 168, 1),
+              size: 50,
             ),
           )
         ],
-        leading: 
-          Container(
-            child: const Icon(Icons.face, 
-            color: Color.fromRGBO(165, 176, 168, 1),
-            size: 50,
-          )
-        ),
+        leading: Container(
+            child: const Icon(
+          Icons.face,
+          color: Color.fromRGBO(165, 176, 168, 1),
+          size: 50,
+        )),
         backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
-        title: Image.asset('assets/images/rohawktics.png',
-        width: 75,
-        height: 75,
-        alignment: Alignment.center,
+        title: Image.asset(
+          'assets/images/rohawktics.png',
+          width: 75,
+          height: 75,
+          alignment: Alignment.center,
         ),
       ),
       body: Center(
         child: Column(
           children: <Widget>[
-            const Text('Cash Egley (Admin)',
-            textScaleFactor: 1.5,
-            style: TextStyle(color: Colors.white),
+            const Text(
+              'Cash Egley (Admin)',
+              textScaleFactor: 1.5,
+              style: TextStyle(color: Colors.white),
             ),
-            const SizedBox(height: 20,),
+            const SizedBox(
+              height: 20,
+            ),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/scouting');},
-              style: TextButton.styleFrom(
-              textStyle: const TextStyle(fontSize: 40),
-              padding: const EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
-              backgroundColor: Colors.redAccent,
-              side: const BorderSide(width:3, color: Color.fromRGBO(198, 65, 65, 1)),
-              ),  child: const Text("Scouting",
-              style: TextStyle(
-                color: Colors.white
-              ),
-              ),
-            ),
-            const SizedBox(height: 20,),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/schedule');},
-              style: TextButton.styleFrom(
-              textStyle: const TextStyle(fontSize: 40),
-              padding: const EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
-              backgroundColor: Colors.blue,
-              side: const BorderSide(width:3, color: Color.fromRGBO(65, 104, 196, 1)),
-              ), child: const Text("Schedule",
-                style: TextStyle(
-                color: Colors.white
-              ),
-              ),
-            ),
-            const SizedBox(height: 20,),
-            ElevatedButton(
-              onPressed: () {
-              Navigator.pushNamed(context, '/analytics');
+                Navigator.pushNamed(context, '/scouting');
               },
               style: TextButton.styleFrom(
-              textStyle: const TextStyle(fontSize: 40),
-              padding: const EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
-              backgroundColor: Colors.yellow,
-              side: const BorderSide(width:3, color: Color.fromRGBO(196, 188, 65, 1)),
-              ), child: const Text("Analytics",
-                style: TextStyle(
-                color: Colors.white
+                textStyle: const TextStyle(fontSize: 40),
+                padding: const EdgeInsets.only(
+                    left: 14, top: 12, right: 14, bottom: 12),
+                backgroundColor: Colors.redAccent,
+                side: const BorderSide(
+                    width: 3, color: Color.fromRGBO(198, 65, 65, 1)),
               ),
+              child: const Text(
+                "Scouting",
+                style: TextStyle(color: Colors.white),
               ),
             ),
-            const SizedBox(height: 20,),
+            const SizedBox(
+              height: 20,
+            ),
             ElevatedButton(
-              onPressed: () {           
-                Navigator.pushNamed(context, '/pitscouting');},
+              onPressed: () {
+                Navigator.pushNamed(context, '/schedule');
+              },
               style: TextButton.styleFrom(
-              textStyle: const TextStyle(fontSize: 40),
-              padding: const EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
-              backgroundColor: Colors.green,
-              side: const BorderSide(width:3, color: Color.fromRGBO(50, 87, 39, 1)),
-              ), child: const Text("Pit Scouting",
-                style: TextStyle(
-                color: Colors.white
+                textStyle: const TextStyle(fontSize: 40),
+                padding: const EdgeInsets.only(
+                    left: 14, top: 12, right: 14, bottom: 12),
+                backgroundColor: Colors.blue,
+                side: const BorderSide(
+                    width: 3, color: Color.fromRGBO(65, 104, 196, 1)),
               ),
+              child: const Text(
+                "Schedule",
+                style: TextStyle(color: Colors.white),
               ),
             ),
-            const SizedBox(height: 20,),
+            const SizedBox(
+              height: 20,
+            ),
             ElevatedButton(
-              onPressed: () {              
-                Navigator.pushNamed(context, '/sscouting');},
+              onPressed: () {
+                Navigator.pushNamed(context, '/analytics');
+              },
               style: TextButton.styleFrom(
-              textStyle: const TextStyle(fontSize: 40,),
-              padding: const EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
-              backgroundColor: Colors.orange,
-              side: const BorderSide(width:3, color: Color.fromRGBO(158, 90, 38, 1)),
-              ), child: const Text("Super Scouting",
-                style: TextStyle(
-                color: Colors.white
+                textStyle: const TextStyle(fontSize: 40),
+                padding: const EdgeInsets.only(
+                    left: 14, top: 12, right: 14, bottom: 12),
+                backgroundColor: Colors.yellow,
+                side: const BorderSide(
+                    width: 3, color: Color.fromRGBO(196, 188, 65, 1)),
               ),
+              child: const Text(
+                "Analytics",
+                style: TextStyle(color: Colors.white),
               ),
             ),
-            const SizedBox(height: 20,),
+            const SizedBox(
+              height: 20,
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/pitscouting');
+              },
+              style: TextButton.styleFrom(
+                textStyle: const TextStyle(fontSize: 40),
+                padding: const EdgeInsets.only(
+                    left: 14, top: 12, right: 14, bottom: 12),
+                backgroundColor: Colors.green,
+                side: const BorderSide(
+                    width: 3, color: Color.fromRGBO(50, 87, 39, 1)),
+              ),
+              child: const Text(
+                "Pit Scouting",
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/sscouting');
+              },
+              style: TextButton.styleFrom(
+                textStyle: const TextStyle(
+                  fontSize: 40,
+                ),
+                padding: const EdgeInsets.only(
+                    left: 14, top: 12, right: 14, bottom: 12),
+                backgroundColor: Colors.orange,
+                side: const BorderSide(
+                    width: 3, color: Color.fromRGBO(157, 90, 38, 1)),
+              ),
+              child: const Text(
+                "Super Scouting",
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
             ElevatedButton(
               onPressed: () {
                 showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
                     title: const Text('Woops!'),
-                    content: const Text(
-                      'This page is still under development.'
-                    ) , 
+                    content:
+                        const Text('This page is still under development.'),
                     actions: [
                       TextButton(
                         child: const Text('OK'),
@@ -169,17 +205,18 @@ class _ScoutingHomePageState extends State<ScoutingHomePage>{
                       )
                     ],
                   ),
-                );            
+                );
               },
               style: TextButton.styleFrom(
-              textStyle: const TextStyle(fontSize: 40,color: Colors.black),
-              padding: const EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
-              backgroundColor: Colors.pinkAccent,
-              side: const BorderSide(width: 3, color: Color.fromARGB(255, 165, 34, 160))
-              ), child: const Text("Placeholder",
-                style: TextStyle(
-                color: Colors.white
-              ),
+                  textStyle: const TextStyle(fontSize: 40, color: Colors.black),
+                  padding: const EdgeInsets.only(
+                      left: 14, top: 12, right: 14, bottom: 12),
+                  backgroundColor: Colors.pinkAccent,
+                  side: const BorderSide(
+                      width: 3, color: Color.fromARGB(255, 165, 34, 160))),
+              child: const Text(
+                "Placeholder",
+                style: TextStyle(color: Colors.white),
               ),
             ),
           ],
@@ -194,36 +231,33 @@ class AnalyticsPage extends StatefulWidget {
   final String title;
   @override
   State<AnalyticsPage> createState() => _AnalyticsHomePageState();
-
 }
 
-class _AnalyticsHomePageState extends State<AnalyticsPage>{
+class _AnalyticsHomePageState extends State<AnalyticsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          Container(
+        appBar: AppBar(
+      actions: [
+        Container(
             child: IconButton(
-              onPressed: () => Navigator.pushNamed(context, '/'),
-             icon: const Icon(Icons.arrow_back))
-          )
-        ],
-        leading: 
-          Container(
-            child: const Icon(Icons.face, 
-            color: Color.fromRGBO(165, 176, 168, 1),
-            size: 50,
-          )
-        ),
-        backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
-        title: Image.asset('assets/images/rohawktics.png',
+                onPressed: () => Navigator.pushNamed(context, '/'),
+                icon: const Icon(Icons.arrow_back)))
+      ],
+      leading: Container(
+          child: const Icon(
+        Icons.face,
+        color: Color.fromRGBO(165, 176, 168, 1),
+        size: 50,
+      )),
+      backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
+      title: Image.asset(
+        'assets/images/rohawktics.png',
         width: 75,
         height: 75,
         alignment: Alignment.center,
-        ),
-      )
-    );
+      ),
+    ));
   }
 }
 
@@ -232,36 +266,33 @@ class ScoutingPage extends StatefulWidget {
   final String title;
   @override
   State<ScoutingPage> createState() => _ScoutingPageState();
-
 }
 
-class _ScoutingPageState extends State<ScoutingPage>{
+class _ScoutingPageState extends State<ScoutingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          Container(
+        appBar: AppBar(
+      actions: [
+        Container(
             child: IconButton(
-              onPressed: () => Navigator.pushNamed(context, '/'),
-             icon: const Icon(Icons.arrow_back))
-          )
-        ],
-        leading: 
-          Container(
-            child: const Icon(Icons.face, 
-            color: Color.fromRGBO(165, 176, 168, 1),
-            size: 50,
-          )
-        ),
-        backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
-        title: Image.asset('assets/images/rohawktics.png',
+                onPressed: () => Navigator.pushNamed(context, '/'),
+                icon: const Icon(Icons.arrow_back)))
+      ],
+      leading: Container(
+          child: const Icon(
+        Icons.face,
+        color: Color.fromRGBO(165, 176, 168, 1),
+        size: 50,
+      )),
+      backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
+      title: Image.asset(
+        'assets/images/rohawktics.png',
         width: 75,
         height: 75,
         alignment: Alignment.center,
-        ),
-      )
-    );
+      ),
+    ));
   }
 }
 
@@ -270,36 +301,33 @@ class SchedulePage extends StatefulWidget {
   final String title;
   @override
   State<SchedulePage> createState() => _SchedulePageState();
-
 }
 
-class _SchedulePageState extends State<SchedulePage>{
+class _SchedulePageState extends State<SchedulePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          Container(
+        appBar: AppBar(
+      actions: [
+        Container(
             child: IconButton(
-              onPressed: () => Navigator.pushNamed(context, '/'),
-             icon: const Icon(Icons.arrow_back))
-          )
-        ],
-        leading: 
-          Container(
-            child: const Icon(Icons.face, 
-            color: Color.fromRGBO(165, 176, 168, 1),
-            size: 50,
-          )
-        ),
-        backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
-        title: Image.asset('assets/images/rohawktics.png',
+                onPressed: () => Navigator.pushNamed(context, '/'),
+                icon: const Icon(Icons.arrow_back)))
+      ],
+      leading: Container(
+          child: const Icon(
+        Icons.face,
+        color: Color.fromRGBO(165, 176, 168, 1),
+        size: 50,
+      )),
+      backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
+      title: Image.asset(
+        'assets/images/rohawktics.png',
         width: 75,
         height: 75,
         alignment: Alignment.center,
-        ),
-      )
-    );
+      ),
+    ));
   }
 }
 
@@ -308,36 +336,33 @@ class PitScoutingPage extends StatefulWidget {
   final String title;
   @override
   State<PitScoutingPage> createState() => _PitScoutingPageState();
-
 }
 
-class _PitScoutingPageState extends State<PitScoutingPage>{
+class _PitScoutingPageState extends State<PitScoutingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          Container(
+        appBar: AppBar(
+      actions: [
+        Container(
             child: IconButton(
-              onPressed: () => Navigator.pushNamed(context, '/'),
-             icon: const Icon(Icons.arrow_back))
-          )
-        ],
-        leading: 
-          Container(
-            child: const Icon(Icons.face, 
-            color: Color.fromRGBO(165, 176, 168, 1),
-            size: 50,
-          )
-        ),
-        backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
-        title: Image.asset('assets/images/rohawktics.png',
+                onPressed: () => Navigator.pushNamed(context, '/'),
+                icon: const Icon(Icons.arrow_back)))
+      ],
+      leading: Container(
+          child: const Icon(
+        Icons.face,
+        color: Color.fromRGBO(165, 176, 168, 1),
+        size: 50,
+      )),
+      backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
+      title: Image.asset(
+        'assets/images/rohawktics.png',
         width: 75,
         height: 75,
         alignment: Alignment.center,
-        ),
-      )
-    );
+      ),
+    ));
   }
 }
 
@@ -346,35 +371,32 @@ class SScoutingPage extends StatefulWidget {
   final String title;
   @override
   State<SScoutingPage> createState() => _SScoutingPageState();
-
 }
 
-class _SScoutingPageState extends State<SScoutingPage>{
+class _SScoutingPageState extends State<SScoutingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          Container(
+        appBar: AppBar(
+      actions: [
+        Container(
             child: IconButton(
-              onPressed: () => Navigator.pushNamed(context, '/'),
-             icon: const Icon(Icons.arrow_back))
-          )
-        ],
-        leading: 
-          Container(
-            child: const Icon(Icons.face, 
-            color: Color.fromRGBO(165, 176, 168, 1),
-            size: 50,
-          )
-        ),
-        backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
-        title: Image.asset('assets/images/rohawktics.png',
+                onPressed: () => Navigator.pushNamed(context, '/'),
+                icon: const Icon(Icons.arrow_back)))
+      ],
+      leading: Container(
+          child: const Icon(
+        Icons.face,
+        color: Color.fromRGBO(165, 176, 168, 1),
+        size: 50,
+      )),
+      backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
+      title: Image.asset(
+        'assets/images/rohawktics.png',
         width: 75,
         height: 75,
         alignment: Alignment.center,
-        ),
-      )
-    );
+      ),
+    ));
   }
 }
