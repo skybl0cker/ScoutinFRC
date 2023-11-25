@@ -190,35 +190,6 @@ class _ScoutingHomePageState extends State<ScoutingHomePage> {
             const SizedBox(
               height: 20,
             ),
-            ElevatedButton(
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text('Woops!'),
-                    content:
-                        const Text('This page is still under development.'),
-                    actions: [
-                      TextButton(
-                        child: const Text('OK'),
-                        onPressed: () => Navigator.pop(context),
-                      )
-                    ],
-                  ),
-                );
-              },
-              style: TextButton.styleFrom(
-                  textStyle: const TextStyle(fontSize: 40, color: Colors.black),
-                  padding: const EdgeInsets.only(
-                      left: 14, top: 12, right: 14, bottom: 12),
-                  backgroundColor: Colors.pinkAccent,
-                  side: const BorderSide(
-                      width: 3, color: Color.fromARGB(255, 165, 34, 160))),
-              child: const Text(
-                "Placeholder",
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
           ],
         ),
       ),
@@ -242,7 +213,12 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
         Container(
             child: IconButton(
                 onPressed: () => Navigator.pushNamed(context, '/'),
-                icon: const Icon(Icons.arrow_back)))
+                icon: const Icon(Icons.arrow_back,
+                 color: Color.fromRGBO(165, 176, 168, 1),
+                 size: 50,
+                 )
+             )
+        )
       ],
       leading: Container(
           child: const Icon(
@@ -257,7 +233,19 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
         height: 75,
         alignment: Alignment.center,
       ),
-    ));
+    ),
+    body: const Center(
+        child: Column(
+          children: <Widget>[
+            Text(
+              'Cash Egley (Admin)',
+              textScaleFactor: 1.5,
+              style: TextStyle(color: Colors.white),
+            ),
+          ]
+        )
+      )
+    );
   }
 }
 
@@ -277,7 +265,12 @@ class _ScoutingPageState extends State<ScoutingPage> {
         Container(
             child: IconButton(
                 onPressed: () => Navigator.pushNamed(context, '/'),
-                icon: const Icon(Icons.arrow_back)))
+                icon: const Icon(Icons.arrow_back,
+                 color: Color.fromRGBO(165, 176, 168, 1),
+                 size: 50,
+                 )
+             )
+        )
       ],
       leading: Container(
           child: const Icon(
@@ -312,7 +305,12 @@ class _SchedulePageState extends State<SchedulePage> {
         Container(
             child: IconButton(
                 onPressed: () => Navigator.pushNamed(context, '/'),
-                icon: const Icon(Icons.arrow_back)))
+                icon: const Icon(Icons.arrow_back,
+                 color: Color.fromRGBO(165, 176, 168, 1),
+                 size: 50,
+                 )
+             )
+        )
       ],
       leading: Container(
           child: const Icon(
@@ -347,7 +345,12 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
         Container(
             child: IconButton(
                 onPressed: () => Navigator.pushNamed(context, '/'),
-                icon: const Icon(Icons.arrow_back)))
+                icon: const Icon(Icons.arrow_back,
+                 color: Color.fromRGBO(165, 176, 168, 1),
+                 size: 50,
+                 )
+             )
+        )
       ],
       leading: Container(
           child: const Icon(
@@ -382,7 +385,12 @@ class _SScoutingPageState extends State<SScoutingPage> {
         Container(
             child: IconButton(
                 onPressed: () => Navigator.pushNamed(context, '/'),
-                icon: const Icon(Icons.arrow_back)))
+                icon: const Icon(Icons.arrow_back,
+                 color: Color.fromRGBO(165, 176, 168, 1),
+                 size: 50,
+                 )
+             )
+        )
       ],
       leading: Container(
           child: const Icon(
@@ -397,6 +405,7 @@ class _SScoutingPageState extends State<SScoutingPage> {
         height: 75,
         alignment: Alignment.center,
       ),
-    ));
+    )
+    );
   }
 }
