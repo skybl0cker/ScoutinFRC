@@ -1,6 +1,7 @@
 // // import 'dart:js_interop_unsafe';
 // ignore_for_file: avoid_unnecessary_containers
 
+
 import 'package:flutter/material.dart';
 import 'navbar.dart';
 
@@ -366,6 +367,7 @@ class _SchedulePageState extends State<SchedulePage> {
               decoration: BoxDecoration(
                 color: const Color.fromRGBO(82, 79, 79, 1),
                 borderRadius: BorderRadius.circular(12.0),
+                 
               ),
             ),
             const SizedBox(
@@ -456,7 +458,29 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
         height: 75,
         alignment: Alignment.center,
       ),
-    ));
+    ),
+    body: Center(
+        child: Column(
+          children: <Widget>[
+            const Text("What is the drive train?"),
+            TextField(
+              style: const TextStyle(
+                fontSize: 20
+              ),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: const Color.fromRGBO(255, 255, 255, 1),
+                
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              hintText: 'Input answer here',
+            )
+            )
+          ]
+        )
+    )
+    );
   }
 }
 
