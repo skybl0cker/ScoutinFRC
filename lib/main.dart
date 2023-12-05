@@ -2,6 +2,7 @@
 // ignore_for_file: avoid_unnecessary_containers
 
 import 'package:flutter/material.dart';
+import 'navbar.dart';
 
 void main() {
   runApp(const ScoutingApp());
@@ -53,22 +54,24 @@ class _ScoutingHomePageState extends State<ScoutingHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const NavBar(
+      ),
       appBar: AppBar(
-        actions: [
-          Container(
-            child: const Icon(
-              Icons.settings,
-              color: Color.fromRGBO(165, 176, 168, 1),
+        leading: Builder(
+      builder: (BuildContext context) {
+        return IconButton(
+          icon: const Icon(
+            Icons.menu,
+            color: Color.fromRGBO(165, 176, 168, 1),
               size: 50,
-            ),
-          )
-        ],
-        leading: Container(
-            child: const Icon(
-          Icons.face,
-          color: Color.fromRGBO(165, 176, 168, 1),
-          size: 50,
-        )),
+          ),
+          onPressed: () {
+            Scaffold.of(context).openDrawer();
+          },
+          tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+         );
+      },
+    ),
         backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
         title: Image.asset(
           'assets/images/rohawktics.png',
@@ -80,11 +83,6 @@ class _ScoutingHomePageState extends State<ScoutingHomePage> {
       body: Center(
         child: Column(
           children: <Widget>[
-            const Text(
-              'Cash Egley (Admin)',
-              textScaleFactor: 1.5,
-              style: TextStyle(color: Colors.white),
-            ),
             const SizedBox(
               height: 20,
             ),
@@ -208,7 +206,24 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
+    drawer: const NavBar(
+      ),
+      appBar: AppBar(
+        leading: Builder(
+      builder: (BuildContext context) {
+        return IconButton(
+          icon: const Icon(
+            Icons.menu,
+            color: Color.fromRGBO(165, 176, 168, 1),
+              size: 50,
+          ),
+          onPressed: () {
+            Scaffold.of(context).openDrawer();
+          },
+          tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+         );
+      },
+    ),
       actions: [
         Container(
             child: IconButton(
@@ -220,12 +235,6 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
              )
         )
       ],
-      leading: Container(
-          child: const Icon(
-        Icons.face,
-        color: Color.fromRGBO(165, 176, 168, 1),
-        size: 50,
-      )),
       backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
       title: Image.asset(
         'assets/images/rohawktics.png',
@@ -237,11 +246,6 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
     body: const Center(
         child: Column(
           children: <Widget>[
-            Text(
-              'Cash Egley (Admin)',
-              textScaleFactor: 1.5,
-              style: TextStyle(color: Colors.white),
-            ),
           ]
         )
       )
@@ -260,7 +264,24 @@ class _ScoutingPageState extends State<ScoutingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
+    drawer: const NavBar(
+      ),
+      appBar: AppBar(
+        leading: Builder(
+      builder: (BuildContext context) {
+        return IconButton(
+          icon: const Icon(
+            Icons.menu,
+            color: Color.fromRGBO(165, 176, 168, 1),
+              size: 50,
+          ),
+          onPressed: () {
+            Scaffold.of(context).openDrawer();
+          },
+          tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+         );
+      },
+    ),
       actions: [
         Container(
             child: IconButton(
@@ -272,12 +293,7 @@ class _ScoutingPageState extends State<ScoutingPage> {
              )
         )
       ],
-      leading: Container(
-          child: const Icon(
-        Icons.face,
-        color: Color.fromRGBO(165, 176, 168, 1),
-        size: 50,
-      )),
+
       backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
       title: Image.asset(
         'assets/images/rohawktics.png',
@@ -300,7 +316,24 @@ class _SchedulePageState extends State<SchedulePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
+    drawer: const NavBar(
+      ),
+      appBar: AppBar(
+        leading: Builder(
+      builder: (BuildContext context) {
+        return IconButton(
+          icon: const Icon(
+            Icons.menu,
+            color: Color.fromRGBO(165, 176, 168, 1),
+              size: 50,
+          ),
+          onPressed: () {
+            Scaffold.of(context).openDrawer();
+          },
+          tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+         );
+      },
+    ),
       actions: [
         Container(
             child: IconButton(
@@ -312,12 +345,7 @@ class _SchedulePageState extends State<SchedulePage> {
              )
         )
       ],
-      leading: Container(
-          child: const Icon(
-        Icons.face,
-        color: Color.fromRGBO(165, 176, 168, 1),
-        size: 50,
-      )),
+
       backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
       title: Image.asset(
         'assets/images/rohawktics.png',
@@ -325,7 +353,58 @@ class _SchedulePageState extends State<SchedulePage> {
         height: 75,
         alignment: Alignment.center,
       ),
-    ));
+    ),
+    body: Center(
+        child: Column(
+          children: <Widget>[
+            const SizedBox(
+              height: 20,
+            ),
+            Container(
+              width: 350,
+              height: 125,
+              decoration: BoxDecoration(
+                color: const Color.fromRGBO(82, 79, 79, 1),
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Container(
+              width: 350,
+              height: 125,
+              decoration: BoxDecoration(
+                color: const Color.fromRGBO(82, 79, 79, 1),
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Container(
+              width: 350,
+              height: 125,
+              decoration: BoxDecoration(
+                color: const Color.fromRGBO(82, 79, 79, 1),
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Container(
+              width: 350,
+              height: 125,
+              decoration: BoxDecoration(
+                color: const Color.fromRGBO(82, 79, 79, 1),
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+            ),
+          ]
+        )
+    )
+    );
   }
 }
 
@@ -340,7 +419,24 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
+        drawer: const NavBar(
+      ),
+      appBar: AppBar(
+        leading: Builder(
+      builder: (BuildContext context) {
+        return IconButton(
+          icon: const Icon(
+            Icons.menu,
+            color: Color.fromRGBO(165, 176, 168, 1),
+              size: 50,
+          ),
+          onPressed: () {
+            Scaffold.of(context).openDrawer();
+          },
+          tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+         );
+      },
+    ),
       actions: [
         Container(
             child: IconButton(
@@ -352,12 +448,7 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
              )
         )
       ],
-      leading: Container(
-          child: const Icon(
-        Icons.face,
-        color: Color.fromRGBO(165, 176, 168, 1),
-        size: 50,
-      )),
+
       backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
       title: Image.asset(
         'assets/images/rohawktics.png',
@@ -380,7 +471,24 @@ class _SScoutingPageState extends State<SScoutingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
+        drawer: const NavBar(
+      ),
+      appBar: AppBar(
+        leading: Builder(
+      builder: (BuildContext context) {
+        return IconButton(
+          icon: const Icon(
+            Icons.menu,
+            color: Color.fromRGBO(165, 176, 168, 1),
+              size: 50,
+          ),
+          onPressed: () {
+            Scaffold.of(context).openDrawer();
+          },
+          tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+         );
+      },
+    ),
       actions: [
         Container(
             child: IconButton(
@@ -392,12 +500,7 @@ class _SScoutingPageState extends State<SScoutingPage> {
              )
         )
       ],
-      leading: Container(
-          child: const Icon(
-        Icons.face,
-        color: Color.fromRGBO(165, 176, 168, 1),
-        size: 50,
-      )),
+
       backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
       title: Image.asset(
         'assets/images/rohawktics.png',
