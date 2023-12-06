@@ -4,6 +4,8 @@
 
 import 'package:flutter/material.dart';
 import 'navbar.dart';
+// ignore: unused_import
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(const ScoutingApp());
@@ -470,7 +472,6 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
               decoration: InputDecoration(
                 filled: true,
                 fillColor: const Color.fromRGBO(255, 255, 255, 1),
-                
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
