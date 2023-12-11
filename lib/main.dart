@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'navbar.dart';
 // ignore: unused_import
 import 'package:shared_preferences/shared_preferences.dart';
+import 'sp.dart';
 
 void main() {
   runApp(const ScoutingApp());
@@ -91,6 +92,7 @@ class _ScoutingHomePageState extends State<ScoutingHomePage> {
             ),
             ElevatedButton(
               onPressed: () {
+                setPref('qpint');
                 Navigator.pushNamed(context, '/scouting');
               },
               style: TextButton.styleFrom(
