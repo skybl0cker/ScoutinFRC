@@ -1,6 +1,6 @@
 # HVA-FRC-SCOUTING2024
 
-FRC 3824's Scouting App, for the 2023-2024 First Robotics Competition.
+FRC 3824's Scouting App, for the 2023-2024 First Robotics Competition Season.
 
 ## Short Introduction
 
@@ -12,4 +12,4 @@ Our links:
 
 - [Bluealliance: Visit our page on Blue Alliance](https://www.thebluealliance.com/team/3824)
 
-Designed by Cash Egley
+Designed by Cash Egley and Brady Rogers
