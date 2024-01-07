@@ -479,7 +479,49 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
               ),
               hintText: 'Input answer here',
             )
+            ),
+            const Text("What is the dimensions of your Robot"),
+            TextField(
+              style: const TextStyle(
+                fontSize: 20
+              ),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: const Color.fromRGBO(255, 255, 255, 1),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              hintText: 'Input answer here',
             )
+            ),
+            const Text("What is the weight of your Robot?"),
+            TextField(
+              style: const TextStyle(
+                fontSize: 20
+              ),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: const Color.fromRGBO(255, 255, 255, 1),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              hintText: 'Input answer here',
+            )
+            ),
+            const Text("How did you create your grabber/shooter"),
+            TextField(
+              style: const TextStyle(
+                fontSize: 20
+              ),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: const Color.fromRGBO(255, 255, 255, 1),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              hintText: 'Input answer here',
+            )
+            ),
           ]
         )
     )
