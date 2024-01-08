@@ -92,7 +92,7 @@ class _ScoutingHomePageState extends State<ScoutingHomePage> {
             ),
             ElevatedButton(
               onPressed: () {
-                setPref('qpint');
+                setPref('qpint','oqirntoqt');
                 Navigator.pushNamed(context, '/scouting');
               },
               style: TextButton.styleFrom(

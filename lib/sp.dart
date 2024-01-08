@@ -7,11 +7,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 
 
-void setPref(String key) async {
+void setPref(String robotNum, String matchNum, ) async {
   // Obtain shared preferences.
 final SharedPreferences pagePref = await SharedPreferences.getInstance();
-
-pagePref.setStringList(key, <String>['hello','goodbye']);
+List<String> temp = ["hello", "goodbye"];
+temp[0]; [1]; [2]; [3]; [4]; 
+pagePref.setStringList("$robotNum/$matchNum", <String>['hello','goodbye']);
 
 }
 
