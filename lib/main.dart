@@ -466,7 +466,8 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
     body: Center(
         child: Column(
           children: <Widget>[
-            const Text("What is the drive train?"),
+            const Text("What is the drive train?",
+            style: TextStyle(color: Colors.white),),
             TextField(
               style: const TextStyle(
                 fontSize: 20
@@ -479,7 +480,56 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
               ),
               hintText: 'Input answer here',
             )
+<<<<<<< Updated upstream
             )
+=======
+            ),
+            const Text("What is the dimensions of your Robot",
+            style: TextStyle(color: Colors.white),),
+            TextField(
+              style: const TextStyle(
+                fontSize: 20
+              ),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: const Color.fromRGBO(255, 255, 255, 1),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              hintText: 'Input answer here',
+            )
+            ),
+            const Text("What is the weight of your Robot?",
+            style: TextStyle(color: Colors.white),),
+            TextField(
+              style: const TextStyle(
+                fontSize: 20
+              ),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: const Color.fromRGBO(255, 255, 255, 1),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              hintText: 'Input answer here',
+            )
+            ),
+            const Text("How did you create your grabber/shooter",
+            style: TextStyle(color: Colors.white),),
+            TextField(
+              style: const TextStyle(
+                fontSize: 20
+              ),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: const Color.fromRGBO(255, 255, 255, 1),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              hintText: 'Input answer here',
+            )
+            ),
+>>>>>>> Stashed changes
           ]
         )
     )
