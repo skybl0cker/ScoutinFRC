@@ -1,19 +1,24 @@
 // // import 'dart:js_interop_unsafe';
 dynamic pageData = {
-  "autoPickup": 0,
-  "floorPickup": 0,
-  "feederPickup": 0,
-  1: 0,
-  2: 0,
-  3: 0,
-  4: 0,
-  5: 0,
-  "speakerPlacement": 0,
-  "ampPlacement": 0,
-  "stagePlacement": 0,
-  "stageHang": 0,
+  "autoPickup": 0, //0 not picked up, 1 picked up
+  "floorPickup": 0, //0 not picked up, 1 picked up
+  "feederPickup": 0, //0 not picked up, 1 picked up
+  1: 0, //0 not picked up, 1 picked up
+  2: 0, //0 not picked up, 1 picked up
+  3: 0, //0 not picked up, 1 picked up
+  4: 0, //0 not picked up, 1 picked up
+  5: 0, //0 not picked up, 1 picked up
+  6: 0, //0 not picked up, 1 picked up
+  7: 0, //0 not picked up, 1 picked up
+  8: 0, //0 not picked up, 1 picked up
+  "speakerPlacement": 0, //0 0 notes, 1 1 note, 2 2 notes, 3 3 notes, 4 4 notes
+  "ampPlacement": 0, //0 0 notes, 1 1 note, 2 2 notes, 3 3 notes, 4 4 notes
+  "stagePlacement": 0, //0 0 notes, 1 1 note, 2 2 notes, 3 3 notes
+  "stageHang": 0, //0 = no hang,1 hang on one closest to field,2 hang on one closest to amp,3 hang on other one
+  "microphonePlacement": 0, //0 = not landed, 1 landed
 };
 dynamic reorganizePD(dynamic data) {
+  return pageData.runtimeType;
   dynamic temp;
   temp = pageData["instance"];
   pageData["instance"] = pageData["grandold time"];

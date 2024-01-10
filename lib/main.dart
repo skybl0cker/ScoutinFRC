@@ -8,8 +8,11 @@ import 'navbar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'sp.dart';
 import 'package:gap/gap.dart';
+//ignore: unused_import
+import 'variables.dart' as v;
 
 void main() {
+  print(v.reorganizePD(v.pageData));
   runApp(const ScoutingApp());
 }
 
