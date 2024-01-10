@@ -12,7 +12,7 @@ import 'package:gap/gap.dart';
 import 'variables.dart' as v;
 
 void main() {
-  print(v.reorganizePD(v.pageData));
+  // ignore: avoid_print
   runApp(const ScoutingApp());
 }
 
@@ -96,7 +96,7 @@ class _ScoutingHomePageState extends State<ScoutingHomePage> {
             ),
             ElevatedButton(
               onPressed: () {
-                setPref('qpint', 'nfwnkwgw');
+                setPref('qpint','oqeihtqoiw', v.pageData);
                 Navigator.pushNamed(context, '/scouting');
               },
               style: TextButton.styleFrom(

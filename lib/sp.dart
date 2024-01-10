@@ -9,26 +9,26 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 
 
-void setPref(String robotNum, String matchNum, ) async {
+void setPref(String robotNum, String matchNum, Map<Object, int> pData) async {
   // Obtain shared preferences.
 final SharedPreferences pagePref = await SharedPreferences.getInstance();
 List<String> temp = ["hello", "goodbye"];
-temp[0] = v.pageData["autoPickup"]; 
-temp[1] = v.pageData["floorPickup"];
-temp[2] = v.pageData["feederPickup"];
-temp[3] = v.pageData["1"];
-temp[4] = v.pageData["2"];
-temp[5] = v.pageData["3"];
-temp[6] = v.pageData["4"];
-temp[7] = v.pageData["5"];
-temp[8] = v.pageData["6"];
-temp[9] = v.pageData["7"];
-temp[10] = v.pageData["8"];
-temp[11] = v.pageData["speakerPlacement"];
-temp[12] = v.pageData["ampPlacement"];
-temp[13] = v.pageData["stagePlacement"];
-temp[14] = v.pageData["stageHang"];
-temp[15] = v.pageData["microphonePlacement"];
+temp[0] = pData["autoPickup"].toString(); 
+temp[1] = pData["floorPickup"].toString(); 
+temp[2] = pData["feederPickup"].toString(); 
+temp[3] = pData["1"].toString(); 
+temp[4] = pData["2"].toString(); 
+temp[5] = pData["3"].toString(); 
+temp[6] = pData["4"].toString(); 
+temp[7] = pData["5"].toString(); 
+temp[8] = pData["6"].toString(); 
+temp[9] = pData["7"].toString(); 
+temp[10] = pData["8"].toString(); 
+temp[11] = pData["speakerPlacement"].toString(); 
+temp[12] = pData["ampPlacement"].toString(); 
+temp[13] = pData["stagePlacement"].toString(); 
+temp[14] = pData["stageHang"].toString(); 
+temp[15] = pData["microphonePlacement"].toString(); 
 pagePref.setStringList("$robotNum/$matchNum", <String>['hello','goodbye']);
 
 }

@@ -1,5 +1,6 @@
 // // import 'dart:js_interop_unsafe';
 dynamic pageData = {
+  "auto": 0, //0 not in auto //1 in auto 
   "autoPickup": 0, //0 not picked up, 1 picked up
   "floorPickup": 0, //0 not picked up, 1 picked up
   "feederPickup": 0, //0 not picked up, 1 picked up
@@ -18,10 +19,6 @@ dynamic pageData = {
   "microphonePlacement": 0, //0 = not landed, 1 landed
 };
 dynamic reorganizePD(dynamic data) {
-  return pageData.runtimeType;
-  dynamic temp;
-  temp = pageData["instance"];
-  pageData["instance"] = pageData["grandold time"];
-  pageData["grandold time"] = temp;
+
   return pageData;
 }
