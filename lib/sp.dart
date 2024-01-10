@@ -11,7 +11,7 @@ void setPref(String robotNum, String matchNum, ) async {
   // Obtain shared preferences.
 final SharedPreferences pagePref = await SharedPreferences.getInstance();
 List<String> temp = ["hello", "goodbye"];
-temp[0]; [1]; [2]; [3]; [4]; 
+temp[1]; [2]; [3]; [4]; [5]; [6]; [7]; [8]; 
 pagePref.setStringList("$robotNum/$matchNum", <String>['hello','goodbye']);
 
 }

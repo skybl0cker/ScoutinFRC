@@ -7,6 +7,7 @@ import 'navbar.dart';
 // ignore: unused_import
 import 'package:shared_preferences/shared_preferences.dart';
 import 'sp.dart';
+import 'package:gap/gap.dart';
 
 void main() {
   runApp(const ScoutingApp());
@@ -466,6 +467,7 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
     body: Center(
         child: Column(
           children: <Widget>[
+            const Gap(20),
             const Text("What is the drive train?",
             style: TextStyle(color: Colors.white, fontSize: 20),),
             TextField(
@@ -481,6 +483,7 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
               hintText: 'Input answer here',
             )
             ),
+            const Gap(20),
             const Text("What is the dimensions of your Robot",
             style: TextStyle(color: Colors.white, fontSize: 20),
             ),
@@ -497,6 +500,7 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
               hintText: 'Input answer here',
             )
             ),
+            const Gap(20),
             const Text("What is the weight of your Robot?",
             style: TextStyle(color: Colors.white, fontSize: 20),),
             TextField(
@@ -512,6 +516,7 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
               hintText: 'Input answer here',
             )
             ),
+            const Gap(20),
             const Text("How did you create your grabber/shooter",
             style: TextStyle(color: Colors.white, fontSize: 19),),
             TextField(
