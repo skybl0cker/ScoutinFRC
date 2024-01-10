@@ -467,7 +467,7 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
         child: Column(
           children: <Widget>[
             const Text("What is the drive train?",
-            style: TextStyle(color: Colors.white),),
+            style: TextStyle(color: Colors.white, fontSize: 20),),
             TextField(
               style: const TextStyle(
                 fontSize: 20
@@ -480,12 +480,10 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
               ),
               hintText: 'Input answer here',
             )
-<<<<<<< Updated upstream
-            )
-=======
             ),
             const Text("What is the dimensions of your Robot",
-            style: TextStyle(color: Colors.white),),
+            style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
             TextField(
               style: const TextStyle(
                 fontSize: 20
@@ -500,7 +498,7 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
             )
             ),
             const Text("What is the weight of your Robot?",
-            style: TextStyle(color: Colors.white),),
+            style: TextStyle(color: Colors.white, fontSize: 20),),
             TextField(
               style: const TextStyle(
                 fontSize: 20
@@ -515,7 +513,7 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
             )
             ),
             const Text("How did you create your grabber/shooter",
-            style: TextStyle(color: Colors.white),),
+            style: TextStyle(color: Colors.white, fontSize: 19),),
             TextField(
               style: const TextStyle(
                 fontSize: 20
@@ -528,8 +526,7 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
               ),
               hintText: 'Input answer here',
             )
-            ),
->>>>>>> Stashed changes
+            )
           ]
         )
     )
