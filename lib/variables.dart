@@ -1,4 +1,5 @@
 // // import 'dart:js_interop_unsafe';
+<<<<<<< Updated upstream
 dynamic pageData = {
   "auto": 0, //0 not in auto //1 in auto 
   "autoPickup": 0, //0 not picked up, 1 picked up
@@ -22,3 +23,19 @@ dynamic reorganizePD(dynamic data) {
 
   return pageData;
 }
+=======
+
+dynamic pageData = {
+  "instance": 15,
+  "instance2": 49,
+  "grandold time": 68,
+};
+
+dynamic reorganizePD(dynamic data) {
+  dynamic temp;
+  temp = pageData["instance"];
+  pageData["instance"] = pageData["grandold time"];
+  pageData["grandold time"] = temp;
+  return pageData;
+}
+>>>>>>> Stashed changes

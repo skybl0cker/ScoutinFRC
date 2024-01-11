@@ -3,6 +3,7 @@
 
 
 import 'package:flutter/material.dart';
+<<<<<<< Updated upstream
 import 'navbar.dart';
 // ignore: unused_import
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,6 +14,12 @@ import 'variables.dart' as v;
 
 void main() {
   // ignore: avoid_print
+=======
+import 'variables.dart' as v;
+
+void main() {
+  print(v.reorganizePD(v.pageData));
+>>>>>>> Stashed changes
   runApp(const ScoutingApp());
 }
 
@@ -21,6 +28,7 @@ class ScoutingApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+<<<<<<< Updated upstream
       title: 'Scouting',
       initialRoute: '/',
       routes: <String, WidgetBuilder>{
@@ -48,6 +56,15 @@ class ScoutingApp extends StatelessWidget {
         useMaterial3: true,
       ),
     );
+=======
+        title: 'Scouting',
+        theme: ThemeData(
+          useMaterial3: true,
+        ),
+        home: const ScoutingHomePage(
+          title: 'Home Page',
+        ));
+>>>>>>> Stashed changes
   }
 }
 
@@ -59,6 +76,7 @@ class ScoutingHomePage extends StatefulWidget {
 }
 
 class _ScoutingHomePageState extends State<ScoutingHomePage> {
+<<<<<<< Updated upstream
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -322,6 +340,8 @@ class SchedulePage extends StatefulWidget {
 }
 
 class _SchedulePageState extends State<SchedulePage> {
+=======
+>>>>>>> Stashed changes
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -431,6 +451,7 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
     return Scaffold(
         drawer: const NavBar(
       ),
+<<<<<<< Updated upstream
       appBar: AppBar(
         leading: Builder(
       builder: (BuildContext context) {
@@ -594,3 +615,9 @@ class _SScoutingPageState extends State<SScoutingPage> {
     );
   }
 }
+=======
+      body: Container(),
+    );
+  }
+}
+>>>>>>> Stashed changes
