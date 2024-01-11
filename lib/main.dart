@@ -1,7 +1,4 @@
-
-
 import 'package:flutter/material.dart';
-<<<<<<< Updated upstream
 import 'navbar.dart';
 // ignore: unused_import
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,13 +8,7 @@ import 'package:gap/gap.dart';
 import 'variables.dart' as v;
 
 void main() {
-  // ignore: avoid_print
-=======
-import 'variables.dart' as v;
-
-void main() {
   print(v.reorganizePD(v.pageData));
->>>>>>> Stashed changes
   runApp(const ScoutingApp());
 }
 
@@ -26,7 +17,6 @@ class ScoutingApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-<<<<<<< Updated upstream
       title: 'Scouting',
       initialRoute: '/',
       routes: <String, WidgetBuilder>{
@@ -54,15 +44,6 @@ class ScoutingApp extends StatelessWidget {
         useMaterial3: true,
       ),
     );
-=======
-        title: 'Scouting',
-        theme: ThemeData(
-          useMaterial3: true,
-        ),
-        home: const ScoutingHomePage(
-          title: 'Home Page',
-        ));
->>>>>>> Stashed changes
   }
 }
 
@@ -74,28 +55,26 @@ class ScoutingHomePage extends StatefulWidget {
 }
 
 class _ScoutingHomePageState extends State<ScoutingHomePage> {
-<<<<<<< Updated upstream
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const NavBar(
-      ),
+      drawer: const NavBar(),
       appBar: AppBar(
         leading: Builder(
-      builder: (BuildContext context) {
-        return IconButton(
-          icon: const Icon(
-            Icons.menu,
-            color: Color.fromRGBO(165, 176, 168, 1),
-              size: 50,
-          ),
-          onPressed: () {
-            Scaffold.of(context).openDrawer();
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(
+                Icons.menu,
+                color: Color.fromRGBO(165, 176, 168, 1),
+                size: 50,
+              ),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+            );
           },
-          tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-         );
-      },
-    ),
+        ),
         backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
         title: Image.asset(
           'assets/images/rohawktics.png',
@@ -112,7 +91,7 @@ class _ScoutingHomePageState extends State<ScoutingHomePage> {
             ),
             ElevatedButton(
               onPressed: () {
-                setPref('qpint','oqeihtqoiw', v.pageData);
+                setPref('qpint', 'oqeihtqoiw', v.pageData);
                 Navigator.pushNamed(context, '/scouting');
               },
               style: TextButton.styleFrom(
@@ -231,50 +210,42 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    drawer: const NavBar(
-      ),
-      appBar: AppBar(
-        leading: Builder(
-      builder: (BuildContext context) {
-        return IconButton(
-          icon: const Icon(
-            Icons.menu,
-            color: Color.fromRGBO(165, 176, 168, 1),
-              size: 50,
+        drawer: const NavBar(),
+        appBar: AppBar(
+          leading: Builder(
+            builder: (BuildContext context) {
+              return IconButton(
+                icon: const Icon(
+                  Icons.menu,
+                  color: Color.fromRGBO(165, 176, 168, 1),
+                  size: 50,
+                ),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+                tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+              );
+            },
           ),
-          onPressed: () {
-            Scaffold.of(context).openDrawer();
-          },
-          tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-         );
-      },
-    ),
-      actions: [
-        Container(
-            child: IconButton(
-                onPressed: () => Navigator.pushNamed(context, '/'),
-                icon: const Icon(Icons.arrow_back,
-                 color: Color.fromRGBO(165, 176, 168, 1),
-                 size: 50,
-                 )
-             )
-        )
-      ],
-      backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
-      title: Image.asset(
-        'assets/images/rohawktics.png',
-        width: 75,
-        height: 75,
-        alignment: Alignment.center,
-      ),
-    ),
-    body: const Center(
-        child: Column(
-          children: <Widget>[
-          ]
-        )
-      )
-    );
+          actions: [
+            Container(
+                child: IconButton(
+                    onPressed: () => Navigator.pushNamed(context, '/'),
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      color: Color.fromRGBO(165, 176, 168, 1),
+                      size: 50,
+                    )))
+          ],
+          backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
+          title: Image.asset(
+            'assets/images/rohawktics.png',
+            width: 75,
+            height: 75,
+            alignment: Alignment.center,
+          ),
+        ),
+        body: const Center(child: Column(children: <Widget>[])));
   }
 }
 
@@ -289,44 +260,41 @@ class _ScoutingPageState extends State<ScoutingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    drawer: const NavBar(
-      ),
-      appBar: AppBar(
-        leading: Builder(
-      builder: (BuildContext context) {
-        return IconButton(
-          icon: const Icon(
-            Icons.menu,
-            color: Color.fromRGBO(165, 176, 168, 1),
-              size: 50,
+        drawer: const NavBar(),
+        appBar: AppBar(
+          leading: Builder(
+            builder: (BuildContext context) {
+              return IconButton(
+                icon: const Icon(
+                  Icons.menu,
+                  color: Color.fromRGBO(165, 176, 168, 1),
+                  size: 50,
+                ),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+                tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+              );
+            },
           ),
-          onPressed: () {
-            Scaffold.of(context).openDrawer();
-          },
-          tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-         );
-      },
-    ),
-      actions: [
-        Container(
-            child: IconButton(
-                onPressed: () => Navigator.pushNamed(context, '/'),
-                icon: const Icon(Icons.arrow_back,
-                 color: Color.fromRGBO(165, 176, 168, 1),
-                 size: 50,
-                 )
-             )
-        )
-      ],
-
-      backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
-      title: Image.asset(
-        'assets/images/rohawktics.png',
-        width: 75,
-        height: 75,
-        alignment: Alignment.center,
-      ),
-    ));
+          actions: [
+            Container(
+                child: IconButton(
+                    onPressed: () => Navigator.pushNamed(context, '/'),
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      color: Color.fromRGBO(165, 176, 168, 1),
+                      size: 50,
+                    )))
+          ],
+          backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
+          title: Image.asset(
+            'assets/images/rohawktics.png',
+            width: 75,
+            height: 75,
+            alignment: Alignment.center,
+          ),
+        ));
   }
 }
 
@@ -338,101 +306,91 @@ class SchedulePage extends StatefulWidget {
 }
 
 class _SchedulePageState extends State<SchedulePage> {
-=======
->>>>>>> Stashed changes
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    drawer: const NavBar(
-      ),
-      appBar: AppBar(
-        leading: Builder(
-      builder: (BuildContext context) {
-        return IconButton(
-          icon: const Icon(
-            Icons.menu,
-            color: Color.fromRGBO(165, 176, 168, 1),
-              size: 50,
+        drawer: const NavBar(),
+        appBar: AppBar(
+          leading: Builder(
+            builder: (BuildContext context) {
+              return IconButton(
+                icon: const Icon(
+                  Icons.menu,
+                  color: Color.fromRGBO(165, 176, 168, 1),
+                  size: 50,
+                ),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+                tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+              );
+            },
           ),
-          onPressed: () {
-            Scaffold.of(context).openDrawer();
-          },
-          tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-         );
-      },
-    ),
-      actions: [
-        Container(
-            child: IconButton(
-                onPressed: () => Navigator.pushNamed(context, '/'),
-                icon: const Icon(Icons.arrow_back,
-                 color: Color.fromRGBO(165, 176, 168, 1),
-                 size: 50,
-                 )
-             )
-        )
-      ],
-
-      backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
-      title: Image.asset(
-        'assets/images/rohawktics.png',
-        width: 75,
-        height: 75,
-        alignment: Alignment.center,
-      ),
-    ),
-    body: Center(
-        child: Column(
-          children: <Widget>[
-            const SizedBox(
-              height: 20,
-            ),
+          actions: [
             Container(
-              width: 350,
-              height: 125,
-              decoration: BoxDecoration(
-                color: const Color.fromRGBO(82, 79, 79, 1),
-                borderRadius: BorderRadius.circular(12.0),
-                 
-              ),
+                child: IconButton(
+                    onPressed: () => Navigator.pushNamed(context, '/'),
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      color: Color.fromRGBO(165, 176, 168, 1),
+                      size: 50,
+                    )))
+          ],
+          backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
+          title: Image.asset(
+            'assets/images/rohawktics.png',
+            width: 75,
+            height: 75,
+            alignment: Alignment.center,
+          ),
+        ),
+        body: Center(
+            child: Column(children: <Widget>[
+          const SizedBox(
+            height: 20,
+          ),
+          Container(
+            width: 350,
+            height: 125,
+            decoration: BoxDecoration(
+              color: const Color.fromRGBO(82, 79, 79, 1),
+              borderRadius: BorderRadius.circular(12.0),
             ),
-            const SizedBox(
-              height: 20,
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          Container(
+            width: 350,
+            height: 125,
+            decoration: BoxDecoration(
+              color: const Color.fromRGBO(82, 79, 79, 1),
+              borderRadius: BorderRadius.circular(12.0),
             ),
-            Container(
-              width: 350,
-              height: 125,
-              decoration: BoxDecoration(
-                color: const Color.fromRGBO(82, 79, 79, 1),
-                borderRadius: BorderRadius.circular(12.0),
-              ),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          Container(
+            width: 350,
+            height: 125,
+            decoration: BoxDecoration(
+              color: const Color.fromRGBO(82, 79, 79, 1),
+              borderRadius: BorderRadius.circular(12.0),
             ),
-            const SizedBox(
-              height: 20,
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          Container(
+            width: 350,
+            height: 125,
+            decoration: BoxDecoration(
+              color: const Color.fromRGBO(82, 79, 79, 1),
+              borderRadius: BorderRadius.circular(12.0),
             ),
-            Container(
-              width: 350,
-              height: 125,
-              decoration: BoxDecoration(
-                color: const Color.fromRGBO(82, 79, 79, 1),
-                borderRadius: BorderRadius.circular(12.0),
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Container(
-              width: 350,
-              height: 125,
-              decoration: BoxDecoration(
-                color: const Color.fromRGBO(82, 79, 79, 1),
-                borderRadius: BorderRadius.circular(12.0),
-              ),
-            ),
-          ]
-        )
-    )
-    );
+          ),
+        ])));
   }
 }
 
@@ -447,117 +405,104 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        drawer: const NavBar(
-      ),
-<<<<<<< Updated upstream
-      appBar: AppBar(
-        leading: Builder(
-      builder: (BuildContext context) {
-        return IconButton(
-          icon: const Icon(
-            Icons.menu,
-            color: Color.fromRGBO(165, 176, 168, 1),
-              size: 50,
+        drawer: const NavBar(),
+        appBar: AppBar(
+          leading: Builder(
+            builder: (BuildContext context) {
+              return IconButton(
+                icon: const Icon(
+                  Icons.menu,
+                  color: Color.fromRGBO(165, 176, 168, 1),
+                  size: 50,
+                ),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+                tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+              );
+            },
           ),
-          onPressed: () {
-            Scaffold.of(context).openDrawer();
-          },
-          tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-         );
-      },
-    ),
-      actions: [
-        Container(
-            child: IconButton(
-                onPressed: () => Navigator.pushNamed(context, '/'),
-                icon: const Icon(Icons.arrow_back,
-                 color: Color.fromRGBO(165, 176, 168, 1),
-                 size: 50,
-                 )
-             )
-        )
-      ],
-
-      backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
-      title: Image.asset(
-        'assets/images/rohawktics.png',
-        width: 75,
-        height: 75,
-        alignment: Alignment.center,
-      ),
-    ),
-    body: Center(
-        child: Column(
-          children: <Widget>[
-            const Gap(20),
-            const Text("What is the drive train?",
-            style: TextStyle(color: Colors.white, fontSize: 20),),
-            TextField(
-              style: const TextStyle(
-                fontSize: 20
-              ),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: const Color.fromRGBO(255, 255, 255, 1),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              hintText: 'Input answer here',
-            )
-            ),
-            const Gap(20),
-            const Text("What is the dimensions of your Robot",
+          actions: [
+            Container(
+                child: IconButton(
+                    onPressed: () => Navigator.pushNamed(context, '/'),
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      color: Color.fromRGBO(165, 176, 168, 1),
+                      size: 50,
+                    )))
+          ],
+          backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
+          title: Image.asset(
+            'assets/images/rohawktics.png',
+            width: 75,
+            height: 75,
+            alignment: Alignment.center,
+          ),
+        ),
+        body: Center(
+            child: Column(children: <Widget>[
+          const Gap(20),
+          const Text(
+            "What is the drive train?",
             style: TextStyle(color: Colors.white, fontSize: 20),
-            ),
-            TextField(
-              style: const TextStyle(
-                fontSize: 20
-              ),
+          ),
+          TextField(
+              style: const TextStyle(fontSize: 20),
               decoration: InputDecoration(
                 filled: true,
                 fillColor: const Color.fromRGBO(255, 255, 255, 1),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              hintText: 'Input answer here',
-            )
-            ),
-            const Gap(20),
-            const Text("What is the weight of your Robot?",
-            style: TextStyle(color: Colors.white, fontSize: 20),),
-            TextField(
-              style: const TextStyle(
-                fontSize: 20
-              ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                hintText: 'Input answer here',
+              )),
+          const Gap(20),
+          const Text(
+            "What is the dimensions of your Robot",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          TextField(
+              style: const TextStyle(fontSize: 20),
               decoration: InputDecoration(
                 filled: true,
                 fillColor: const Color.fromRGBO(255, 255, 255, 1),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              hintText: 'Input answer here',
-            )
-            ),
-            const Gap(20),
-            const Text("How did you create your grabber/shooter",
-            style: TextStyle(color: Colors.white, fontSize: 19),),
-            TextField(
-              style: const TextStyle(
-                fontSize: 20
-              ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                hintText: 'Input answer here',
+              )),
+          const Gap(20),
+          const Text(
+            "What is the weight of your Robot?",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          TextField(
+              style: const TextStyle(fontSize: 20),
               decoration: InputDecoration(
                 filled: true,
                 fillColor: const Color.fromRGBO(255, 255, 255, 1),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              hintText: 'Input answer here',
-            )
-            )
-          ]
-        )
-    )
-    );
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                hintText: 'Input answer here',
+              )),
+          const Gap(20),
+          const Text(
+            "How did you create your grabber/shooter",
+            style: TextStyle(color: Colors.white, fontSize: 19),
+          ),
+          TextField(
+              style: const TextStyle(fontSize: 20),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: const Color.fromRGBO(255, 255, 255, 1),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                hintText: 'Input answer here',
+              ))
+        ])));
   }
 }
 
@@ -572,50 +517,40 @@ class _SScoutingPageState extends State<SScoutingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        drawer: const NavBar(
-      ),
-      appBar: AppBar(
-        leading: Builder(
-      builder: (BuildContext context) {
-        return IconButton(
-          icon: const Icon(
-            Icons.menu,
-            color: Color.fromRGBO(165, 176, 168, 1),
-              size: 50,
+        drawer: const NavBar(),
+        appBar: AppBar(
+          leading: Builder(
+            builder: (BuildContext context) {
+              return IconButton(
+                icon: const Icon(
+                  Icons.menu,
+                  color: Color.fromRGBO(165, 176, 168, 1),
+                  size: 50,
+                ),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+                tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+              );
+            },
           ),
-          onPressed: () {
-            Scaffold.of(context).openDrawer();
-          },
-          tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-         );
-      },
-    ),
-      actions: [
-        Container(
-            child: IconButton(
-                onPressed: () => Navigator.pushNamed(context, '/'),
-                icon: const Icon(Icons.arrow_back,
-                 color: Color.fromRGBO(165, 176, 168, 1),
-                 size: 50,
-                 )
-             )
-        )
-      ],
-
-      backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
-      title: Image.asset(
-        'assets/images/rohawktics.png',
-        width: 75,
-        height: 75,
-        alignment: Alignment.center,
-      ),
-    )
-    );
+          actions: [
+            Container(
+                child: IconButton(
+                    onPressed: () => Navigator.pushNamed(context, '/'),
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      color: Color.fromRGBO(165, 176, 168, 1),
+                      size: 50,
+                    )))
+          ],
+          backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
+          title: Image.asset(
+            'assets/images/rohawktics.png',
+            width: 75,
+            height: 75,
+            alignment: Alignment.center,
+          ),
+        ));
   }
 }
-=======
-      body: Container(),
-    );
-  }
-}
->>>>>>> Stashed changes

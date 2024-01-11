@@ -1,7 +1,7 @@
 // // import 'dart:js_interop_unsafe';
-<<<<<<< Updated upstream
+
 dynamic pageData = {
-  "auto": 0, //0 not in auto //1 in auto 
+  "auto": 0, //0 not in auto //1 in auto
   "autoPickup": 0, //0 not picked up, 1 picked up
   "floorPickup": 0, //0 not picked up, 1 picked up
   "feederPickup": 0, //0 not picked up, 1 picked up
@@ -16,26 +16,10 @@ dynamic pageData = {
   "speakerPlacement": 0, //0 0 notes, 1 1 note, 2 2 notes, 3 3 notes, 4 4 notes
   "ampPlacement": 0, //0 0 notes, 1 1 note, 2 2 notes, 3 3 notes, 4 4 notes
   "stagePlacement": 0, //0 0 notes, 1 1 note, 2 2 notes, 3 3 notes
-  "stageHang": 0, //0 = no hang,1 hang on one closest to field,2 hang on one closest to amp,3 hang on other one
+  "stageHang":
+      0, //0 = no hang,1 hang on one closest to field,2 hang on one closest to amp,3 hang on other one
   "microphonePlacement": 0, //0 = not landed, 1 landed
 };
 dynamic reorganizePD(dynamic data) {
-
   return pageData;
 }
-=======
-
-dynamic pageData = {
-  "instance": 15,
-  "instance2": 49,
-  "grandold time": 68,
-};
-
-dynamic reorganizePD(dynamic data) {
-  dynamic temp;
-  temp = pageData["instance"];
-  pageData["instance"] = pageData["grandold time"];
-  pageData["grandold time"] = temp;
-  return pageData;
-}
->>>>>>> Stashed changes
