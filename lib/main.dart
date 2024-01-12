@@ -1,10 +1,9 @@
+// ignore_for_file: avoid_unnecessary_containers, avoid_print, unused_import
 import 'package:flutter/material.dart';
 import 'navbar.dart';
-// ignore: unused_import
 import 'package:shared_preferences/shared_preferences.dart';
 import 'sp.dart';
 import 'package:gap/gap.dart';
-//ignore: unused_import
 import 'variables.dart' as v;
 
 void main() {
@@ -199,56 +198,6 @@ class _ScoutingHomePageState extends State<ScoutingHomePage> {
   }
 }
 
-class AnalyticsPage extends StatefulWidget {
-  const AnalyticsPage({super.key, required this.title});
-  final String title;
-  @override
-  State<AnalyticsPage> createState() => _AnalyticsHomePageState();
-}
-
-class _AnalyticsHomePageState extends State<AnalyticsPage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        drawer: const NavBar(),
-        appBar: AppBar(
-          leading: Builder(
-            builder: (BuildContext context) {
-              return IconButton(
-                icon: const Icon(
-                  Icons.menu,
-                  color: Color.fromRGBO(165, 176, 168, 1),
-                  size: 50,
-                ),
-                onPressed: () {
-                  Scaffold.of(context).openDrawer();
-                },
-                tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-              );
-            },
-          ),
-          actions: [
-            Container(
-                child: IconButton(
-                    onPressed: () => Navigator.pushNamed(context, '/'),
-                    icon: const Icon(
-                      Icons.arrow_back,
-                      color: Color.fromRGBO(165, 176, 168, 1),
-                      size: 50,
-                    )))
-          ],
-          backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
-          title: Image.asset(
-            'assets/images/rohawktics.png',
-            width: 75,
-            height: 75,
-            alignment: Alignment.center,
-          ),
-        ),
-        body: const Center(child: Column(children: <Widget>[])));
-  }
-}
-
 class ScoutingPage extends StatefulWidget {
   const ScoutingPage({super.key, required this.title});
   final String title;
@@ -294,7 +243,241 @@ class _ScoutingPageState extends State<ScoutingPage> {
             height: 75,
             alignment: Alignment.center,
           ),
-        ));
+        ),
+        body: Center(
+        child: Column(children: <Widget>[
+          const Gap(20),
+          const Text(
+            "Team Number",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          TextField(
+              style: const TextStyle(fontSize: 20),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: const Color.fromRGBO(255, 255, 255, 1),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.0)
+                ),
+                hintText: 'ex: 3824',
+              )
+              ),
+            const Gap(80),
+            const Text(
+            "Match Number",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          TextField(
+              style: const TextStyle(fontSize: 20),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: const Color.fromRGBO(255, 255, 255, 1),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.0)
+                ),
+                hintText: 'ex: 1',
+              )
+              ),
+        ]
+        )
+      )
+    );
+  }
+}
+
+class MatchNumPage extends StatefulWidget {
+  const MatchNumPage({super.key, required this.title});
+  final String title;
+  @override
+  State<MatchNumPage> createState() => _MatchNumPageState();
+}
+class _MatchNumPageState extends State<MatchNumPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        drawer: const NavBar(),
+        appBar: AppBar(
+          leading: Builder(
+          builder: (BuildContext context) {
+              return IconButton(
+                icon: const Icon(
+                  Icons.menu,
+                  color: Color.fromRGBO(165, 176, 168, 1),
+                  size: 50,
+                ),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+                tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+              );
+            },
+          ),
+          actions: [
+            Container(
+                child: IconButton(
+                    onPressed: () => Navigator.pushNamed(context, '/'),
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      color: Color.fromRGBO(165, 176, 168, 1),
+                      size: 50,
+                    )))
+          ],
+          backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
+          title: Image.asset(
+            'assets/images/rohawktics.png',
+            width: 75,
+            height: 75,
+            alignment: Alignment.center,
+          ),
+        )
+      );
+  }
+}
+
+class AutoPage extends StatefulWidget {
+  const AutoPage({super.key, required this.title});
+  final String title;
+  @override
+  State<AutoPage> createState() => _AutoPageState();
+}
+class _AutoPageState extends State<AutoPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        drawer: const NavBar(),
+        appBar: AppBar(
+          leading: Builder(
+          builder: (BuildContext context) {
+              return IconButton(
+                icon: const Icon(
+                  Icons.menu,
+                  color: Color.fromRGBO(165, 176, 168, 1),
+                  size: 50,
+                ),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+                tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+              );
+            },
+          ),
+          actions: [
+            Container(
+                child: IconButton(
+                    onPressed: () => Navigator.pushNamed(context, '/'),
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      color: Color.fromRGBO(165, 176, 168, 1),
+                      size: 50,
+                    )))
+          ],
+          backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
+          title: Image.asset(
+            'assets/images/rohawktics.png',
+            width: 75,
+            height: 75,
+            alignment: Alignment.center,
+          ),
+        )
+      );
+  }
+}
+
+class TeleopPage extends StatefulWidget {
+  const TeleopPage({super.key, required this.title});
+  final String title;
+  @override
+  State<TeleopPage> createState() => _TeleopPageState();
+}
+class _TeleopPageState extends State<TeleopPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        drawer: const NavBar(),
+        appBar: AppBar(
+          leading: Builder(
+          builder: (BuildContext context) {
+              return IconButton(
+                icon: const Icon(
+                  Icons.menu,
+                  color: Color.fromRGBO(165, 176, 168, 1),
+                  size: 50,
+                ),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+                tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+              );
+            },
+          ),
+          actions: [
+            Container(
+                child: IconButton(
+                    onPressed: () => Navigator.pushNamed(context, '/'),
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      color: Color.fromRGBO(165, 176, 168, 1),
+                      size: 50,
+                    )))
+          ],
+          backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
+          title: Image.asset(
+            'assets/images/rohawktics.png',
+            width: 75,
+            height: 75,
+            alignment: Alignment.center,
+          ),
+        )
+      );
+  }
+}
+
+class EndgamePage extends StatefulWidget {
+  const EndgamePage({super.key, required this.title});
+  final String title;
+  @override
+  State<EndgamePage> createState() => _EndgamePageState();
+}
+class _EndgamePageState extends State<EndgamePage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        drawer: const NavBar(),
+        appBar: AppBar(
+          leading: Builder(
+          builder: (BuildContext context) {
+              return IconButton(
+                icon: const Icon(
+                  Icons.menu,
+                  color: Color.fromRGBO(165, 176, 168, 1),
+                  size: 50,
+                ),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+                tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+              );
+            },
+          ),
+          actions: [
+            Container(
+                child: IconButton(
+                    onPressed: () => Navigator.pushNamed(context, '/'),
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      color: Color.fromRGBO(165, 176, 168, 1),
+                      size: 50,
+                    )))
+          ],
+          backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
+          title: Image.asset(
+            'assets/images/rohawktics.png',
+            width: 75,
+            height: 75,
+            alignment: Alignment.center,
+          ),
+        )
+      );
   }
 }
 
@@ -390,9 +573,63 @@ class _SchedulePageState extends State<SchedulePage> {
               borderRadius: BorderRadius.circular(12.0),
             ),
           ),
-        ])));
+        ]
+        )
+        )
+        );
   }
 }
+
+class AnalyticsPage extends StatefulWidget {
+  const AnalyticsPage({super.key, required this.title});
+  final String title;
+  @override
+  State<AnalyticsPage> createState() => _AnalyticsHomePageState();
+}
+
+class _AnalyticsHomePageState extends State<AnalyticsPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        drawer: const NavBar(),
+        appBar: AppBar(
+          leading: Builder(
+            builder: (BuildContext context) {
+              return IconButton(
+                icon: const Icon(
+                  Icons.menu,
+                  color: Color.fromRGBO(165, 176, 168, 1),
+                  size: 50,
+                ),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+                tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+              );
+            },
+          ),
+          actions: [
+            Container(
+                child: IconButton(
+                    onPressed: () => Navigator.pushNamed(context, '/'),
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      color: Color.fromRGBO(165, 176, 168, 1),
+                      size: 50,
+                    )))
+          ],
+          backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
+          title: Image.asset(
+            'assets/images/rohawktics.png',
+            width: 75,
+            height: 75,
+            alignment: Alignment.center,
+          ),
+        ),
+        body: const Center(child: Column(children: <Widget>[])));
+  }
+}
+
 
 class PitScoutingPage extends StatefulWidget {
   const PitScoutingPage({super.key, required this.title});
@@ -441,7 +678,7 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
           ),
         ),
         body: Center(
-            child: Column(children: <Widget>[
+        child: Column(children: <Widget>[
           const Gap(20),
           const Text(
             "What is the drive train?",
@@ -502,7 +739,10 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
                 ),
                 hintText: 'Input answer here',
               ))
-        ])));
+        ]
+        )
+      )
+    );
   }
 }
 
@@ -551,6 +791,7 @@ class _SScoutingPageState extends State<SScoutingPage> {
             height: 75,
             alignment: Alignment.center,
           ),
-        ));
+        )
+      );
   }
 }

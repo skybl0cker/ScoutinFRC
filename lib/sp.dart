@@ -12,10 +12,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 void setPref(String robotNum, String matchNum, Map<Object, int> pData) async {
   // Obtain shared preferences.
 final SharedPreferences pagePref = await SharedPreferences.getInstance();
-List<String> temp = ["hello", "goodbye"];
+List<String> temp = <String>["","","","","","","","","","","","","","","",""];
 temp[0] = pData["autoPickup"].toString(); 
 temp[1] = pData["floorPickup"].toString(); 
-temp[2] = pData["feederPickup"].toString(); 
+temp[2] = (pData["feederPickup"].toString()); 
 temp[3] = pData["1"].toString(); 
 temp[4] = pData["2"].toString(); 
 temp[5] = pData["3"].toString(); 
