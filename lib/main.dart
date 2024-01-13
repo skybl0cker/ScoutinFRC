@@ -387,8 +387,8 @@ class _AutoPageState extends State<AutoPage> {
         ),
         body: Center(
         child: Column(children: <Widget>[
-          const Text("Auto Scoring", style: TextStyle(color: Colors.white, fontSize: 25),)
-          ,
+          const Text("Auto Scoring", style: TextStyle(color: Colors.white, fontSize: 25),
+          ),
           ToggleButtons(
             onPressed: (int index) {
               setState(() {
