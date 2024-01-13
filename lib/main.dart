@@ -23,10 +23,10 @@ class ScoutingApp extends StatelessWidget {
       title: 'Scouting',
       initialRoute: '/',
       routes: <String, WidgetBuilder>{
-        '/': (context) => const ScoutingHomePage(
+        '/': (context) => const HomePage(
               title: '',
             ),
-        '/scouting': (context) => const ScoutingPage(
+        '/scouting': (context) => const MatchNumPage(
               title: '',
             ),
         '/auto': (context) => const AutoPage(
@@ -59,14 +59,14 @@ class ScoutingApp extends StatelessWidget {
   }
 }
 
-class ScoutingHomePage extends StatefulWidget {
-  const ScoutingHomePage({super.key, required this.title});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key, required this.title});
   final String title;
   @override
-  State<ScoutingHomePage> createState() => _ScoutingHomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _ScoutingHomePageState extends State<ScoutingHomePage> {
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -212,15 +212,14 @@ class _ScoutingHomePageState extends State<ScoutingHomePage> {
   }
 }
 
-class ScoutingPage extends StatefulWidget {
-  const ScoutingPage({super.key, required this.title});
+class MatchNumPage extends StatefulWidget {
+  const MatchNumPage({super.key, required this.title});
   final String title;
   @override
-  State<ScoutingPage> createState() => _ScoutingPageState();
+  State<MatchNumPage> createState() => _MatchNumPageState();
 }
 
-class _ScoutingPageState extends State<ScoutingPage> {
-    final List<bool> selectedStart = <bool>[false, false, false];
+class _MatchNumPageState extends State<MatchNumPage> {
   @override
   Widget build(BuildContext context) {
     TextEditingController matchNum = TextEditingController();
@@ -324,6 +323,12 @@ class _ScoutingPageState extends State<ScoutingPage> {
   }
 }
 
+const List<Widget> autoPosition = <Widget>[
+  Text('Left'),
+  Text('Middle'),
+  Text('Right')
+];
+
 const List<Widget> autoScoring = <Widget>[
   Text('None'),
   Text('Cargo'),
@@ -347,6 +352,8 @@ class AutoPage extends StatefulWidget {
 class _AutoPageState extends State<AutoPage> {
   bool toggleButton1 = false;
     final List<bool> selectedStart = <bool>[false, false, false];
+    final List<bool> selectedAuto = <bool>[false, false, false];
+    final List<bool> selectedEnd = <bool>[false, false, false];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -387,7 +394,8 @@ class _AutoPageState extends State<AutoPage> {
         ),
         body: Center(
         child: Column(children: <Widget>[
-          const Text("Auto Scoring", style: TextStyle(color: Colors.white, fontSize: 25),
+          const Gap(20),
+          const Text("Starting Position", style: TextStyle(color: Colors.white, fontSize: 25),
           ),
           ToggleButtons(
             onPressed: (int index) {
@@ -399,17 +407,83 @@ class _AutoPageState extends State<AutoPage> {
               );
             },
           borderRadius: const BorderRadius.all(Radius.circular(12)),
-          selectedBorderColor: const Color.fromRGBO(65, 104, 196, 1), borderWidth: 2.5,
+          selectedBorderColor: const Color.fromRGBO(198, 65, 65, 1), borderWidth: 2.5,
           selectedColor: Colors.black,
-          fillColor: Colors.blue,
+          fillColor: Colors.red,
           color: Colors.white,
           constraints: const BoxConstraints(
           minHeight: 40.0,
           minWidth: 80.0,
           ),
           isSelected: selectedStart, // MAKE A NEW ONE OF THESE
+           children: autoPosition, //MAKE A NEW ONE OF THESE
+         ),
+          const Gap(20),
+          const Text("Auto Scoring", style: TextStyle(color: Colors.white, fontSize: 25),
+          ),
+          ToggleButtons(
+            onPressed: (int index) {
+              setState(() {
+                for (int i = 0; i < selectedAuto.length; i++) {
+                  selectedAuto[i] = i == index; //CHECK AND MAKE SURE IT DOES WHAT IT SHOULD
+                }
+              }
+              );
+            },
+          borderRadius: const BorderRadius.all(Radius.circular(12)),
+          selectedBorderColor: const Color.fromRGBO(50, 87, 39, 1), borderWidth: 2.5,
+          selectedColor: Colors.black,
+          fillColor: Colors.green,
+          color: Colors.white,
+          constraints: const BoxConstraints(
+          minHeight: 40.0,
+          minWidth: 80.0,
+          ),
+          isSelected: selectedAuto, // MAKE A NEW ONE OF THESE
            children: autoScoring, //MAKE A NEW ONE OF THESE
          ),
+         const Gap(20),
+          const Text("Did they leave community?", style: TextStyle(color: Colors.white, fontSize: 25),
+          ),
+          ToggleButtons(
+            onPressed: (int index) {
+              setState(() {
+                for (int i = 0; i < selectedEnd.length; i++) {
+                  selectedEnd[i] = i == index; //CHECK AND MAKE SURE IT DOES WHAT IT SHOULD
+                }
+              }
+              );
+            },
+          borderRadius: const BorderRadius.all(Radius.circular(12)),
+          selectedBorderColor: const Color.fromRGBO(196, 188, 65, 1), borderWidth: 2.5,
+          selectedColor: Colors.black,
+          fillColor: Colors.yellow,
+          color: Colors.white,
+          constraints: const BoxConstraints(
+          minHeight: 40.0,
+          minWidth: 80.0,
+          ),
+          isSelected: selectedEnd, // MAKE A NEW ONE OF THESE
+           children: communityLeave, //MAKE A NEW ONE OF THESE
+         ),
+         const Gap(50),
+         ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/teleop');
+              },
+              style: TextButton.styleFrom(
+                textStyle: const TextStyle(
+                  fontSize: 40,
+                ),
+                padding: const EdgeInsets.only(
+                    left: 14, top: 12, right: 14, bottom: 12),
+                backgroundColor: Colors.blue,
+                side: const BorderSide(
+                    width: 3, color: Color.fromRGBO(65, 104, 196, 1)),
+              ), child: const Text("Confirm",
+              style: TextStyle(color: Colors.white, fontSize: 25),
+              ),
+              )
         ]
         )
       )
@@ -447,7 +521,7 @@ class _TeleopPageState extends State<TeleopPage> {
           actions: [
             Container(
                 child: IconButton(
-                    onPressed: () => Navigator.pushNamed(context, '/'),
+                    onPressed: () => Navigator.pushNamed(context, '/auto'),
                     icon: const Icon(
                       Icons.arrow_back,
                       color: Color.fromRGBO(165, 176, 168, 1),
@@ -461,8 +535,14 @@ class _TeleopPageState extends State<TeleopPage> {
             height: 75,
             alignment: Alignment.center,
           ),
-        )
-      );
+        ),
+        body: const Center(
+        child: Column(children: <Widget>[
+          
+        ]
+      )
+    )
+   );
   }
 }
 
