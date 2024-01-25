@@ -902,6 +902,7 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
     TextEditingController dimensionText = TextEditingController();
     TextEditingController weightText = TextEditingController();
     TextEditingController mechanismText = TextEditingController();
+    TextEditingController scoreText = TextEditingController();
     return Scaffold(
         drawer: const NavBar(),
         appBar: AppBar(
@@ -939,7 +940,9 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
           ),
         ),
         body: Center(
-        child: Column(children: <Widget>[
+        child: SingleChildScrollView(  
+        child: Column(
+          children: <Widget>[
           const Gap(20),
           const Text(
             "What is the drive train?",
@@ -990,11 +993,28 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
               )),
           const Gap(20),
           const Text(
-            "How did you create your grabber/shooter",
+            "Do you have a floor or feeder intake?",
             style: TextStyle(color: Colors.white, fontSize: 19),
           ),
           TextField(
             controller: mechanismText,
+              style: const TextStyle(fontSize: 20),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: const Color.fromRGBO(255, 255, 255, 1),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                hintText: 'Input answer here',
+              )
+              ),
+              Gap(20),
+              const Text(
+              "Do you score though the speaker, amp, or both?",
+            style: TextStyle(color: Colors.white, fontSize: 19),
+          ),
+          TextField(
+            controller: scoreText,
               style: const TextStyle(fontSize: 20),
               decoration: InputDecoration(
                 filled: true,
@@ -1012,6 +1032,7 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
                 print(dimensionText.text);
                 print(weightText.text);
                 print(mechanismText.text);
+                print(scoreText.text);
                 Navigator.pushNamed(context, '/');
               },
               style: TextButton.styleFrom(
@@ -1030,6 +1051,7 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
         ]
         )
       )
+        )
     );
   }
 }
