@@ -148,7 +148,7 @@ class _HomePageState extends State<HomePage> {
               child: const Text(
                 "Scouting",
                 style: TextStyle(color: Colors.white),
-              ).animate().fade(delay: 500.ms),
+              ).animate().fade(delay: 500.ms).slide(delay: 500.ms),
             ),
         ),
             const SizedBox(
@@ -196,7 +196,7 @@ class _HomePageState extends State<HomePage> {
               child: const Text(
                 "Schedule",
                 style: TextStyle(color: Colors.white),
-              ).animate().fade(delay: 700.ms),
+              ).animate().fade(delay: 700.ms).slide(delay: 700.ms),
             ),
         ),
             const SizedBox(
@@ -244,7 +244,7 @@ class _HomePageState extends State<HomePage> {
               child: const Text(
                 "Analytics",
                 style: TextStyle(color: Colors.white),
-              ).animate().fade(delay: 900.ms),
+              ).animate().fade(delay: 900.ms).slide(delay: 900.ms),
             ),
         ),
             const SizedBox(
@@ -292,7 +292,7 @@ class _HomePageState extends State<HomePage> {
               child: const Text(
                 "Pit Scouting",
                 style: TextStyle(color: Colors.white),
-              ).animate().fade(delay: 1100.ms),
+              ).animate().fade(delay: 1100.ms).slide(delay: 1100.ms),
             ),
         ),
             const SizedBox(
@@ -342,7 +342,7 @@ class _HomePageState extends State<HomePage> {
               child: const Text(
                 "Super Scouting",
                 style: TextStyle(color: Colors.white),
-              ).animate().fade(delay: 1350.ms),
+              ).animate().fade(delay: 1350.ms).slide(delay: 1350.ms),
             ),
         ),
             const SizedBox(
@@ -473,13 +473,13 @@ const List<Widget> autoPosition = <Widget>[
 ];
 
 const List<Widget> autoScoring = <Widget>[
-  Text('None'),
-  Text('Cargo'),
-  Text('Scored')
+  Text('Neither'),
+  Text('Started w/Cargo'),
+  Text('Scored Cargo')
 ];
 
 const List<Widget> communityLeave = <Widget>[
-  Text('None'),
+  Text('Neither'),
   Text('Inside'),
   Text('Left')
 ];
