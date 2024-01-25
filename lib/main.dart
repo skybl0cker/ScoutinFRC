@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_unnecessary_containers, avoid_print, unused_import, unnecessary_import, prefer_const_constructors
+// ignore_for_file: avoid_unnecessary_containers, avoid_print, unused_import, unnecessary_import, prefer_const_constructors, prefer_const_literals_to_create_immutables
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -679,13 +679,15 @@ class _TeleopPageState extends State<TeleopPage> {
             alignment: Alignment.center,
           ),
         ),
-        body: const Center(
-        child: Column(children: <Widget>[
-          
-        ]
+        body: Center(
+        child: Image.asset('assets/images/field.png',
+        alignment: Alignment.topCenter,
+        width: 350,
+        height: 350,
+        ),   
       )
-    )
-   );
+    );
+
   }
 }
 

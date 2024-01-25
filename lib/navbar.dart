@@ -12,12 +12,12 @@ class NavBar extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
-            accountName: const Text('Cash Egley (Scouting Captain)'),
-            accountEmail: const Text('cashegley@gmail.com'),
+            accountName: const Text('Placeholder'),
+            accountEmail: const Text('Placeholder'),
             currentAccountPicture: CircleAvatar(
               child: ClipOval(
                 child: Image.network(
-                  'https://ca.slack-edge.com/T0HR9PPK2-U02FHNQCSJY-04bae1a0999a-512',
+                  'https://cdn.vox-cdn.com/thumbor/pjAFMcil-hO0FghvSAoJPuP2XqQ=/1400x1050/filters:format(jpeg)/cdn.vox-cdn.com/uploads/chorus_asset/file/25125289/vlcsnap_2023_12_01_10h37m31s394.jpg',
                   fit: BoxFit.cover,
                   width: 90,
                   height: 90,
