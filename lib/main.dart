@@ -350,7 +350,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
-      ),
+      )
     );
   }
 }
@@ -462,7 +462,7 @@ class _MatchNumPageState extends State<MatchNumPage> {
         ]
         )
       )
-    );
+        );
   }
 }
 
@@ -680,6 +680,7 @@ class _TeleopPageState extends State<TeleopPage> {
           ),
         ),
         body: Center(
+
         child: Image.asset('assets/images/field.png',
         alignment: Alignment.topCenter,
         width: 350,
@@ -787,7 +788,8 @@ class _SchedulePageState extends State<SchedulePage> {
           ),
         ),
         body: Center(
-            child: Column(children: <Widget>[
+            child: Column(
+              children: <Widget>[
           const SizedBox(
             height: 20,
           ),
@@ -885,7 +887,15 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
             alignment: Alignment.center,
           ),
         ),
-        body: const Center(child: Column(children: <Widget>[])));
+        body: const Center(
+          child: Column(
+            children: <Widget>[
+
+            ]
+            )
+            )
+            );
+    
   }
 }
 
@@ -1012,7 +1022,7 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
               ),
               Gap(20),
               const Text(
-              "Do you score though the speaker, amp, or both?",
+              "Do you score through the speaker, amp, or both?",
             style: TextStyle(color: Colors.white, fontSize: 19),
           ),
           TextField(
