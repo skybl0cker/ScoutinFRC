@@ -968,6 +968,7 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
             controller: drivetrainText,
               style: const TextStyle(fontSize: 20),
               decoration: InputDecoration(
+                contentPadding: EdgeInsets.fromLTRB(5, 10, 5, 10),
                 filled: true,
                 fillColor: const Color.fromRGBO(255, 255, 255, 1),
                 border: OutlineInputBorder(
