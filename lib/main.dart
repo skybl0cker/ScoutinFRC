@@ -1,6 +1,5 @@
-// ignore_for_file: avoid_unnecessary_containers, avoid_print, unused_import, unnecessary_import, prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: avoid_unnecessary_containers, avoid_print, unused_import, unnecessary_import, prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'navbar.dart';
@@ -96,7 +95,6 @@ class _HomePageState extends State<HomePage> {
           'assets/images/rohawktics.png',
           width: 75,
           height: 75,
-          alignment: Alignment.center,
         ),
       ),
       body: Center(
@@ -641,6 +639,11 @@ class TeleopPage extends StatefulWidget {
   State<TeleopPage> createState() => _TeleopPageState();
 }
 class _TeleopPageState extends State<TeleopPage> {
+  bool? isChecked = true;
+  bool? isChecked2 = true;
+  bool? isChecked3 = true;
+  bool? isChecked4 = true;
+  bool? isChecked5 = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -680,14 +683,112 @@ class _TeleopPageState extends State<TeleopPage> {
           ),
         ),
         body: Center(
-
-        child: Image.asset('assets/images/field.png',
-        alignment: Alignment.topCenter,
+        child: Column(children: <Widget>[
+           Gap(20),
+           Text(
+            "Field",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 24
+            ),
+        ),
+        Gap(4),  
+        Container(
+          child: Column(
+            children: [
+          CheckboxListTile(
+          controlAffinity: ListTileControlAffinity.leading,
+          checkColor: Colors.white,
+          activeColor: Colors.grey,
+          side:
+            BorderSide(width: 2, color: Colors.grey),
+          isError: true,
+          tristate: false,
+          value: isChecked,
+          onChanged: (bool? value) {
+            setState(() {
+              isChecked = value;
+            });
+          },
+        ),
+        Gap(4),
+        CheckboxListTile(
+          controlAffinity: ListTileControlAffinity.leading,
+          checkColor: Colors.white,
+          activeColor: Colors.grey,
+          side:
+            BorderSide(width: 2, color: Colors.grey),
+          isError: true,
+          tristate: false,
+          value: isChecked2,
+          onChanged: (bool? value) {
+            setState(() {
+              isChecked2 = value;
+            });
+          },
+        ),
+        Gap(4),
+        CheckboxListTile(
+          controlAffinity: ListTileControlAffinity.leading,
+          checkColor: Colors.white,
+          activeColor: Colors.grey,
+          side:
+            BorderSide(width: 2, color: Colors.grey),
+          isError: true,
+          tristate: false,
+          value: isChecked3,
+          onChanged: (bool? value) {
+            setState(() {
+              isChecked3 = value;
+            });
+          },
+        ),
+        Gap(4),
+        CheckboxListTile(
+          controlAffinity: ListTileControlAffinity.leading,
+          checkColor: Colors.white,
+          activeColor: Colors.grey,
+          side:
+            BorderSide(width: 2, color: Colors.grey),
+          isError: true,
+          tristate: false,
+          value: isChecked4,
+          onChanged: (bool? value) {
+            setState(() {
+              isChecked4 = value;
+            });
+          },
+        ),
+        Gap(4),
+        CheckboxListTile(
+          controlAffinity: ListTileControlAffinity.leading,
+          checkColor: Colors.white,
+          activeColor: Colors.grey,
+          side:
+            BorderSide(width: 2, color: Colors.grey),
+          isError: true,
+          tristate: false,
+          value: isChecked5,
+          onChanged: (bool? value) {
+            setState(() {
+              isChecked5 = value;
+            });
+          },
+        ),
+            ],
+          ),
+          decoration: BoxDecoration(image:DecorationImage(
+            image: AssetImage('assets/images/field_upscaled.png'),
+             ),
+        ),
+  
         width: 350,
         height: 350,
-        ),   
-      )
-    );
+        alignment: Alignment.topCenter,),
+      ],
+    )       
+  )
+);
 
   }
 }
@@ -959,32 +1060,34 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
         child: SingleChildScrollView(  
         child: Column(
           children: <Widget>[
-          const Gap(20),
           const Text(
             "What is the drive train?",
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
           TextField(
+            textAlign: TextAlign.center,
             controller: drivetrainText,
               style: const TextStyle(fontSize: 20),
               decoration: InputDecoration(
-                contentPadding: EdgeInsets.fromLTRB(5, 10, 5, 10),
+                contentPadding: EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
                 filled: true,
                 fillColor: const Color.fromRGBO(255, 255, 255, 1),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
                 hintText: 'Input answer here',
-              )),
+              )),              
           const Gap(20),
           const Text(
             "What is the dimensions of your Robot",
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
           TextField(
+            textAlign: TextAlign.center,
             controller: dimensionText,
               style: const TextStyle(fontSize: 20),
               decoration: InputDecoration(
+                contentPadding: EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
                 filled: true,
                 fillColor: const Color.fromRGBO(255, 255, 255, 1),
                 border: OutlineInputBorder(
@@ -998,9 +1101,11 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
           TextField(
+            textAlign: TextAlign.center,
             controller: weightText,
               style: const TextStyle(fontSize: 20),
               decoration: InputDecoration(
+                contentPadding: EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
                 filled: true,
                 fillColor: const Color.fromRGBO(255, 255, 255, 1),
                 border: OutlineInputBorder(
@@ -1014,9 +1119,11 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
             style: TextStyle(color: Colors.white, fontSize: 19),
           ),
           TextField(
+            textAlign: TextAlign.center,
             controller: mechanismText,
               style: const TextStyle(fontSize: 20),
               decoration: InputDecoration(
+                contentPadding: EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
                 filled: true,
                 fillColor: const Color.fromRGBO(255, 255, 255, 1),
                 border: OutlineInputBorder(
@@ -1028,12 +1135,14 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
               Gap(20),
               const Text(
               "Do you score through the speaker, amp, or both?",
-             style: TextStyle(color: Colors.white, fontSize: 19),
+             style: TextStyle(color: Colors.white, fontSize: 17),
           ),
           TextField(
+            textAlign: TextAlign.center,
             controller: scoreText,
               style: const TextStyle(fontSize: 20),
               decoration: InputDecoration(
+                contentPadding: EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
                 filled: true,
                 fillColor: const Color.fromRGBO(255, 255, 255, 1),
                 border: OutlineInputBorder(
@@ -1048,9 +1157,11 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
              style: TextStyle(color: Colors.white, fontSize: 19),
           ),
           TextField(
+            textAlign: TextAlign.center,
             controller: chainText,
               style: const TextStyle(fontSize: 20),
               decoration: InputDecoration(
+                contentPadding: EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
                 filled: true,
                 fillColor: const Color.fromRGBO(255, 255, 255, 1),
                 border: OutlineInputBorder(
@@ -1065,9 +1176,11 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
              style: TextStyle(color: Colors.white, fontSize: 19),
           ),
           TextField(
+            textAlign: TextAlign.center,
             controller: harmonyText,
               style: const TextStyle(fontSize: 20),
               decoration: InputDecoration(
+                contentPadding: EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
                 filled: true,
                 fillColor: const Color.fromRGBO(255, 255, 255, 1),
                 border: OutlineInputBorder(
@@ -1082,9 +1195,11 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
              style: TextStyle(color: Colors.white, fontSize: 19),
           ),
           TextField(
+              textAlign: TextAlign.center,
             controller: stagescoreText,
               style: const TextStyle(fontSize: 20),
               decoration: InputDecoration(
+                contentPadding: EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
                 filled: true,
                 fillColor: const Color.fromRGBO(255, 255, 255, 1),
                 border: OutlineInputBorder(
@@ -1096,12 +1211,14 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
               Gap(20),
               const Text(
               "Do you prioritize floor pickup or feeder pickup?",
-             style: TextStyle(color: Colors.white, fontSize: 19),
+             style: TextStyle(color: Colors.white, fontSize: 17),
           ),
           TextField(
+            textAlign: TextAlign.center,
             controller: feederfloorText,
               style: const TextStyle(fontSize: 20),
-              decoration: InputDecoration(
+              decoration: InputDecoration( 
+                contentPadding: EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
                 filled: true,
                 fillColor: const Color.fromRGBO(255, 255, 255, 1),
                 border: OutlineInputBorder(
