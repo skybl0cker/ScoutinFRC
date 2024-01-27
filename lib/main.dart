@@ -915,6 +915,10 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
     TextEditingController weightText = TextEditingController();
     TextEditingController mechanismText = TextEditingController();
     TextEditingController scoreText = TextEditingController();
+    TextEditingController chainText = TextEditingController();
+    TextEditingController harmonyText = TextEditingController();
+    TextEditingController stagescoreText = TextEditingController();
+    TextEditingController feederfloorText = TextEditingController();
     return Scaffold(
         drawer: const NavBar(),
         appBar: AppBar(
@@ -1023,10 +1027,78 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
               Gap(20),
               const Text(
               "Do you score through the speaker, amp, or both?",
-            style: TextStyle(color: Colors.white, fontSize: 19),
+             style: TextStyle(color: Colors.white, fontSize: 19),
           ),
           TextField(
             controller: scoreText,
+              style: const TextStyle(fontSize: 20),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: const Color.fromRGBO(255, 255, 255, 1),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                hintText: 'Input answer here',
+              )
+              ),
+              Gap(20),
+              const Text(
+              "Can you hang on stage?",
+             style: TextStyle(color: Colors.white, fontSize: 19),
+          ),
+          TextField(
+            controller: chainText,
+              style: const TextStyle(fontSize: 20),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: const Color.fromRGBO(255, 255, 255, 1),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                hintText: 'Input answer here',
+              )
+              ),
+              Gap(20),
+              const Text(
+              "Can you achieve harmony?",
+             style: TextStyle(color: Colors.white, fontSize: 19),
+          ),
+          TextField(
+            controller: harmonyText,
+              style: const TextStyle(fontSize: 20),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: const Color.fromRGBO(255, 255, 255, 1),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                hintText: 'Input answer here',
+              )
+              ),
+              Gap(20),
+              const Text(
+              "Can you score on the stage?",
+             style: TextStyle(color: Colors.white, fontSize: 19),
+          ),
+          TextField(
+            controller: stagescoreText,
+              style: const TextStyle(fontSize: 20),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: const Color.fromRGBO(255, 255, 255, 1),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                hintText: 'Input answer here',
+              )
+              ),
+              Gap(20),
+              const Text(
+              "Do you prioritize floor pickup or feeder pickup?",
+             style: TextStyle(color: Colors.white, fontSize: 19),
+          ),
+          TextField(
+            controller: feederfloorText,
               style: const TextStyle(fontSize: 20),
               decoration: InputDecoration(
                 filled: true,
@@ -1045,6 +1117,10 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
                 print(weightText.text);
                 print(mechanismText.text);
                 print(scoreText.text);
+                print(chainText.text);
+                print(harmonyText.text);
+                print(stagescoreText.text);
+                print(feederfloorText.text);
                 Navigator.pushNamed(context, '/');
               },
               style: TextButton.styleFrom(
