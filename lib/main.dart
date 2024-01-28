@@ -146,7 +146,7 @@ class _HomePageState extends State<HomePage> {
               child: const Text(
                 "Scouting",
                 style: TextStyle(color: Colors.white),
-              ).animate().fade(delay: 500.ms).slide(delay: 500.ms),
+              ).animate().fade(delay: 250.ms).slide(delay: 250.ms),
             ),
         ),
             const SizedBox(
@@ -194,7 +194,7 @@ class _HomePageState extends State<HomePage> {
               child: const Text(
                 "Schedule",
                 style: TextStyle(color: Colors.white),
-              ).animate().fade(delay: 700.ms).slide(delay: 700.ms),
+              ).animate().fade(delay: 350.ms).slide(delay: 350.ms),
             ),
         ),
             const SizedBox(
@@ -242,7 +242,7 @@ class _HomePageState extends State<HomePage> {
               child: const Text(
                 "Analytics",
                 style: TextStyle(color: Colors.white),
-              ).animate().fade(delay: 900.ms).slide(delay: 900.ms),
+              ).animate().fade(delay: 450.ms).slide(delay: 450.ms),
             ),
         ),
             const SizedBox(
@@ -290,7 +290,7 @@ class _HomePageState extends State<HomePage> {
               child: const Text(
                 "Pit Scouting",
                 style: TextStyle(color: Colors.white),
-              ).animate().fade(delay: 1100.ms).slide(delay: 1100.ms),
+              ).animate().fade(delay: 550.ms).slide(delay: 550.ms),
             ),
         ),
             const SizedBox(
@@ -340,7 +340,7 @@ class _HomePageState extends State<HomePage> {
               child: const Text(
                 "Super Scouting",
                 style: TextStyle(color: Colors.white),
-              ).animate().fade(delay: 1350.ms).slide(delay: 1350.ms),
+              ).animate().fade(delay: 675.ms).slide(delay: 675.ms),
             ),
         ),
             const SizedBox(
@@ -644,6 +644,9 @@ class _TeleopPageState extends State<TeleopPage> {
   bool? isChecked3 = true;
   bool? isChecked4 = true;
   bool? isChecked5 = true;
+  bool? isChecked6 = true;
+  bool? isChecked7 = true;
+  bool? isChecked8 = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -684,20 +687,21 @@ class _TeleopPageState extends State<TeleopPage> {
         ),
         body: Center(
         child: Column(children: <Widget>[
-           Gap(20),
+           
            Text(
             "Field",
             style: TextStyle(
               color: Colors.white,
               fontSize: 24
             ),
-        ),
-        Gap(4),  
+        ), 
         Container(
           child: Column(
             children: [
+          Gap(25), 
           CheckboxListTile(
           controlAffinity: ListTileControlAffinity.leading,
+          contentPadding: EdgeInsets.symmetric(horizontal: 0.5),
           checkColor: Colors.white,
           activeColor: Colors.grey,
           side:
@@ -711,9 +715,10 @@ class _TeleopPageState extends State<TeleopPage> {
             });
           },
         ),
-        Gap(4),
+        Gap(6),
         CheckboxListTile(
           controlAffinity: ListTileControlAffinity.leading,
+          contentPadding: EdgeInsets.symmetric(horizontal: 0.5),
           checkColor: Colors.white,
           activeColor: Colors.grey,
           side:
@@ -727,9 +732,10 @@ class _TeleopPageState extends State<TeleopPage> {
             });
           },
         ),
-        Gap(4),
+        Gap(6),
         CheckboxListTile(
           controlAffinity: ListTileControlAffinity.leading,
+          contentPadding: EdgeInsets.symmetric(horizontal: 0.5),
           checkColor: Colors.white,
           activeColor: Colors.grey,
           side:
@@ -743,9 +749,10 @@ class _TeleopPageState extends State<TeleopPage> {
             });
           },
         ),
-        Gap(4),
+        Gap(6),
         CheckboxListTile(
           controlAffinity: ListTileControlAffinity.leading,
+          contentPadding: EdgeInsets.symmetric(horizontal: 0.5),
           checkColor: Colors.white,
           activeColor: Colors.grey,
           side:
@@ -759,9 +766,10 @@ class _TeleopPageState extends State<TeleopPage> {
             });
           },
         ),
-        Gap(4),
+        Gap(6),
         CheckboxListTile(
           controlAffinity: ListTileControlAffinity.leading,
+          contentPadding: EdgeInsets.symmetric(horizontal: 0.5),
           checkColor: Colors.white,
           activeColor: Colors.grey,
           side:
