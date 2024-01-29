@@ -146,7 +146,7 @@ class _HomePageState extends State<HomePage> {
               child: const Text(
                 "Scouting",
                 style: TextStyle(color: Colors.white),
-              ).animate().fade(delay: 250.ms).slide(delay: 250.ms),
+              ).animate().fade(delay: 500.ms).slide(delay: 500.ms),
             ),
         ),
             const SizedBox(
@@ -194,7 +194,7 @@ class _HomePageState extends State<HomePage> {
               child: const Text(
                 "Schedule",
                 style: TextStyle(color: Colors.white),
-              ).animate().fade(delay: 350.ms).slide(delay: 350.ms),
+              ).animate().fade(delay: 500.ms).slide(delay: 500.ms),
             ),
         ),
             const SizedBox(
@@ -242,7 +242,7 @@ class _HomePageState extends State<HomePage> {
               child: const Text(
                 "Analytics",
                 style: TextStyle(color: Colors.white),
-              ).animate().fade(delay: 450.ms).slide(delay: 450.ms),
+              ).animate().fade(delay: 500.ms).slide(delay: 500.ms),
             ),
         ),
             const SizedBox(
@@ -290,7 +290,7 @@ class _HomePageState extends State<HomePage> {
               child: const Text(
                 "Pit Scouting",
                 style: TextStyle(color: Colors.white),
-              ).animate().fade(delay: 550.ms).slide(delay: 550.ms),
+              ).animate().fade(delay: 500.ms).slide(delay: 500.ms),
             ),
         ),
             const SizedBox(
@@ -340,13 +340,13 @@ class _HomePageState extends State<HomePage> {
               child: const Text(
                 "Super Scouting",
                 style: TextStyle(color: Colors.white),
-              ).animate().fade(delay: 675.ms).slide(delay: 675.ms),
+              ).animate().fade(delay: 500.ms).slide(delay: 500.ms),
             ),
         ),
             const SizedBox(
               height: 20,
             ),
-          ],
+          ].animate().fade(delay: 300.ms).slide(delay: 300.ms)
         ),
       )
     );
@@ -698,7 +698,8 @@ class _TeleopPageState extends State<TeleopPage> {
         Container(
           child: Column(
             children: [
-          Gap(25), 
+          Column(children: [
+          SizedBox(width: 50, child:
           CheckboxListTile(
           controlAffinity: ListTileControlAffinity.leading,
           contentPadding: EdgeInsets.symmetric(horizontal: 0.5),
@@ -715,7 +716,8 @@ class _TeleopPageState extends State<TeleopPage> {
             });
           },
         ),
-        Gap(6),
+          ),
+        SizedBox(width: 50, child:
         CheckboxListTile(
           controlAffinity: ListTileControlAffinity.leading,
           contentPadding: EdgeInsets.symmetric(horizontal: 0.5),
@@ -732,7 +734,8 @@ class _TeleopPageState extends State<TeleopPage> {
             });
           },
         ),
-        Gap(6),
+        ),
+        SizedBox(width: 50, child:
         CheckboxListTile(
           controlAffinity: ListTileControlAffinity.leading,
           contentPadding: EdgeInsets.symmetric(horizontal: 0.5),
@@ -749,7 +752,8 @@ class _TeleopPageState extends State<TeleopPage> {
             });
           },
         ),
-        Gap(6),
+        ),
+        SizedBox(width: 50, child:
         CheckboxListTile(
           controlAffinity: ListTileControlAffinity.leading,
           contentPadding: EdgeInsets.symmetric(horizontal: 0.5),
@@ -766,7 +770,8 @@ class _TeleopPageState extends State<TeleopPage> {
             });
           },
         ),
-        Gap(6),
+        ),
+        SizedBox(width: 50, child:
         CheckboxListTile(
           controlAffinity: ListTileControlAffinity.leading,
           contentPadding: EdgeInsets.symmetric(horizontal: 0.5),
@@ -783,16 +788,76 @@ class _TeleopPageState extends State<TeleopPage> {
             });
           },
         ),
+        ),
+          ],
+          ),
+          Row(children: [
+          SizedBox(width: 50, child:
+          CheckboxListTile(
+          controlAffinity: ListTileControlAffinity.leading,
+          contentPadding: EdgeInsets.symmetric(horizontal: 0.5),
+          checkColor: Colors.white,
+          activeColor: Colors.grey,
+          side:
+            BorderSide(width: 2, color: Colors.grey),
+          isError: true,
+          tristate: false,
+          value: isChecked6,
+          onChanged: (bool? value) {
+            setState(() {
+              isChecked6 = value;
+            });
+          },
+        ),
+          ),
+        SizedBox(width: 50, child:
+        CheckboxListTile(
+          controlAffinity: ListTileControlAffinity.leading,
+          contentPadding: EdgeInsets.symmetric(horizontal: 0.5),
+          checkColor: Colors.white,
+          activeColor: Colors.grey,
+          side:
+            BorderSide(width: 2, color: Colors.grey),
+          isError: true,
+          tristate: false,
+          value: isChecked7,
+          onChanged: (bool? value) {
+            setState(() {
+              isChecked7 = value;
+            });
+          },
+        ),
+        ),
+        SizedBox(width: 50, child:
+        CheckboxListTile(
+          controlAffinity: ListTileControlAffinity.leading,
+          contentPadding: EdgeInsets.symmetric(horizontal: 0.5),
+          checkColor: Colors.white,
+          activeColor: Colors.grey,
+          side:
+            BorderSide(width: 2, color: Colors.grey),
+          isError: true,
+          tristate: false,
+          value: isChecked8,
+          onChanged: (bool? value) {
+            setState(() {
+              isChecked8 = value;
+            });
+          },
+        ),
+        ),
+          ],
+          )
             ],
           ),
           decoration: BoxDecoration(image:DecorationImage(
             image: AssetImage('assets/images/field_upscaled.png'),
              ),
         ),
-  
         width: 350,
         height: 350,
         alignment: Alignment.topCenter,),
+        
       ],
     )       
   )
