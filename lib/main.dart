@@ -22,7 +22,7 @@ class ScoutingApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Scouting',
-      initialRoute: '/',
+      initialRoute: '/teleop',
       routes: <String, WidgetBuilder>{
         '/': (context) => const HomePage(
               title: '',
@@ -639,7 +639,7 @@ class TeleopPage extends StatefulWidget {
   State<TeleopPage> createState() => _TeleopPageState();
 }
 class _TeleopPageState extends State<TeleopPage> {
-  bool? isChecked = true;
+  bool? isChecked = false;
   bool? isChecked2 = true;
   bool? isChecked3 = true;
   bool? isChecked4 = true;
@@ -696,175 +696,189 @@ class _TeleopPageState extends State<TeleopPage> {
             ),
         ), 
         Container(
-          child: Column(
-            children: [
-          Column(children: [
-          SizedBox(width: 50, child:
-          CheckboxListTile(
-          controlAffinity: ListTileControlAffinity.leading,
-          contentPadding: EdgeInsets.symmetric(horizontal: 0.5),
+            transform:Matrix4.translationValues(0,0,10),
+            child: 
+          Stack(
+            fit:StackFit.loose,
+            children: [ 
+          Align(
+            alignment: AlignmentDirectional(-1.05, -0.86),
+            child:Container(
+            color: Colors.transparent,
+            constraints: BoxConstraints.tight(Size(50, 50)),
+            // child: TextButton(onPressed: (){}, child: Text("M")),
+            child: CheckboxListTile(
+            contentPadding: EdgeInsets.all(3),
           checkColor: Colors.white,
           activeColor: Colors.grey,
-          side:
-            BorderSide(width: 2, color: Colors.grey),
-          isError: true,
-          tristate: false,
           value: isChecked,
           onChanged: (bool? value) {
             setState(() {
-              isChecked = value;
-            });
+              isChecked = (value);
+          });
           },
-        ),
           ),
-        SizedBox(width: 50, child:
-        CheckboxListTile(
-          controlAffinity: ListTileControlAffinity.leading,
-          contentPadding: EdgeInsets.symmetric(horizontal: 0.5),
+          ),
+          ),
+          Align(
+            alignment: AlignmentDirectional(-1.05, -0.44),
+            child:Container(
+            color: Colors.transparent,
+            constraints: BoxConstraints.tight(Size(50, 50)),
+            // child: TextButton(onPressed: (){}, child: Text("M")),
+            child: CheckboxListTile(
+            contentPadding: EdgeInsets.all(3),
           checkColor: Colors.white,
           activeColor: Colors.grey,
-          side:
-            BorderSide(width: 2, color: Colors.grey),
-          isError: true,
-          tristate: false,
           value: isChecked2,
           onChanged: (bool? value) {
             setState(() {
-              isChecked2 = value;
-            });
+              isChecked2 = (value);
+          });
           },
-        ),
-        ),
-        SizedBox(width: 50, child:
-        CheckboxListTile(
-          controlAffinity: ListTileControlAffinity.leading,
-          contentPadding: EdgeInsets.symmetric(horizontal: 0.5),
+          ),
+          ),
+          ),
+          Align(
+            alignment: AlignmentDirectional(-1.05, -0.03),
+            child:Container(
+            color: Colors.transparent,
+            constraints: BoxConstraints.tight(Size(50, 50)),
+            // child: TextButton(onPressed: (){}, child: Text("M")),
+            child: CheckboxListTile(
+            contentPadding: EdgeInsets.all(3),
           checkColor: Colors.white,
           activeColor: Colors.grey,
-          side:
-            BorderSide(width: 2, color: Colors.grey),
-          isError: true,
-          tristate: false,
           value: isChecked3,
           onChanged: (bool? value) {
             setState(() {
-              isChecked3 = value;
-            });
+              isChecked3 = (value);
+          });
           },
-        ),
-        ),
-        SizedBox(width: 50, child:
-        CheckboxListTile(
-          controlAffinity: ListTileControlAffinity.leading,
-          contentPadding: EdgeInsets.symmetric(horizontal: 0.5),
+          ),
+          ),
+          ),
+          Align(
+            alignment: AlignmentDirectional(-1.05, 0.39),
+            child:Container(
+            color: Colors.transparent,
+            constraints: BoxConstraints.tight(Size(50, 50)),
+            // child: TextButton(onPressed: (){}, child: Text("M")),
+            child: CheckboxListTile(
+            contentPadding: EdgeInsets.all(3),
           checkColor: Colors.white,
           activeColor: Colors.grey,
-          side:
-            BorderSide(width: 2, color: Colors.grey),
-          isError: true,
-          tristate: false,
           value: isChecked4,
           onChanged: (bool? value) {
             setState(() {
-              isChecked4 = value;
-            });
+              isChecked4= (value);
+          });
           },
-        ),
-        ),
-        SizedBox(width: 50, child:
-        CheckboxListTile(
-          controlAffinity: ListTileControlAffinity.leading,
-          contentPadding: EdgeInsets.symmetric(horizontal: 0.5),
+          ),
+          ),
+          ),
+          Align(
+            alignment: AlignmentDirectional(-1.05, 0.80),
+            child:Container(
+            color: Colors.transparent,
+            constraints: BoxConstraints.tight(Size(50, 50)),
+            // child: TextButton(onPressed: (){}, child: Text("M")),
+            child: CheckboxListTile(
+            contentPadding: EdgeInsets.all(3),
           checkColor: Colors.white,
           activeColor: Colors.grey,
-          side:
-            BorderSide(width: 2, color: Colors.grey),
-          isError: true,
-          tristate: false,
           value: isChecked5,
           onChanged: (bool? value) {
             setState(() {
-              isChecked5 = value;
-            });
+              isChecked5 = (value);
+          });
           },
-        ),
-        ),
-          ],
           ),
-          Row(children: [
-          SizedBox(width: 50, child:
-          CheckboxListTile(
-          controlAffinity: ListTileControlAffinity.leading,
-          contentPadding: EdgeInsets.symmetric(horizontal: 0.5),
+          ),
+          ),
+          Align(
+            alignment: AlignmentDirectional(0.28, -0.75),
+            child:Container(
+            color: Colors.transparent,
+            constraints: BoxConstraints.tight(Size(50, 50)),
+            // child: TextButton(onPressed: (){}, child: Text("M")),
+            child: CheckboxListTile(
+            contentPadding: EdgeInsets.all(3),
           checkColor: Colors.white,
           activeColor: Colors.grey,
-          side:
-            BorderSide(width: 2, color: Colors.grey),
-          isError: true,
-          tristate: false,
           value: isChecked6,
           onChanged: (bool? value) {
             setState(() {
-              isChecked6 = value;
-            });
+              isChecked6 = (value);
+          });
           },
-        ),
           ),
-        SizedBox(width: 50, child:
-        CheckboxListTile(
-          controlAffinity: ListTileControlAffinity.leading,
-          contentPadding: EdgeInsets.symmetric(horizontal: 0.5),
+          ),
+          ),
+          Align(
+            alignment: AlignmentDirectional(0.28, -0.39),
+            child:Container(
+            color: Colors.transparent,
+            constraints: BoxConstraints.tight(Size(50, 50)),
+            // child: TextButton(onPressed: (){}, child: Text("M")),
+            child: CheckboxListTile(
+            contentPadding: EdgeInsets.all(3),
           checkColor: Colors.white,
           activeColor: Colors.grey,
-          side:
-            BorderSide(width: 2, color: Colors.grey),
-          isError: true,
-          tristate: false,
           value: isChecked7,
           onChanged: (bool? value) {
             setState(() {
-              isChecked7 = value;
-            });
+              isChecked7 = (value);
+          });
           },
-        ),
-        ),
-        SizedBox(width: 50, child:
-        CheckboxListTile(
-          controlAffinity: ListTileControlAffinity.leading,
-          contentPadding: EdgeInsets.symmetric(horizontal: 0.5),
+          ),
+          ),
+          ),
+          Align(
+            alignment: AlignmentDirectional(0.28, -0.03),
+            child:Container(
+            color: Colors.transparent,
+            constraints: BoxConstraints.tight(Size(50, 50)),
+            // child: TextButton(onPressed: (){}, child: Text("M")),
+            child: CheckboxListTile(
+            contentPadding: EdgeInsets.all(3),
           checkColor: Colors.white,
           activeColor: Colors.grey,
-          side:
-            BorderSide(width: 2, color: Colors.grey),
-          isError: true,
-          tristate: false,
           value: isChecked8,
           onChanged: (bool? value) {
             setState(() {
-              isChecked8 = value;
-            });
+              isChecked8 = (value);
+          });
           },
-        ),
-        ),
-          ],
-          )
-            ],
           ),
+          ),
+          ),
+          
+          ],
+          ),
+        
           decoration: BoxDecoration(image:DecorationImage(
-            image: AssetImage('assets/images/field_upscaled.png'),
+            image: AssetImage('assets/images/field.png'),
              ),
         ),
+        
         width: 350,
         height: 350,
         alignment: Alignment.topCenter,),
-        
+        Image.asset('assets/images/amp.png',
+        width: 250,
+        height: 250,),
+        Image.asset('assets/images/speaker.png',
+        width: 250,
+        height: 250,)
       ],
-    )       
+    ),       
   )
 );
 
   }
 }
+
 
 class EndgamePage extends StatefulWidget {
   const EndgamePage({super.key, required this.title});

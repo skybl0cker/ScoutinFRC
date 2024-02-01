@@ -16,17 +16,15 @@ dynamic pageData = {
   "speakerPlacement": 0, //0 0 notes, 1 1 note, 2 2 notes, 3 3 notes, 4 4 notes
   "ampPlacement": 0, //0 0 notes, 1 1 note, 2 2 notes, 3 3 notes, 4 4 notes
   "stagePlacement": 0, //0 0 notes, 1 1 note, 2 2 notes, 3 3 notes
-  "stageHang":
-      0, //0 = no hang,1 hang on one closest to field,2 hang on one closest to amp,3 hang on other one
+  "stageHang": 0, //0 = no hang,1 hang on one closest to field,2 hang on one closest to amp,3 hang on other one
   "microphonePlacement": 0, //0 = not landed, 1 landed
+  "robotNum": 0,
+  "matchNum": 0, 
 };
 
-Map<dynamic,int> robotData = {
-  "robotNum": 0,
-  "matchNum": 0,
-};
 
 dynamic reorganizePD(dynamic data) {
   return pageData;
+  
 }
 
