@@ -22,7 +22,7 @@ class ScoutingApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Scouting',
-      initialRoute: '/teleop',
+      initialRoute: '/',
       routes: <String, WidgetBuilder>{
         '/': (context) => const HomePage(
               title: '',
@@ -639,6 +639,28 @@ class TeleopPage extends StatefulWidget {
   State<TeleopPage> createState() => _TeleopPageState();
 }
 class _TeleopPageState extends State<TeleopPage> {
+  int _counter = 0;
+  int _counter2 = 0;
+  void _incrementCounter() {
+    setState(() {
+      _counter++;
+    });
+  }
+  void _incrementCounter2() {
+    setState(() {
+      _counter--;
+    });
+  }
+  void _incrementCounter3() {
+    setState(() {
+      _counter2++;
+    });
+  }
+  void _incrementCounter4() {
+    setState(() {
+      _counter2--;
+    });
+  }
   bool? isChecked = false;
   bool? isChecked2 = true;
   bool? isChecked3 = true;
@@ -686,15 +708,64 @@ class _TeleopPageState extends State<TeleopPage> {
           ),
         ),
         body: Center(
+        child: SingleChildScrollView(
         child: Column(children: <Widget>[
-           
            Text(
-            "Field",
+            "Amp",
             style: TextStyle(
               color: Colors.white,
               fontSize: 24
             ),
-        ), 
+        ),
+        Container(
+          transform:Matrix4.translationValues(0,0,10),
+          child:
+          Stack(
+            alignment: Alignment.topCenter,
+            children: [
+              Image.asset('assets/images/amp.png',
+              width: 200,
+              height: 200,
+              ),
+              Positioned(
+              top: 90,
+              bottom: 60,
+              right: 165,
+               child:
+              FloatingActionButton(onPressed: _incrementCounter,
+              backgroundColor: Colors.transparent,
+              heroTag: "tag1",
+              ),
+              ),
+              Positioned(
+                top: 90,
+                bottom: 60,
+                left: 165,
+                child: 
+                FloatingActionButton(onPressed: _incrementCounter2,
+                backgroundColor: Colors.transparent,
+                heroTag: "tag2",
+              )
+              ),
+              Positioned(
+                top: 90,
+                bottom: 30,
+                child: Container(
+                child:Text('$_counter',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 36
+                ),),),
+              )
+            ],
+          )
+        ),
+        Text('Field',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 24
+        ),
+        ),
         Container(
             transform:Matrix4.translationValues(0,0,10),
             child: 
@@ -858,22 +929,84 @@ class _TeleopPageState extends State<TeleopPage> {
           ),
         
           decoration: BoxDecoration(image:DecorationImage(
-            image: AssetImage('assets/images/field.png'),
+            image: AssetImage('assets/images/field.png',
+            ),
              ),
         ),
-        
-        width: 350,
-        height: 350,
-        alignment: Alignment.topCenter,),
-        Image.asset('assets/images/amp.png',
-        width: 250,
-        height: 250,),
-        Image.asset('assets/images/speaker.png',
-        width: 250,
-        height: 250,)
+        width: 300,
+        height: 300,
+        alignment: Alignment.topCenter,
+        ),
+        Text('Speaker',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 24
+        ),
+        ),
+        Container(
+          transform:Matrix4.translationValues(0,0,10),
+          child:
+          Stack(
+            alignment: Alignment.topCenter,
+            children: [
+              Image.asset('assets/images/speaker.png',
+              width: 200,
+              height: 200,
+              ),
+              Positioned(
+              top: 80,
+              bottom: 60,
+              right: 150,
+               child:
+              FloatingActionButton(onPressed: _incrementCounter3,
+              backgroundColor: Colors.transparent,
+              heroTag: "tag3",
+              ),
+              ),
+              Positioned(
+                top: 80,
+                bottom: 60,
+                left: 150,
+                child: 
+                FloatingActionButton(onPressed: _incrementCounter4,
+                backgroundColor: Colors.transparent,
+                heroTag: "tag4",
+              )
+              ),
+              Positioned(
+                top: 35,
+                bottom: 30,
+                child: Container(
+                child:Text('$_counter2',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 36
+                ),),),
+              )
+            ],
+          )
+        ),
+        ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/endgame');
+              },
+              style: TextButton.styleFrom(
+                textStyle: const TextStyle(
+                  fontSize: 40,
+                ),
+                padding: const EdgeInsets.only(
+                    left: 14, top: 12, right: 14, bottom: 12),
+                backgroundColor: Colors.blue,
+                side: const BorderSide(
+                    width: 3, color: Color.fromRGBO(65, 104, 196, 1)),
+              ), child: const Text("Confirm",
+              style: TextStyle(color: Colors.white, fontSize: 25),
+              ),
+              )
       ],
     ),       
   )
+        )
 );
 
   }
@@ -910,7 +1043,7 @@ class _EndgamePageState extends State<EndgamePage> {
           actions: [
             Container(
                 child: IconButton(
-                    onPressed: () => Navigator.pushNamed(context, '/'),
+                    onPressed: () => Navigator.pushNamed(context, '/teleop'),
                     icon: const Icon(
                       Icons.arrow_back,
                       color: Color.fromRGBO(165, 176, 168, 1),
@@ -1187,6 +1320,9 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
             "What is the weight of your Robot?",
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
+          SizedBox(
+            width: 350,
+          child:
           TextField(
             textAlign: TextAlign.center,
             controller: weightText,
@@ -1198,8 +1334,10 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
+              
                 hintText: 'Input answer here',
               )),
+          ),
           const Gap(20),
           const Text(
             "Do you have a floor or feeder intake?",
