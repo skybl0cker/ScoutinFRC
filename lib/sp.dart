@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 
 
-void setPref(String robotNum, String matchNum, Map<Object, int> pData) async {
+void setPref(String robotNum, String matchNum, Map<String, Object> pData) async {
   // Obtain shared preferences.
 final SharedPreferences pagePref = await SharedPreferences.getInstance();
 List<String> temp = <String>["","","","","","","","","","","","","","","",""];
@@ -28,8 +28,7 @@ temp[11] = pData["speakerPlacement"].toString();
 temp[12] = pData["ampPlacement"].toString(); 
 temp[13] = pData["stagePlacement"].toString(); 
 temp[14] = pData["stageHang"].toString(); 
-temp[15] = pData["microphonePlacement"].toString(); 
+temp[15] = pData["microphonePlacement"].toString();
 pagePref.setStringList("$robotNum/$matchNum", <String>['hello','goodbye']);
-
 }
 

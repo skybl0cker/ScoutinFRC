@@ -1,18 +1,20 @@
 // // import 'dart:js_interop_unsafe';
 
 dynamic pageData = {
+  "robotNum": "",
+  "matchNum": "",
   "auto": 0, //0 not in auto //1 in auto
   "autoPickup": 0, //0 not picked up, 1 picked up
   "floorPickup": 0, //0 not picked up, 1 picked up
   "feederPickup": 0, //0 not picked up, 1 picked up
-  "1": 0, //0 not picked up, 1 picked up
-  "2": 0, //0 not picked up, 1 picked up
-  "3": 0, //0 not picked up, 1 picked up
-  "4": 0, //0 not picked up, 1 picked up
-  "5": 0, //0 not picked up, 1 picked up
-  "6": 0, //0 not picked up, 1 picked up
-  "7": 0, //0 not picked up, 1 picked up
-  "8": 0, //0 not picked up, 1 picked up
+  "1": false, //0 not picked up, 1 picked up
+  "2": false, //0 not picked up, 1 picked up
+  "3": false, //0 not picked up, 1 picked up
+  "4": false, //0 not picked up, 1 picked up
+  "5": false, //0 not picked up, 1 picked up
+  "6": false, //0 not picked up, 1 picked up
+  "7": false, //0 not picked up, 1 picked up
+  "8": false, //0 not picked up, 1 picked up
   "speakerPlacement": 0, //0 0 notes, 1 1 note, 2 2 notes, 3 3 notes, 4 4 notes
   "ampPlacement": 0, //0 0 notes, 1 1 note, 2 2 notes, 3 3 notes, 4 4 notes
   "stagePlacement": 0, //0 0 notes, 1 1 note, 2 2 notes, 3 3 notes
@@ -31,12 +33,6 @@ dynamic pitData = {
   "stagescore": 0,
   "feederorfloor": 0,
 };
-
-Map<dynamic,int> robotData = {
-  "robotNum": 0,
-  "matchNum": 0, 
-};
-
 
 dynamic reorganizePD(dynamic data) {
   return pageData;

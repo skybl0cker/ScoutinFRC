@@ -440,8 +440,8 @@ class _MatchNumPageState extends State<MatchNumPage> {
               const Gap(25),
               ElevatedButton(
               onPressed: () {
-                print(robotNum.text);
-                print(matchNum.text);
+                v.pageData["robotNum"] = robotNum.text;
+                v.pageData["matchNum"] = matchNum.text;
                 Navigator.pushNamed(context, '/auto');
               },
               style: TextButton.styleFrom(
@@ -610,6 +610,9 @@ class _AutoPageState extends State<AutoPage> {
          const Gap(50),
          ElevatedButton(
               onPressed: () {
+                v.pageData["startingPosition"] = selectedStart;
+                v.pageData["autoScoring"] = selectedAuto;
+                v.pageData["wingLeave"] = selectedEnd;
                 Navigator.pushNamed(context, '/teleop');
               },
               style: TextButton.styleFrom(
@@ -641,6 +644,7 @@ class TeleopPage extends StatefulWidget {
 class _TeleopPageState extends State<TeleopPage> {
   int _counter = 0;
   int _counter2 = 0;
+  int _counter3 = 0;
   void _incrementCounter() {
     setState(() {
       _counter++;
@@ -661,14 +665,24 @@ class _TeleopPageState extends State<TeleopPage> {
       _counter2--;
     });
   }
+  void _incrementCounter5() {
+    setState(() {
+      _counter3++;
+    });
+  }
+  void _incrementCounter6() {
+    setState(() {
+      _counter3--;
+    });
+  }
   bool? isChecked = false;
-  bool? isChecked2 = true;
-  bool? isChecked3 = true;
-  bool? isChecked4 = true;
-  bool? isChecked5 = true;
-  bool? isChecked6 = true;
-  bool? isChecked7 = true;
-  bool? isChecked8 = true;
+  bool? isChecked2 = false;
+  bool? isChecked3 = false;
+  bool? isChecked4 = false;
+  bool? isChecked5 = false;
+  bool? isChecked6 = false;
+  bool? isChecked7 = false;
+  bool? isChecked8 = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -711,7 +725,7 @@ class _TeleopPageState extends State<TeleopPage> {
         child: SingleChildScrollView(
         child: Column(children: <Widget>[
            Text(
-            "Amp",
+            "Amp Score",
             style: TextStyle(
               color: Colors.white,
               fontSize: 24
@@ -760,7 +774,7 @@ class _TeleopPageState extends State<TeleopPage> {
             ],
           )
         ),
-        Text('Field',
+        Text('Field Pickup',
         style: TextStyle(
           color: Colors.white,
           fontSize: 24
@@ -937,7 +951,7 @@ class _TeleopPageState extends State<TeleopPage> {
         height: 300,
         alignment: Alignment.topCenter,
         ),
-        Text('Speaker',
+        Text('Speaker Score',
         style: TextStyle(
           color: Colors.white,
           fontSize: 24
@@ -986,8 +1000,68 @@ class _TeleopPageState extends State<TeleopPage> {
             ],
           )
         ),
+        Text('Feeder Pickup',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 24
+        ),
+        ),
+        Container(
+          transform:Matrix4.translationValues(0,0,10),
+          child:
+          Stack(
+            alignment: Alignment.topCenter,
+            children: [
+              Image.asset('assets/images/source.png',
+              width: 200,
+              height: 200,
+              ),
+              Positioned(
+              top: 80,
+              bottom: 60,
+              right: 150,
+               child:
+              FloatingActionButton(onPressed: _incrementCounter5,
+              backgroundColor: Colors.transparent,
+              heroTag: "tag5",
+              ),
+              ),
+              Positioned(
+                top: 80,
+                bottom: 60,
+                left: 150,
+                child: 
+                FloatingActionButton(onPressed: _incrementCounter6,
+                backgroundColor: Colors.transparent,
+                heroTag: "tag6",
+              )
+              ),
+              Positioned(
+                top: 55,
+                bottom: 30,
+                child: Container(
+                child:Text('$_counter3',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 30
+                ),),),
+              )
+            ],
+          )
+        ),
         ElevatedButton(
               onPressed: () {
+                v.pageData["1"] = isChecked;
+                v.pageData["2"] = isChecked2;
+                v.pageData["3"] = isChecked3;
+                v.pageData["4"] = isChecked4;
+                v.pageData["5"] = isChecked5;
+                v.pageData["6"] = isChecked6;
+                v.pageData["7"] = isChecked7;
+                v.pageData["8"] = isChecked8;
+                v.pageData["ampPlacement"] = _counter;
+                v.pageData["speakerPlacement"] = _counter2;
+                v.pageData["feederPickup"] = _counter3;
                 Navigator.pushNamed(context, '/endgame');
               },
               style: TextButton.styleFrom(
@@ -1012,6 +1086,24 @@ class _TeleopPageState extends State<TeleopPage> {
   }
 }
 
+const List<Widget> endStage = <Widget>[
+  Text('In Wing'),
+  Text('Hanging'),
+  Text('Harmony')
+];
+
+const List<Widget> endStageNumber = <Widget>[
+  Text('1'),
+  Text('2'),
+  Text('3')
+];
+
+const List<Widget> wingPosition = <Widget>[
+  Text('Neither'),
+  Text('Inside'),
+  Text('Outside')
+];
+
 
 class EndgamePage extends StatefulWidget {
   const EndgamePage({super.key, required this.title});
@@ -1020,8 +1112,13 @@ class EndgamePage extends StatefulWidget {
   State<EndgamePage> createState() => _EndgamePageState();
 }
 class _EndgamePageState extends State<EndgamePage> {
+  bool toggleButton2 = false;
+    final List<bool> selectedStage = <bool>[false, false, false];
+    final List<bool> selectedStageNumber = <bool>[false, false, false];
+    final List<bool> selectedPosition = <bool>[false, false, false];
   @override
   Widget build(BuildContext context) {
+    TextEditingController matchNotes = TextEditingController();
     return Scaffold(
         drawer: const NavBar(),
         appBar: AppBar(
@@ -1057,8 +1154,125 @@ class _EndgamePageState extends State<EndgamePage> {
             height: 75,
             alignment: Alignment.center,
           ),
+        ),
+        body: Center(
+        child: Column(children: <Widget>[
+          const Text('Endgame',
+          style: TextStyle(color: Colors.white, fontSize: 37),),
+          const Gap(20),
+          const Text("Stage", style: TextStyle(color: Colors.white, fontSize: 25),
+          ),
+          ToggleButtons(
+            onPressed: (int index) {
+              setState(() {
+                for (int i = 0; i < selectedStage.length; i++) {
+                  selectedStage[i] = i == index; //CHECK AND MAKE SURE IT DOES WHAT IT SHOULD
+                }
+              }
+              );
+            },
+          borderRadius: const BorderRadius.all(Radius.circular(12)),
+          selectedBorderColor: const Color.fromRGBO(198, 65, 65, 1), borderWidth: 2.5,
+          selectedColor: Colors.black,
+          fillColor: Colors.red,
+          color: Colors.white,
+          constraints: const BoxConstraints(
+          minHeight: 40.0,
+          minWidth: 80.0,
+          ),
+          isSelected: selectedStage, // MAKE A NEW ONE OF THESE
+           children: endStage, //MAKE A NEW ONE OF THESE
+         ),
+          const Gap(20),
+          const Text("Bots on Stage", style: TextStyle(color: Colors.white, fontSize: 25),
+          ),
+          ToggleButtons(
+            onPressed: (int index) {
+              setState(() {
+                for (int i = 0; i < selectedStageNumber.length; i++) {
+                  selectedStageNumber[i] = i == index; //CHECK AND MAKE SURE IT DOES WHAT IT SHOULD
+                }
+              }
+              );
+            },
+          borderRadius: const BorderRadius.all(Radius.circular(12)),
+          selectedBorderColor: const Color.fromRGBO(50, 87, 39, 1), borderWidth: 2.5,
+          selectedColor: Colors.black,
+          fillColor: Colors.green,
+          color: Colors.white,
+          constraints: const BoxConstraints(
+          minHeight: 40.0,
+          minWidth: 80.0,
+          ),
+          isSelected: selectedStageNumber, // MAKE A NEW ONE OF THESE
+           children: endStageNumber, //MAKE A NEW ONE OF THESE
+         ),
+         const Gap(20),
+          const Text("Robot Position", style: TextStyle(color: Colors.white, fontSize: 25),
+          ),
+          ToggleButtons(
+            onPressed: (int index) {
+              setState(() {
+                for (int i = 0; i < selectedPosition.length; i++) {
+                  selectedPosition[i] = i == index; //CHECK AND MAKE SURE IT DOES WHAT IT SHOULD
+                }
+              }
+              );
+            },
+          borderRadius: const BorderRadius.all(Radius.circular(12)),
+          selectedBorderColor: const Color.fromRGBO(196, 188, 65, 1), borderWidth: 2.5,
+          selectedColor: Colors.black,
+          fillColor: Colors.yellow,
+          color: Colors.white,
+          constraints: const BoxConstraints(
+          minHeight: 40.0,
+          minWidth: 80.0,
+          ),
+          isSelected: selectedPosition, // MAKE A NEW ONE OF THESE
+           children: wingPosition, //MAKE A NEW ONE OF THESE
+         ),
+         const Gap(20),
+         const Text('Match Notes',
+         style: TextStyle(color: Colors.white, fontSize: 25
+         ),),
+         SizedBox(width: 350, child:
+         TextField(
+          controller: matchNotes,
+            textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 20),
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
+                filled: true,
+                fillColor: const Color.fromRGBO(255, 255, 255, 1),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                hintText: 'Input answer here',
+              )),
+         ),
+         const Gap(50),
+         ElevatedButton(
+              onPressed: () {
+                setPref(v.pageData["robotNum"],v.pageData["matchNum"],v.pageData);
+                Navigator.pushNamed(context, '/');
+              },
+              style: TextButton.styleFrom(
+                textStyle: const TextStyle(
+                  fontSize: 40,
+                ),
+                padding: const EdgeInsets.only(
+                    left: 14, top: 12, right: 14, bottom: 12),
+                backgroundColor: Colors.blue,
+                side: const BorderSide(
+                    width: 3, color: Color.fromRGBO(65, 104, 196, 1)),
+              ), child: const Text("Confirm",
+              style: TextStyle(color: Colors.white, fontSize: 25),
+              ),
+              )
+        ]
         )
-      );
+      )
+    );
   }
 }
 
@@ -1113,47 +1327,6 @@ class _SchedulePageState extends State<SchedulePage> {
               children: <Widget>[
           const SizedBox(
             height: 20,
-          ),
-          Container(
-            width: 350,
-            height: 125,
-            decoration: BoxDecoration(
-              color: const Color.fromRGBO(82, 79, 79, 1),
-              borderRadius: BorderRadius.circular(12.0),
-            ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          Container(
-            width: 350,
-            height: 125,
-            decoration: BoxDecoration(
-              color: const Color.fromRGBO(82, 79, 79, 1),
-              borderRadius: BorderRadius.circular(12.0),
-            ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          Container(
-            width: 350,
-            height: 125,
-            decoration: BoxDecoration(
-              color: const Color.fromRGBO(82, 79, 79, 1),
-              borderRadius: BorderRadius.circular(12.0),
-            ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          Container(
-            width: 350,
-            height: 125,
-            decoration: BoxDecoration(
-              color: const Color.fromRGBO(82, 79, 79, 1),
-              borderRadius: BorderRadius.circular(12.0),
-            ),
           ),
         ]
         )
