@@ -53,7 +53,7 @@ class ScoutingApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Scouting',
-      initialRoute: '/',
+      initialRoute: '/scouting',
       routes: <String, WidgetBuilder>{
         '/': (context) => const HomePage(
               title: '',
@@ -154,7 +154,6 @@ class _HomePageState extends State<HomePage> {
               ),
               child: ElevatedButton(
                 onPressed: () {
-                  setPref('qpint', 'oqeihtqoiw', v.pageData);
                   Navigator.pushNamed(context, '/scouting');
                 },
                 style: TextButton.styleFrom(
@@ -631,9 +630,27 @@ class _AutoPageState extends State<AutoPage> {
           const Gap(50),
           ElevatedButton(
             onPressed: () {
-              v.pageData["startingPosition"] = selectedStart;
-              v.pageData["autoScoring"] = selectedAuto;
-              v.pageData["wingLeave"] = selectedEnd;
+              if (selectedStart[0]) {
+              v.pageData["startingPosition"] = 0;
+              } else if (selectedStart[1]) {
+              v.pageData["startingPosition"] = 1;
+              } else if (selectedStart[2]) {
+              v.pageData["startingPosition"] = 2;
+              }
+              if (selectedAuto[0]) {
+              v.pageData["autoScoring"] = 0;
+              } else if (selectedAuto[1]) {
+              v.pageData["autoScoring"] = 1;
+              } else if (selectedAuto[2]) {
+              v.pageData["autoScoring"] = 2;
+              }
+              if (selectedEnd[0]) {
+              v.pageData["wingLeave"] = 0;
+              } else if (selectedEnd[1]) {
+              v.pageData["wingLeave"] = 1;
+              } else if (selectedEnd[2]) {
+              v.pageData["wingLeave"] = 2;
+              }
               Navigator.pushNamed(context, '/teleop');
             },
             style: TextButton.styleFrom(
@@ -661,7 +678,6 @@ class TeleopPage extends StatefulWidget {
   @override
   State<TeleopPage> createState() => _TeleopPageState();
 }
-
 class _TeleopPageState extends State<TeleopPage> {
   int _counter = 0;
   int _counter2 = 0;
@@ -671,37 +687,31 @@ class _TeleopPageState extends State<TeleopPage> {
       _counter++;
     });
   }
-
   void _incrementCounter2() {
     setState(() {
       _counter--;
     });
   }
-
   void _incrementCounter3() {
     setState(() {
       _counter2++;
     });
   }
-
   void _incrementCounter4() {
     setState(() {
       _counter2--;
     });
   }
-
   void _incrementCounter5() {
     setState(() {
       _counter3++;
     });
   }
-
   void _incrementCounter6() {
     setState(() {
       _counter3--;
     });
   }
-
   bool? isChecked = false;
   bool? isChecked2 = false;
   bool? isChecked3 = false;
@@ -716,7 +726,7 @@ class _TeleopPageState extends State<TeleopPage> {
         drawer: const NavBar(),
         appBar: AppBar(
           leading: Builder(
-            builder: (BuildContext context) {
+          builder: (BuildContext context) {
               return IconButton(
                 icon: const Icon(
                   Icons.menu,
@@ -749,603 +759,367 @@ class _TeleopPageState extends State<TeleopPage> {
           ),
         ),
         body: Center(
-            child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              Text(
-                "Amp Score",
-                style: TextStyle(color: Colors.white, fontSize: 24),
+        child: SingleChildScrollView(
+        child: Column(children: <Widget>[
+           Text(
+            "Amp Score",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 24
+            ),
+        ),
+        Container(
+          transform:Matrix4.translationValues(0,0,10),
+          child:
+          Stack(
+            alignment: Alignment.topCenter,
+            children: [
+              Image.asset('assets/images/amp.png',
+              width: 200,
+              height: 200,
               ),
-              Container(
-                  transform: Matrix4.translationValues(0, 0, 10),
-                  child: Stack(
-                    alignment: Alignment.topCenter,
-                    children: [
-                      Image.asset(
-                        'assets/images/amp.png',
-                        width: 200,
-                        height: 200,
-                      ),
-                      Container(
-                          transform: Matrix4.translationValues(0, 0, 10),
-                          child: Stack(
-                            alignment: Alignment.topCenter,
-                            children: [
-                              Image.asset(
-                                'assets/images/amp.png',
-                                width: 200,
-                                height: 200,
-                              ),
-                              Positioned(
-                                top: 90,
-                                bottom: 60,
-                                right: 165,
-                                child: FloatingActionButton(
-                                  onPressed: _incrementCounter,
-                                  backgroundColor: Colors.transparent,
-                                  heroTag: "tag1",
-                                ),
-                              ),
-                              Positioned(
-                                  top: 90,
-                                  bottom: 60,
-                                  left: 165,
-                                  child: FloatingActionButton(
-                                    onPressed: _incrementCounter2,
-                                    backgroundColor: Colors.transparent,
-                                    heroTag: "tag2",
-                                  )),
-                              Positioned(
-                                top: 90,
-                                bottom: 30,
-                                child: Container(
-                                  child: Text(
-                                    '$_counter',
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 36),
-                                  ),
-                                ),
-                              )
-                            ],
-                          )),
-                      Text(
-                        'Field',
-                        style: TextStyle(color: Colors.white, fontSize: 24),
-                      ),
-                      Container(
-                        transform: Matrix4.translationValues(0, 0, 10),
-                        child: Stack(
-                          fit: StackFit.loose,
-                          children: [
-                            Align(
-                              alignment: AlignmentDirectional(-1.05, -0.86),
-                              child: Container(
-                                color: Colors.transparent,
-                                constraints: BoxConstraints.tight(Size(50, 50)),
-                                // child: TextButton(onPressed: (){}, child: Text("M")),
-                                child: CheckboxListTile(
-                                  contentPadding: EdgeInsets.all(3),
-                                  checkColor: Colors.white,
-                                  activeColor: Colors.grey,
-                                  value: isChecked,
-                                  onChanged: (bool? value) {
-                                    setState(() {
-                                      isChecked = (value);
-                                    });
-                                  },
-                                ),
-                              ),
-                            ),
-                            Align(
-                              alignment: AlignmentDirectional(-1.05, -0.44),
-                              child: Container(
-                                color: Colors.transparent,
-                                constraints: BoxConstraints.tight(Size(50, 50)),
-                                // child: TextButton(onPressed: (){}, child: Text("M")),
-                                child: CheckboxListTile(
-                                  contentPadding: EdgeInsets.all(3),
-                                  checkColor: Colors.white,
-                                  activeColor: Colors.grey,
-                                  value: isChecked2,
-                                  onChanged: (bool? value) {
-                                    setState(() {
-                                      isChecked2 = (value);
-                                    });
-                                  },
-                                ),
-                              ),
-                            ),
-                            Align(
-                              alignment: AlignmentDirectional(-1.05, -0.03),
-                              child: Container(
-                                color: Colors.transparent,
-                                constraints: BoxConstraints.tight(Size(50, 50)),
-                                // child: TextButton(onPressed: (){}, child: Text("M")),
-                                child: CheckboxListTile(
-                                  contentPadding: EdgeInsets.all(3),
-                                  checkColor: Colors.white,
-                                  activeColor: Colors.grey,
-                                  value: isChecked3,
-                                  onChanged: (bool? value) {
-                                    setState(() {
-                                      isChecked3 = (value);
-                                    });
-                                  },
-                                ),
-                              ),
-                            ),
-                            Align(
-                              alignment: AlignmentDirectional(-1.05, 0.39),
-                              child: Container(
-                                color: Colors.transparent,
-                                constraints: BoxConstraints.tight(Size(50, 50)),
-                                // child: TextButton(onPressed: (){}, child: Text("M")),
-                                child: CheckboxListTile(
-                                  contentPadding: EdgeInsets.all(3),
-                                  checkColor: Colors.white,
-                                  activeColor: Colors.grey,
-                                  value: isChecked4,
-                                  onChanged: (bool? value) {
-                                    setState(() {
-                                      isChecked4 = (value);
-                                    });
-                                  },
-                                ),
-                              ),
-                            ),
-                            Align(
-                              alignment: AlignmentDirectional(-1.05, 0.80),
-                              child: Container(
-                                color: Colors.transparent,
-                                constraints: BoxConstraints.tight(Size(50, 50)),
-                                // child: TextButton(onPressed: (){}, child: Text("M")),
-                                child: CheckboxListTile(
-                                  contentPadding: EdgeInsets.all(3),
-                                  checkColor: Colors.white,
-                                  activeColor: Colors.grey,
-                                  value: isChecked5,
-                                  onChanged: (bool? value) {
-                                    setState(() {
-                                      isChecked5 = (value);
-                                    });
-                                  },
-                                ),
-                              ),
-                            ),
-                            Align(
-                              alignment: AlignmentDirectional(0.28, -0.75),
-                              child: Container(
-                                color: Colors.transparent,
-                                constraints: BoxConstraints.tight(Size(50, 50)),
-                                // child: TextButton(onPressed: (){}, child: Text("M")),
-                                child: CheckboxListTile(
-                                  contentPadding: EdgeInsets.all(3),
-                                  checkColor: Colors.white,
-                                  activeColor: Colors.grey,
-                                  value: isChecked6,
-                                  onChanged: (bool? value) {
-                                    setState(() {
-                                      isChecked6 = (value);
-                                    });
-                                  },
-                                ),
-                              ),
-                            ),
-                            Align(
-                              alignment: AlignmentDirectional(0.28, -0.39),
-                              child: Container(
-                                color: Colors.transparent,
-                                constraints: BoxConstraints.tight(Size(50, 50)),
-                                // child: TextButton(onPressed: (){}, child: Text("M")),
-                                child: CheckboxListTile(
-                                  contentPadding: EdgeInsets.all(3),
-                                  checkColor: Colors.white,
-                                  activeColor: Colors.grey,
-                                  value: isChecked7,
-                                  onChanged: (bool? value) {
-                                    setState(() {
-                                      isChecked7 = (value);
-                                    });
-                                  },
-                                ),
-                              ),
-                            ),
-                            Align(
-                              alignment: AlignmentDirectional(0.28, -0.03),
-                              child: Container(
-                                color: Colors.transparent,
-                                constraints: BoxConstraints.tight(Size(50, 50)),
-                                // child: TextButton(onPressed: (){}, child: Text("M")),
-                                child: CheckboxListTile(
-                                  contentPadding: EdgeInsets.all(3),
-                                  checkColor: Colors.white,
-                                  activeColor: Colors.grey,
-                                  value: isChecked8,
-                                  onChanged: (bool? value) {
-                                    setState(() {
-                                      isChecked8 = (value);
-                                    });
-                                  },
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage(
-                              'assets/images/field.png',
-                            ),
-                          ),
-                        ),
-                        width: 300,
-                        height: 300,
-                        alignment: Alignment.topCenter,
-                      ),
-                      Text(
-                        'Speaker',
-                        style: TextStyle(color: Colors.white, fontSize: 24),
-                      ),
-                      Container(
-                          transform: Matrix4.translationValues(0, 0, 10),
-                          child: Stack(
-                            alignment: Alignment.topCenter,
-                            children: [
-                              Image.asset(
-                                'assets/images/speaker.png',
-                                width: 200,
-                                height: 200,
-                              ),
-                              Positioned(
-                                top: 80,
-                                bottom: 60,
-                                right: 150,
-                                child: FloatingActionButton(
-                                  onPressed: _incrementCounter3,
-                                  backgroundColor: Colors.transparent,
-                                  heroTag: "tag3",
-                                ),
-                              ),
-                              Positioned(
-                                  top: 80,
-                                  bottom: 60,
-                                  left: 150,
-                                  child: FloatingActionButton(
-                                    onPressed: _incrementCounter4,
-                                    backgroundColor: Colors.transparent,
-                                    heroTag: "tag4",
-                                  )),
-                              Positioned(
-                                top: 35,
-                                bottom: 30,
-                                child: Container(
-                                  child: Text(
-                                    '$_counter2',
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 36),
-                                  ),
-                                ),
-                              )
-                            ],
-                          )),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/endgame');
-                        },
-                        style: TextButton.styleFrom(
-                          textStyle: const TextStyle(
-                            fontSize: 40,
-                          ),
-                          padding: const EdgeInsets.only(
-                              left: 14, top: 12, right: 14, bottom: 12),
-                          backgroundColor: Colors.blue,
-                          side: const BorderSide(
-                              width: 3, color: Color.fromRGBO(65, 104, 196, 1)),
-                        ),
-                        child: const Text(
-                          "Confirm",
-                          style: TextStyle(color: Colors.white, fontSize: 25),
-                        ),
-                      )
-                    ],
-                  )),
-              Text(
-                'Field Pickup',
-                style: TextStyle(color: Colors.white, fontSize: 24),
+              Positioned(
+              top: 90,
+              bottom: 60,
+              right: 165,
+               child:
+              FloatingActionButton(onPressed: _incrementCounter,
+              backgroundColor: Colors.transparent,
+              heroTag: "tag1",
               ),
-              Container(
-                transform: Matrix4.translationValues(0, 0, 10),
-                child: Stack(
-                  fit: StackFit.loose,
-                  children: [
-                    Align(
-                      alignment: AlignmentDirectional(-1.05, -0.86),
-                      child: Container(
-                        color: Colors.transparent,
-                        constraints: BoxConstraints.tight(Size(50, 50)),
-                        // child: TextButton(onPressed: (){}, child: Text("M")),
-                        child: CheckboxListTile(
-                          contentPadding: EdgeInsets.all(3),
-                          checkColor: Colors.white,
-                          activeColor: Colors.grey,
-                          value: isChecked,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              isChecked = (value);
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: AlignmentDirectional(-1.05, -0.44),
-                      child: Container(
-                        color: Colors.transparent,
-                        constraints: BoxConstraints.tight(Size(50, 50)),
-                        // child: TextButton(onPressed: (){}, child: Text("M")),
-                        child: CheckboxListTile(
-                          contentPadding: EdgeInsets.all(3),
-                          checkColor: Colors.white,
-                          activeColor: Colors.grey,
-                          value: isChecked2,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              isChecked2 = (value);
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: AlignmentDirectional(-1.05, -0.03),
-                      child: Container(
-                        color: Colors.transparent,
-                        constraints: BoxConstraints.tight(Size(50, 50)),
-                        // child: TextButton(onPressed: (){}, child: Text("M")),
-                        child: CheckboxListTile(
-                          contentPadding: EdgeInsets.all(3),
-                          checkColor: Colors.white,
-                          activeColor: Colors.grey,
-                          value: isChecked3,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              isChecked3 = (value);
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: AlignmentDirectional(-1.05, 0.39),
-                      child: Container(
-                        color: Colors.transparent,
-                        constraints: BoxConstraints.tight(Size(50, 50)),
-                        // child: TextButton(onPressed: (){}, child: Text("M")),
-                        child: CheckboxListTile(
-                          contentPadding: EdgeInsets.all(3),
-                          checkColor: Colors.white,
-                          activeColor: Colors.grey,
-                          value: isChecked4,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              isChecked4 = (value);
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: AlignmentDirectional(-1.05, 0.80),
-                      child: Container(
-                        color: Colors.transparent,
-                        constraints: BoxConstraints.tight(Size(50, 50)),
-                        // child: TextButton(onPressed: (){}, child: Text("M")),
-                        child: CheckboxListTile(
-                          contentPadding: EdgeInsets.all(3),
-                          checkColor: Colors.white,
-                          activeColor: Colors.grey,
-                          value: isChecked5,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              isChecked5 = (value);
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: AlignmentDirectional(0.28, -0.75),
-                      child: Container(
-                        color: Colors.transparent,
-                        constraints: BoxConstraints.tight(Size(50, 50)),
-                        // child: TextButton(onPressed: (){}, child: Text("M")),
-                        child: CheckboxListTile(
-                          contentPadding: EdgeInsets.all(3),
-                          checkColor: Colors.white,
-                          activeColor: Colors.grey,
-                          value: isChecked6,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              isChecked6 = (value);
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: AlignmentDirectional(0.28, -0.39),
-                      child: Container(
-                        color: Colors.transparent,
-                        constraints: BoxConstraints.tight(Size(50, 50)),
-                        // child: TextButton(onPressed: (){}, child: Text("M")),
-                        child: CheckboxListTile(
-                          contentPadding: EdgeInsets.all(3),
-                          checkColor: Colors.white,
-                          activeColor: Colors.grey,
-                          value: isChecked7,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              isChecked7 = (value);
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: AlignmentDirectional(0.28, -0.03),
-                      child: Container(
-                        color: Colors.transparent,
-                        constraints: BoxConstraints.tight(Size(50, 50)),
-                        // child: TextButton(onPressed: (){}, child: Text("M")),
-                        child: CheckboxListTile(
-                          contentPadding: EdgeInsets.all(3),
-                          checkColor: Colors.white,
-                          activeColor: Colors.grey,
-                          value: isChecked8,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              isChecked8 = (value);
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage(
-                      'assets/images/field.png',
-                    ),
-                  ),
-                ),
-                width: 300,
-                height: 300,
-                alignment: Alignment.topCenter,
               ),
-              Text(
-                'Speaker Score',
-                style: TextStyle(color: Colors.white, fontSize: 24),
+              Positioned(
+                top: 90,
+                bottom: 60,
+                left: 165,
+                child: 
+                FloatingActionButton(onPressed: _incrementCounter2,
+                backgroundColor: Colors.transparent,
+                heroTag: "tag2",
+              )
               ),
-              Container(
-                  transform: Matrix4.translationValues(0, 0, 10),
-                  child: Stack(
-                    alignment: Alignment.topCenter,
-                    children: [
-                      Image.asset(
-                        'assets/images/speaker.png',
-                        width: 200,
-                        height: 200,
-                      ),
-                      Positioned(
-                        top: 80,
-                        bottom: 60,
-                        right: 150,
-                        child: FloatingActionButton(
-                          onPressed: _incrementCounter3,
-                          backgroundColor: Colors.transparent,
-                          heroTag: "tag3",
-                        ),
-                      ),
-                      Positioned(
-                          top: 80,
-                          bottom: 60,
-                          left: 150,
-                          child: FloatingActionButton(
-                            onPressed: _incrementCounter4,
-                            backgroundColor: Colors.transparent,
-                            heroTag: "tag4",
-                          )),
-                      Positioned(
-                        top: 35,
-                        bottom: 30,
-                        child: Container(
-                          child: Text(
-                            '$_counter2',
-                            style: TextStyle(color: Colors.white, fontSize: 36),
-                          ),
-                        ),
-                      )
-                    ],
-                  )),
-              Text(
-                'Feeder Pickup',
-                style: TextStyle(color: Colors.white, fontSize: 24),
-              ),
-              Container(
-                  transform: Matrix4.translationValues(0, 0, 10),
-                  child: Stack(
-                    alignment: Alignment.topCenter,
-                    children: [
-                      Image.asset(
-                        'assets/images/source.png',
-                        width: 200,
-                        height: 200,
-                      ),
-                      Positioned(
-                        top: 80,
-                        bottom: 60,
-                        right: 150,
-                        child: FloatingActionButton(
-                          onPressed: _incrementCounter5,
-                          backgroundColor: Colors.transparent,
-                          heroTag: "tag5",
-                        ),
-                      ),
-                      Positioned(
-                          top: 80,
-                          bottom: 60,
-                          left: 150,
-                          child: FloatingActionButton(
-                            onPressed: _incrementCounter6,
-                            backgroundColor: Colors.transparent,
-                            heroTag: "tag6",
-                          )),
-                      Positioned(
-                        top: 55,
-                        bottom: 30,
-                        child: Container(
-                          child: Text(
-                            '$_counter3',
-                            style: TextStyle(color: Colors.white, fontSize: 30),
-                          ),
-                        ),
-                      )
-                    ],
-                  )),
-              ElevatedButton(
-                onPressed: () {
-                  v.pageData["1"] = isChecked;
-                  v.pageData["2"] = isChecked2;
-                  v.pageData["3"] = isChecked3;
-                  v.pageData["4"] = isChecked4;
-                  v.pageData["5"] = isChecked5;
-                  v.pageData["6"] = isChecked6;
-                  v.pageData["7"] = isChecked7;
-                  v.pageData["8"] = isChecked8;
-                  v.pageData["ampPlacement"] = _counter;
-                  v.pageData["speakerPlacement"] = _counter2;
-                  v.pageData["feederPickup"] = _counter3;
-                  Navigator.pushNamed(context, '/endgame');
-                },
-                style: TextButton.styleFrom(
-                  textStyle: const TextStyle(
-                    fontSize: 40,
-                  ),
-                  padding: const EdgeInsets.only(
-                      left: 14, top: 12, right: 14, bottom: 12),
-                  backgroundColor: Colors.blue,
-                  side: const BorderSide(
-                      width: 3, color: Color.fromRGBO(65, 104, 196, 1)),
-                ),
-                child: const Text(
-                  "Confirm",
-                  style: TextStyle(color: Colors.white, fontSize: 25),
-                ),
+              Positioned(
+                top: 90,
+                bottom: 30,
+                child: Container(
+                child:Text('$_counter',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 36
+                ),),),
               )
             ],
+          )
+        ),
+        Text('Field Pickup',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 24
+        ),
+        ),
+        Container(
+            transform:Matrix4.translationValues(0,0,10),
+            child: 
+          Stack(
+            fit:StackFit.loose,
+            children: [ 
+          Align(
+            alignment: AlignmentDirectional(-1.05, -0.86),
+            child:Container(
+            color: Colors.transparent,
+            constraints: BoxConstraints.tight(Size(50, 50)),
+            // child: TextButton(onPressed: (){}, child: Text("M")),
+            child: CheckboxListTile(
+            contentPadding: EdgeInsets.all(3),
+          checkColor: Colors.white,
+          activeColor: Colors.grey,
+          value: isChecked,
+          onChanged: (bool? value) {
+            setState(() {
+              isChecked = (value);
+          });
+          },
           ),
-        )));
+          ),
+          ),
+          Align(
+            alignment: AlignmentDirectional(-1.05, -0.44),
+            child:Container(
+            color: Colors.transparent,
+            constraints: BoxConstraints.tight(Size(50, 50)),
+            // child: TextButton(onPressed: (){}, child: Text("M")),
+            child: CheckboxListTile(
+            contentPadding: EdgeInsets.all(3),
+          checkColor: Colors.white,
+          activeColor: Colors.grey,
+          value: isChecked2,
+          onChanged: (bool? value) {
+            setState(() {
+              isChecked2 = (value);
+          });
+          },
+          ),
+          ),
+          ),
+          Align(
+            alignment: AlignmentDirectional(-1.05, -0.03),
+            child:Container(
+            color: Colors.transparent,
+            constraints: BoxConstraints.tight(Size(50, 50)),
+            // child: TextButton(onPressed: (){}, child: Text("M")),
+            child: CheckboxListTile(
+            contentPadding: EdgeInsets.all(3),
+          checkColor: Colors.white,
+          activeColor: Colors.grey,
+          value: isChecked3,
+          onChanged: (bool? value) {
+            setState(() {
+              isChecked3 = (value);
+          });
+          },
+          ),
+          ),
+          ),
+          Align(
+            alignment: AlignmentDirectional(-1.05, 0.39),
+            child:Container(
+            color: Colors.transparent,
+            constraints: BoxConstraints.tight(Size(50, 50)),
+            // child: TextButton(onPressed: (){}, child: Text("M")),
+            child: CheckboxListTile(
+            contentPadding: EdgeInsets.all(3),
+          checkColor: Colors.white,
+          activeColor: Colors.grey,
+          value: isChecked4,
+          onChanged: (bool? value) {
+            setState(() {
+              isChecked4= (value);
+          });
+          },
+          ),
+          ),
+          ),
+          Align(
+            alignment: AlignmentDirectional(-1.05, 0.80),
+            child:Container(
+            color: Colors.transparent,
+            constraints: BoxConstraints.tight(Size(50, 50)),
+            // child: TextButton(onPressed: (){}, child: Text("M")),
+            child: CheckboxListTile(
+            contentPadding: EdgeInsets.all(3),
+          checkColor: Colors.white,
+          activeColor: Colors.grey,
+          value: isChecked5,
+          onChanged: (bool? value) {
+            setState(() {
+              isChecked5 = (value);
+          });
+          },
+          ),
+          ),
+          ),
+          Align(
+            alignment: AlignmentDirectional(0.28, -0.75),
+            child:Container(
+            color: Colors.transparent,
+            constraints: BoxConstraints.tight(Size(50, 50)),
+            // child: TextButton(onPressed: (){}, child: Text("M")),
+            child: CheckboxListTile(
+            contentPadding: EdgeInsets.all(3),
+          checkColor: Colors.white,
+          activeColor: Colors.grey,
+          value: isChecked6,
+          onChanged: (bool? value) {
+            setState(() {
+              isChecked6 = (value);
+          });
+          },
+          ),
+          ),
+          ),
+          Align(
+            alignment: AlignmentDirectional(0.28, -0.39),
+            child:Container(
+            color: Colors.transparent,
+            constraints: BoxConstraints.tight(Size(50, 50)),
+            // child: TextButton(onPressed: (){}, child: Text("M")),
+            child: CheckboxListTile(
+            contentPadding: EdgeInsets.all(3),
+          checkColor: Colors.white,
+          activeColor: Colors.grey,
+          value: isChecked7,
+          onChanged: (bool? value) {
+            setState(() {
+              isChecked7 = (value);
+          });
+          },
+          ),
+          ),
+          ),
+          Align(
+            alignment: AlignmentDirectional(0.28, -0.03),
+            child:Container(
+            color: Colors.transparent,
+            constraints: BoxConstraints.tight(Size(50, 50)),
+            // child: TextButton(onPressed: (){}, child: Text("M")),
+            child: CheckboxListTile(
+            contentPadding: EdgeInsets.all(3),
+          checkColor: Colors.white,
+          activeColor: Colors.grey,
+          value: isChecked8,
+          onChanged: (bool? value) {
+            setState(() {
+              isChecked8 = (value);
+          });
+          },
+          ),
+          ),
+          ),
+          
+          ],
+          ),
+        
+          decoration: BoxDecoration(image:DecorationImage(
+            image: AssetImage('assets/images/field.png',
+            ),
+             ),
+        ),
+        width: 300,
+        height: 300,
+        alignment: Alignment.topCenter,
+        ),
+        Text('Speaker Score',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 24
+        ),
+        ),
+        Container(
+          transform:Matrix4.translationValues(0,0,10),
+          child:
+          Stack(
+            alignment: Alignment.topCenter,
+            children: [
+              Image.asset('assets/images/speaker.png',
+              width: 200,
+              height: 200,
+              ),
+              Positioned(
+              top: 80,
+              bottom: 60,
+              right: 150,
+               child:
+              FloatingActionButton(onPressed: _incrementCounter3,
+              backgroundColor: Colors.transparent,
+              heroTag: "tag3",
+              ),
+              ),
+              Positioned(
+                top: 80,
+                bottom: 60,
+                left: 150,
+                child: 
+                FloatingActionButton(onPressed: _incrementCounter4,
+                backgroundColor: Colors.transparent,
+                heroTag: "tag4",
+              )
+              ),
+              Positioned(
+                top: 35,
+                bottom: 30,
+                child: Container(
+                child:Text('$_counter2',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 36
+                ),),),
+              )
+            ],
+          )
+        ),
+        Text('Feeder Pickup',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 24
+        ),
+        ),
+        Container(
+          transform:Matrix4.translationValues(0,0,10),
+          child:
+          Stack(
+            alignment: Alignment.topCenter,
+            children: [
+              Image.asset('assets/images/source.png',
+              width: 200,
+              height: 200,
+              ),
+              Positioned(
+              top: 80,
+              bottom: 60,
+              right: 150,
+               child:
+              FloatingActionButton(onPressed: _incrementCounter5,
+              backgroundColor: Colors.transparent,
+              heroTag: "tag5",
+              ),
+              ),
+              Positioned(
+                top: 80,
+                bottom: 60,
+                left: 150,
+                child: 
+                FloatingActionButton(onPressed: _incrementCounter6,
+                backgroundColor: Colors.transparent,
+                heroTag: "tag6",
+              )
+              ),
+              Positioned(
+                top: 55,
+                bottom: 30,
+                child: Container(
+                child:Text('$_counter3',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 30
+                ),),),
+              )
+            ],
+          )
+        ),
+        ElevatedButton(
+              onPressed: () {
+                v.pageData["1"] = isChecked;
+                v.pageData["2"] = isChecked2;
+                v.pageData["3"] = isChecked3;
+                v.pageData["4"] = isChecked4;
+                v.pageData["5"] = isChecked5;
+                v.pageData["6"] = isChecked6;
+                v.pageData["7"] = isChecked7;
+                v.pageData["8"] = isChecked8;
+                v.pageData["ampPlacement"] = _counter;
+                v.pageData["speakerPlacement"] = _counter2;
+                v.pageData["feederPickup"] = _counter3;
+                Navigator.pushNamed(context, '/endgame');
+              },
+              style: TextButton.styleFrom(
+                textStyle: const TextStyle(
+                  fontSize: 40,
+                ),
+                padding: const EdgeInsets.only(
+                    left: 14, top: 12, right: 14, bottom: 12),
+                backgroundColor: Colors.blue,
+                side: const BorderSide(
+                    width: 3, color: Color.fromRGBO(65, 104, 196, 1)),
+              ), child: const Text("Confirm",
+              style: TextStyle(color: Colors.white, fontSize: 25),
+              ),
+              )
+      ],
+    ),       
+  )
+        )
+);
+
   }
 }
 
@@ -1355,7 +1129,11 @@ const List<Widget> endStage = <Widget>[
   Text('Harmony')
 ];
 
-const List<Widget> endStageNumber = <Widget>[Text('1'), Text('2'), Text('3')];
+const List<Widget> endStageNumber = <Widget>[
+  Text('1'),
+  Text('2'), 
+  Text('3')
+];
 
 const List<Widget> wingPosition = <Widget>[
   Text('Neither'),
@@ -1526,8 +1304,29 @@ class _EndgamePageState extends State<EndgamePage> {
           const Gap(50),
           ElevatedButton(
             onPressed: () {
-              setPref(
-                  v.pageData["robotNum"], v.pageData["matchNum"], v.pageData);
+              if (selectedStage[0]) {
+              v.pageData["stagePlacement"] = 0;
+              } else if (selectedStage[1]) {
+              v.pageData["stagePlacement"] = 1;
+              } else if (selectedStage[2]) {
+              v.pageData["stagePlacement"] = 2;
+              }
+              if (selectedStageNumber[0]) {
+              v.pageData["stageHang"] = 0;
+              } else if (selectedStageNumber[1]) {
+              v.pageData["stageHang"] = 1;
+              } else if (selectedStageNumber[2]) {
+              v.pageData["stageHang"] = 2;
+              }
+              if (selectedPosition[0]) {
+              v.pageData["positionBots"] = 0;
+              } else if (selectedPosition[1]) {
+              v.pageData["positionBots"] = 1;
+              } else if (selectedPosition[2]) {
+              v.pageData["positionBots"] = 2;
+              }
+              v.pageData["matchNotes"] = matchNotes.text;
+              setPref(v.pageData["robotNum"], v.pageData["matchNum"], v.pageData);
               Navigator.pushNamed(context, '/');
             },
             style: TextButton.styleFrom(
