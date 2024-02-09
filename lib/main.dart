@@ -1688,14 +1688,23 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
           ElevatedButton(
             onPressed: () {
               print(drivetrainText.text);
+              //v.pitData["driveTrain"] = drivetrainText.text;
               print(dimensionText.text);
+              //v.pitData["dimensions"] = dimensionText.text;
               print(weightText.text);
+              //v.pitData["weight"] = weightText.text;
               print(mechanismText.text);
+              //v.pitData["mechanism"] = mechanismText.text;
               print(scoreText.text);
+              //v.pitData["score"] = scoreText.text;
               print(chainText.text);
+              //v.pitData["chain"] = chainText.text;
               print(harmonyText.text);
+              //v.pitData["harmony"] = harmonyText.text;
               print(stagescoreText.text);
+              //v.pitData["stageScore"] = stagescoreText.text;
               print(feederfloorText.text);
+              //v.pitData["feederfloor"] = feederfloorText.text;
               Navigator.pushNamed(context, '/');
             },
             style: TextButton.styleFrom(
