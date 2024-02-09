@@ -1,10 +1,7 @@
-// ignore: unused_import
+// ignore_for_file: avoid_print, unused_import
 import 'package:flutter/material.dart';
-// ignore: unused_import
 import 'variables.dart' as v;
-// ignore: unused_import
 import 'navbar.dart';
-// ignore: unused_import
 import 'package:shared_preferences/shared_preferences.dart';
 
 

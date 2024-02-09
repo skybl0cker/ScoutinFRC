@@ -53,7 +53,7 @@ class ScoutingApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Scouting',
-      initialRoute: '/scouting',
+      initialRoute: '/',
       routes: <String, WidgetBuilder>{
         '/': (context) => const HomePage(
               title: '',
@@ -115,7 +115,7 @@ class _HomePageState extends State<HomePage> {
               );
             },
           ),
-          backgroundColor: Color.fromARGB(255, 118, 128, 149),
+          backgroundColor: Color.fromRGBO(65, 68, 73, 1),
           title: Image.asset(
             'assets/images/rohawktics.png',
             width: 75,
