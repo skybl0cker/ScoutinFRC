@@ -17,8 +17,7 @@ class NavBar extends StatelessWidget {
             currentAccountPicture: CircleAvatar(
               child: ClipOval(
                 child: Image.network(
-                  'https://cdn.vox-cdn.com/thumbor/pjAFMcil-hO0FghvSAoJPuP2XqQ=/1400x1050/filters:format(jpeg)/cdn.vox-cdn.com/uploads/chorus_asset/file/25125289/vlcsnap_2023_12_01_10h37m31s394.jpg',
-                  fit: BoxFit.cover,
+                  'https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM=',                  fit: BoxFit.cover,
                   width: 90,
                   height: 90,
                 ),
