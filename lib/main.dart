@@ -29,20 +29,9 @@ void firebasePull() async {
   }
 }
 
-void bigAssMatchFirebasePush(Map<dynamic, dynamic> data) async {
-  if (data != {}) {
-    DatabaseReference ref = FirebaseDatabase.instance.ref("SMR2024/matches");
-    //void test = bigAssMatchJsonFirebasePrep();
-    for (String key in data.keys) {
-      ref.child(key).set(data[key]);
-    }
-  }
-}
-
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   firebaseInit();
-  print(v.reorganizePD(v.pageData));
   runApp(const ScoutingApp());
 }
 
@@ -1809,5 +1798,15 @@ class _SScoutingPageState extends State<SScoutingPage> {
             alignment: Alignment.center,
           ),
         ));
+  }
+}
+
+void bigAssMatchFirebasePush(Map<dynamic, dynamic> data) async {
+  if (data != {}) {
+    DatabaseReference ref = FirebaseDatabase.instance.ref("SMR2024/matches");
+    //void test = bigAssMatchJsonFirebasePrep();
+    for (String key in data.keys) {
+      ref.child(key).set(data[key]);
+    }
   }
 }
