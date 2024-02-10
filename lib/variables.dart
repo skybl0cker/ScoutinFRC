@@ -18,7 +18,8 @@ dynamic pageData = {
   "7": false, //0 not picked up, 1 picked up
   "8": false, //0 not picked up, 1 picked up
   "stagePlacement": 0, //0 0 notes, 1 1 note, 2 2 notes, 3 3 notes
-  "stageHang": 0, //0 = no hang,1 hang on one closest to field,2 hang on one closest to amp,3 hang on other one
+  "stageHang":
+      0, //0 = no hang,1 hang on one closest to field,2 hang on one closest to amp,3 hang on other one
   "microphonePlacement": 0,
   "positionBots": 0,
   "matchNotes": "",
