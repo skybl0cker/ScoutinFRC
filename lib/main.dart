@@ -29,11 +29,13 @@ void firebasePull() async {
   }
 }
 
-void bigAssMatchFirebasePush() async {
-  DatabaseReference ref = FirebaseDatabase.instance.ref("SMR2024/matches");
-  //void test = bigAssMatchJsonFirebasePrep();
-  for (int i = 0; i < 40; i++) {
-    await ref.set({getPref("1", "1")});
+void bigAssMatchFirebasePush(Map<dynamic, dynamic> data) async {
+  if (data != {}) {
+    DatabaseReference ref = FirebaseDatabase.instance.ref("SMR2024/matches");
+    //void test = bigAssMatchJsonFirebasePrep();
+    for (String key in data.keys) {
+      ref.child(key).set(data[key]);
+    }
   }
 }
 
@@ -389,7 +391,9 @@ class _HomePageState extends State<HomePage> {
               child: ElevatedButton(
                 onPressed: () {
                   bigAssMatchJsonFirebasePrep();
-
+                  Future.delayed(const Duration(milliseconds: 500), () {
+                    bigAssMatchFirebasePush(v.allBotMatchData);
+                  });
                   print(v.allBotMatchData);
                 },
                 style: TextButton.styleFrom(
