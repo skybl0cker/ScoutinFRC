@@ -56,6 +56,11 @@ void setPref(
   pagePref.setStringList("$robotNum/$matchNum", temp);
 }
 
+void frick() async {
+    final SharedPreferences pagePref = await SharedPreferences.getInstance();
+pagePref.clear();
+}
+
 void bigAssMatchJsonFirebasePrep() async {
   // Obtain shared preferences.
   final SharedPreferences pagePref = await SharedPreferences.getInstance();

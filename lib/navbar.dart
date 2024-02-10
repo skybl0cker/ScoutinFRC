@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scouting2024/sp.dart';
 
 class NavBar extends StatelessWidget {
   const NavBar({super.key});
@@ -35,11 +36,13 @@ class NavBar extends StatelessWidget {
             onTap: () {},
           ),
           ListTile(
-            leading: const Icon(Icons.settings),
+            leading: const Icon(Icons.cloud),
             iconColor: Colors.white,
-            title: const Text('Settings'),
+            title: const Text('Clear Data'),
             textColor: Colors.white,
-            onTap: () {},
+            onTap: () {
+              frick();
+            },
           ),
         ],
       ),
