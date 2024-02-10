@@ -29,14 +29,12 @@ void firebasePull() async {
   }
 }
 
-void firebasePush() async {
-  DatabaseReference ref = FirebaseDatabase.instance.ref("SMR2024/matches/1/14");
-
-  await ref.set({
-    "name": "John",
-    "age": 18,
-    "address": {"line1": "100 Mountain View"}
-  });
+void bigAssMatchFirebasePush() async {
+  DatabaseReference ref = FirebaseDatabase.instance.ref("SMR2024/matches");
+  //void test = bigAssMatchJsonFirebasePrep();
+  for (int i = 0; i < 40; i++) {
+    await ref.set({getPref("1", "1")});
+  }
 }
 
 void main() {
@@ -107,8 +105,7 @@ class _HomePageState extends State<HomePage> {
                   size: 50,
                 ),
                 onPressed: () {
-                  firebasePush();
-                  firebasePull();
+                  bigAssMatchJsonFirebasePrep();
                   Scaffold.of(context).openDrawer();
                 },
                 tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,

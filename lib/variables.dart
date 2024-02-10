@@ -24,6 +24,8 @@ dynamic pageData = {
   "matchNotes": "",
 };
 
+Map<dynamic, dynamic> allBotMatchData = {};
+
 dynamic pitData = {
   "driveTrain": 0,
   "dimensions": 0,
@@ -38,6 +40,4 @@ dynamic pitData = {
 
 dynamic reorganizePD(dynamic data) {
   return pageData;
-  
 }
-
