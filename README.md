@@ -12,4 +12,4 @@ Our links:
 
 - [Bluealliance: Visit our page on Blue Alliance](https://www.thebluealliance.com/team/3824)
 
-Designed by Cash Egley and Brady Rogers
+Designed by Cash Egley, Brady Rogers, and Luke Daniel
