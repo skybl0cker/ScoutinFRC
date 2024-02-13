@@ -807,56 +807,98 @@ class _TeleopPageState extends State<TeleopPage> {
             child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              Text(
-                "Amp Score",
-                style: TextStyle(color: Colors.white, fontSize: 24),
-              ),
-              Container(
-                  transform: Matrix4.translationValues(0, 0, 10),
-                  child: Stack(
-                    alignment: Alignment.topCenter,
-                    children: [
-                      Image.asset(
-                        'assets/images/amp.png',
-                        width: 200,
-                        height: 200,
-                      ),
-                      Positioned(
-                        top: 90,
-                        bottom: 60,
-                        right: 165,
-                        child: FloatingActionButton(
-                          onPressed: _incrementCounter,
-                          backgroundColor: Colors.transparent,
-                          heroTag: "tag1",
-                        ),
-                      ),
-                      Positioned(
-                          top: 90,
-                          bottom: 60,
-                          left: 165,
-                          child: FloatingActionButton(
-                            onPressed: _incrementCounter2,
-                            backgroundColor: Colors.transparent,
-                            heroTag: "tag2",
-                          )),
-                      Positioned(
-                        top: 90,
-                        bottom: 30,
-                        child: Container(
-                          child: Text(
-                            '$_counter',
-                            style: TextStyle(color: Colors.white, fontSize: 36),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                      padding: EdgeInsetsDirectional.only(end: 10),
+                      transform: Matrix4.translationValues(0, 0, 10),
+                      child: Stack(
+                        alignment: Alignment.topCenter,
+                        children: [
+                          Image.asset(
+                            'assets/images/amp.png',
+                            width: 200,
+                            height: 200,
                           ),
-                        ),
-                      )
-                    ],
-                  )),
-              Text(
-                'Field Pickup',
-                style: TextStyle(color: Colors.white, fontSize: 24),
+                          Positioned(
+                            top: 90,
+                            bottom: 60,
+                            right: 165,
+                            child: FloatingActionButton(
+                              onPressed: _incrementCounter,
+                              backgroundColor: Colors.transparent,
+                              heroTag: "tag1",
+                            ),
+                          ),
+                          Positioned(
+                              top: 90,
+                              bottom: 60,
+                              left: 165,
+                              child: FloatingActionButton(
+                                onPressed: _incrementCounter2,
+                                backgroundColor: Colors.transparent,
+                                heroTag: "tag2",
+                              )),
+                          Positioned(
+                            top: 90,
+                            bottom: 30,
+                            child: Container(
+                              child: Text(
+                                '$_counter',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 36),
+                              ),
+                            ),
+                          )
+                        ],
+                      )),
+                  Container(
+                      transform: Matrix4.translationValues(0, 0, 10),
+                      child: Stack(
+                        alignment: Alignment.topCenter,
+                        children: [
+                          Image.asset(
+                            'assets/images/speaker.png',
+                            width: 200,
+                            height: 200,
+                          ),
+                          Positioned(
+                            top: 80,
+                            bottom: 60,
+                            right: 150,
+                            child: FloatingActionButton(
+                              onPressed: _incrementCounter3,
+                              backgroundColor: Colors.transparent,
+                              heroTag: "tag3",
+                            ),
+                          ),
+                          Positioned(
+                              top: 80,
+                              bottom: 60,
+                              left: 150,
+                              child: FloatingActionButton(
+                                onPressed: _incrementCounter4,
+                                backgroundColor: Colors.transparent,
+                                heroTag: "tag4",
+                              )),
+                          Positioned(
+                            top: 35,
+                            bottom: 30,
+                            child: Container(
+                              child: Text(
+                                '$_counter2',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 36),
+                              ),
+                            ),
+                          )
+                        ],
+                      )),
+                ],
               ),
               Container(
+                padding: EdgeInsets.all(0),
                 transform: Matrix4.translationValues(0, 0, 10),
                 child: Stack(
                   fit: StackFit.loose,
@@ -1025,55 +1067,6 @@ class _TeleopPageState extends State<TeleopPage> {
                 width: 300,
                 height: 300,
                 alignment: Alignment.topCenter,
-              ),
-              Text(
-                'Speaker Score',
-                style: TextStyle(color: Colors.white, fontSize: 24),
-              ),
-              Container(
-                  transform: Matrix4.translationValues(0, 0, 10),
-                  child: Stack(
-                    alignment: Alignment.topCenter,
-                    children: [
-                      Image.asset(
-                        'assets/images/speaker.png',
-                        width: 200,
-                        height: 200,
-                      ),
-                      Positioned(
-                        top: 80,
-                        bottom: 60,
-                        right: 150,
-                        child: FloatingActionButton(
-                          onPressed: _incrementCounter3,
-                          backgroundColor: Colors.transparent,
-                          heroTag: "tag3",
-                        ),
-                      ),
-                      Positioned(
-                          top: 80,
-                          bottom: 60,
-                          left: 150,
-                          child: FloatingActionButton(
-                            onPressed: _incrementCounter4,
-                            backgroundColor: Colors.transparent,
-                            heroTag: "tag4",
-                          )),
-                      Positioned(
-                        top: 35,
-                        bottom: 30,
-                        child: Container(
-                          child: Text(
-                            '$_counter2',
-                            style: TextStyle(color: Colors.white, fontSize: 36),
-                          ),
-                        ),
-                      )
-                    ],
-                  )),
-              Text(
-                'Feeder Pickup',
-                style: TextStyle(color: Colors.white, fontSize: 24),
               ),
               Container(
                   transform: Matrix4.translationValues(0, 0, 10),
