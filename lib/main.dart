@@ -12,6 +12,9 @@ import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+
 
 dynamic firebaseInit() async {
   await Firebase.initializeApp(
@@ -372,8 +375,8 @@ class _HomePageState extends State<HomePage> {
                   begin: Alignment.topRight,
                   end: Alignment.bottomLeft,
                   colors: const [
-                    Colors.purple,
-                    Color.fromARGB(255, 87, 0, 154),
+                    Color.fromARGB(255, 158, 155, 158),
+                    Color.fromARGB(255, 55, 55, 56),
                   ],
                 ),
               ),
@@ -384,6 +387,21 @@ class _HomePageState extends State<HomePage> {
                     bigAssMatchFirebasePush(v.allBotMatchData);
                   });
                   print(v.allBotMatchData);
+                  showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('Success!'),
+                    content: const Text(
+                      'Data has been pushed!'
+                    ),
+                    actions: [
+                      TextButton(
+                        child: const Text('OK'),
+                        onPressed: () => Navigator.pop(context),
+                      )
+                    ],
+                  ),
+                  );
                 },
                 style: TextButton.styleFrom(
                   elevation: 0,
@@ -1420,14 +1438,30 @@ class _SchedulePageState extends State<SchedulePage> {
             alignment: Alignment.center,
           ),
         ),
-        body: Center(
-            child: Column(children: <Widget>[
-          const SizedBox(
-            height: 20,
-          ),
-        ])));
+        body: WebViewWidget(controller: controller),
+      );
   }
 }
+WebViewController controller = WebViewController()
+  ..setJavaScriptMode(JavaScriptMode.unrestricted)
+  ..setBackgroundColor(const Color(0x00000000))
+  ..setNavigationDelegate(
+    NavigationDelegate(
+      onProgress: (int progress) {
+        // Update loading bar.
+      },
+      onPageStarted: (String url) {},
+      onPageFinished: (String url) {},
+      onWebResourceError: (WebResourceError error) {},
+      onNavigationRequest: (NavigationRequest request) {
+        if (request.url.startsWith('https://www.youtube.com/')) {
+          return NavigationDecision.prevent;
+        }
+        return NavigationDecision.navigate;
+      },
+    ),
+  )
+  ..loadRequest(Uri.parse('https://docs.google.com/spreadsheets/d/19tyje0fh_LlKKTaoMsnlHxIeKMulCJcj4pF-jQjb5tQ/edit?usp=sharing'));
 
 class AnalyticsPage extends StatefulWidget {
   const AnalyticsPage({super.key, required this.title});
