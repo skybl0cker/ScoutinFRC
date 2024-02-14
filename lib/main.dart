@@ -12,8 +12,8 @@ import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+
 
 
 dynamic firebaseInit() async {
@@ -407,7 +407,7 @@ class _HomePageState extends State<HomePage> {
                   elevation: 0,
                   shadowColor: const Color.fromRGBO(157, 90, 38, 1),
                   textStyle: const TextStyle(
-                    fontSize: 40,
+                    fontSize: 20,
                   ),
                   padding: const EdgeInsets.only(
                       left: 14, top: 12, right: 14, bottom: 12),
@@ -1087,6 +1087,7 @@ class _TeleopPageState extends State<TeleopPage> {
                 alignment: Alignment.topCenter,
               ),
               Container(
+                
                   transform: Matrix4.translationValues(0, 0, 10),
                   child: Stack(
                     alignment: Alignment.topCenter,

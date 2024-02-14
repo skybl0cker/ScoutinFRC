@@ -44,7 +44,6 @@ dependencies:
   transparent_image_button: ^1.0.0
   firebase_core: ^2.24.2
   firebase_database: ^10.4.0
-  fluttertoast: ^8.2.4
   webview_flutter: ^4.5.0
 
 dev_dependencies:
