@@ -1626,29 +1626,42 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
                 shrinkWrap: true,
                 children: <Widget>[
                   Container(
-                    child: Text('Test',
+                    child: TextButton(
+                    onPressed: (){},
+                    child: Text('Go',
                     style: TextStyle(color: Colors.white, fontSize: 25),
+                    )
                     ),
                     padding: const EdgeInsets.all(10),
                     color: Colors.red,
                   ),
                   Container(
-                    child: Text('Test',
-                    style: TextStyle(color: Colors.white, fontSize: 25),
+                    child: Column(children: [
+                      Text('Notes',
+                    style: TextStyle(color: Colors.white, fontSize: 16),
                     ),
+                    Text('(Auto)',
+                    style: TextStyle(color: Colors.white, fontSize: 10),
+                    ),
+                    ],),
                     padding: const EdgeInsets.all(10),
                     color: Colors.orange,
                   ),
                   Container(
-                    child: Text('Test',
-                    style: TextStyle(color: Colors.white, fontSize: 25),
+                    child: Column(children: [
+                      Text('Notes',
+                    style: TextStyle(color: Colors.white, fontSize: 16),
                     ),
+                    Text('(Teleop)',
+                    style: TextStyle(color: Colors.white, fontSize: 10),
+                    ),
+                    ],),
                     padding: const EdgeInsets.all(10),
                     color: Colors.yellow,
                   ),
                   Container(
-                    child: Text('Test',
-                    style: TextStyle(color: Colors.white, fontSize: 25),
+                    child: Text('Feeder (Teleop)',
+                    style: TextStyle(color: Colors.white, fontSize: 10),
                     ),
                     padding: const EdgeInsets.all(10),
                     color: Colors.green,
@@ -1666,7 +1679,48 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
                     ),
                     padding: const EdgeInsets.all(10),
                     color: Colors.purple,
-
+                  ),
+                  Container(
+                    child: Text('Test',
+                    style: TextStyle(color: Colors.white, fontSize: 25),
+                    ),
+                    padding: const EdgeInsets.all(10),
+                    color: Colors.lightBlue,
+                  ),
+                  Container(
+                    child: Text('Test',
+                    style: TextStyle(color: Colors.white, fontSize: 25),
+                    ),
+                    padding: const EdgeInsets.all(10),
+                    color: Colors.grey,
+                  ),
+                  Container(
+                    child: Text('Test',
+                    style: TextStyle(color: Colors.white, fontSize: 25),
+                    ),
+                    padding: const EdgeInsets.all(10),
+                    color: Colors.lightGreen,
+                  ),
+                  Container(
+                    child: Text('Test',
+                    style: TextStyle(color: Colors.white, fontSize: 25),
+                    ),
+                    padding: const EdgeInsets.all(10),
+                    color: Colors.deepPurple,
+                  ),
+                  Container(
+                    child: Text('Test',
+                    style: TextStyle(color: Colors.white, fontSize: 25),
+                    ),
+                    padding: const EdgeInsets.all(10),
+                    color: Colors.deepOrange,
+                  ),
+                  Container(
+                    child: Text('Test',
+                    style: TextStyle(color: Colors.white, fontSize: 25),
+                    ),
+                    padding: const EdgeInsets.all(10),
+                    color: Colors.pink,
                   ),
                  ],         
                )
@@ -1740,39 +1794,45 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
             "What is the drive train?",
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
-          TextField(
-              textAlign: TextAlign.center,
-              controller: drivetrainText,
-              style: const TextStyle(fontSize: 20),
-              decoration: InputDecoration(
-                contentPadding:
-                    EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
-                filled: true,
-                fillColor: const Color.fromRGBO(255, 255, 255, 1),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                hintText: 'Input answer here',
-              )),
+          SizedBox(
+            width: 350,
+            child: TextField(
+                textAlign: TextAlign.center,
+                controller: weightText,
+                style: const TextStyle(fontSize: 20),
+                decoration: InputDecoration(
+                  contentPadding:
+                   EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
+                  filled: true,
+                  fillColor: const Color.fromRGBO(255, 255, 255, 1),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  hintText: 'Input answer here',
+                )),
+          ),
           const Gap(20),
           const Text(
             "What is the dimensions of your Robot",
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
-          TextField(
-              textAlign: TextAlign.center,
-              controller: dimensionText,
-              style: const TextStyle(fontSize: 20),
-              decoration: InputDecoration(
-                contentPadding:
-                    EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
-                filled: true,
-                fillColor: const Color.fromRGBO(255, 255, 255, 1),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                hintText: 'Input answer here',
-              )),
+          SizedBox(
+            width: 350,
+            child: TextField(
+                textAlign: TextAlign.center,
+                controller: weightText,
+                style: const TextStyle(fontSize: 20),
+                decoration: InputDecoration(
+                  contentPadding:
+                   EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
+                  filled: true,
+                  fillColor: const Color.fromRGBO(255, 255, 255, 1),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  hintText: 'Input answer here',
+                )),
+          ),
           const Gap(20),
           const Text(
             "What is the weight of your Robot?",
@@ -1786,7 +1846,7 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
                 style: const TextStyle(fontSize: 20),
                 decoration: InputDecoration(
                   contentPadding:
-                      EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
+                   EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
                   filled: true,
                   fillColor: const Color.fromRGBO(255, 255, 255, 1),
                   border: OutlineInputBorder(
@@ -1800,115 +1860,133 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
             "Do you have a floor or feeder intake?",
             style: TextStyle(color: Colors.white, fontSize: 19),
           ),
-          TextField(
-              textAlign: TextAlign.center,
-              controller: mechanismText,
-              style: const TextStyle(fontSize: 20),
-              decoration: InputDecoration(
-                contentPadding:
-                    EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
-                filled: true,
-                fillColor: const Color.fromRGBO(255, 255, 255, 1),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                hintText: 'Input answer here',
-              )),
+          SizedBox(
+            width: 350,
+            child: TextField(
+                textAlign: TextAlign.center,
+                controller: weightText,
+                style: const TextStyle(fontSize: 20),
+                decoration: InputDecoration(
+                  contentPadding:
+                   EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
+                  filled: true,
+                  fillColor: const Color.fromRGBO(255, 255, 255, 1),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  hintText: 'Input answer here',
+                )),
+          ),
           Gap(20),
           const Text(
             "Do you score through the speaker, amp, or both?",
             style: TextStyle(color: Colors.white, fontSize: 17),
           ),
-          TextField(
-              textAlign: TextAlign.center,
-              controller: scoreText,
-              style: const TextStyle(fontSize: 20),
-              decoration: InputDecoration(
-                contentPadding:
-                    EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
-                filled: true,
-                fillColor: const Color.fromRGBO(255, 255, 255, 1),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                hintText: 'Input answer here',
-              )),
+          SizedBox(
+            width: 350,
+            child: TextField(
+                textAlign: TextAlign.center,
+                controller: weightText,
+                style: const TextStyle(fontSize: 20),
+                decoration: InputDecoration(
+                  contentPadding:
+                   EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
+                  filled: true,
+                  fillColor: const Color.fromRGBO(255, 255, 255, 1),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  hintText: 'Input answer here',
+                )),
+          ),
           Gap(20),
           const Text(
             "Can you hang on stage?",
             style: TextStyle(color: Colors.white, fontSize: 19),
           ),
-          TextField(
-              textAlign: TextAlign.center,
-              controller: chainText,
-              style: const TextStyle(fontSize: 20),
-              decoration: InputDecoration(
-                contentPadding:
-                    EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
-                filled: true,
-                fillColor: const Color.fromRGBO(255, 255, 255, 1),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                hintText: 'Input answer here',
-              )),
+          SizedBox(
+            width: 350,
+            child: TextField(
+                textAlign: TextAlign.center,
+                controller: weightText,
+                style: const TextStyle(fontSize: 20),
+                decoration: InputDecoration(
+                  contentPadding:
+                   EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
+                  filled: true,
+                  fillColor: const Color.fromRGBO(255, 255, 255, 1),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  hintText: 'Input answer here',
+                )),
+          ),
           Gap(20),
           const Text(
             "Can you achieve harmony?",
             style: TextStyle(color: Colors.white, fontSize: 19),
           ),
-          TextField(
-              textAlign: TextAlign.center,
-              controller: harmonyText,
-              style: const TextStyle(fontSize: 20),
-              decoration: InputDecoration(
-                contentPadding:
-                    EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
-                filled: true,
-                fillColor: const Color.fromRGBO(255, 255, 255, 1),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                hintText: 'Input answer here',
-              )),
+          SizedBox(
+            width: 350,
+            child: TextField(
+                textAlign: TextAlign.center,
+                controller: weightText,
+                style: const TextStyle(fontSize: 20),
+                decoration: InputDecoration(
+                  contentPadding:
+                   EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
+                  filled: true,
+                  fillColor: const Color.fromRGBO(255, 255, 255, 1),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  hintText: 'Input answer here',
+                )),
+          ),
           Gap(20),
           const Text(
             "Can you score on the stage?",
             style: TextStyle(color: Colors.white, fontSize: 19),
           ),
-          TextField(
-              textAlign: TextAlign.center,
-              controller: stagescoreText,
-              style: const TextStyle(fontSize: 20),
-              decoration: InputDecoration(
-                contentPadding:
-                    EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
-                filled: true,
-                fillColor: const Color.fromRGBO(255, 255, 255, 1),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                hintText: 'Input answer here',
-              )),
+          SizedBox(
+            width: 350,
+            child: TextField(
+                textAlign: TextAlign.center,
+                controller: weightText,
+                style: const TextStyle(fontSize: 20),
+                decoration: InputDecoration(
+                  contentPadding:
+                   EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
+                  filled: true,
+                  fillColor: const Color.fromRGBO(255, 255, 255, 1),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  hintText: 'Input answer here',
+                )),
+          ),
           Gap(20),
           const Text(
             "Do you prioritize floor pickup or feeder pickup?",
             style: TextStyle(color: Colors.white, fontSize: 17),
           ),
-          TextField(
-              textAlign: TextAlign.center,
-              controller: feederfloorText,
-              style: const TextStyle(fontSize: 20),
-              decoration: InputDecoration(
-                contentPadding:
-                    EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
-                filled: true,
-                fillColor: const Color.fromRGBO(255, 255, 255, 1),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                hintText: 'Input answer here',
-              )),
+          SizedBox(
+            width: 350,
+            child: TextField(
+                textAlign: TextAlign.center,
+                controller: weightText,
+                style: const TextStyle(fontSize: 20),
+                decoration: InputDecoration(
+                  contentPadding:
+                   EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
+                  filled: true,
+                  fillColor: const Color.fromRGBO(255, 255, 255, 1),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  hintText: 'Input answer here',
+                )),
+          ),
           const Gap(20),
           ElevatedButton(
             onPressed: () {
