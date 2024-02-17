@@ -12,6 +12,9 @@ import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+
+
 
 dynamic firebaseInit() async {
   await Firebase.initializeApp(
@@ -29,18 +32,9 @@ void firebasePull() async {
   }
 }
 
-void bigAssMatchFirebasePush() async {
-  DatabaseReference ref = FirebaseDatabase.instance.ref("SMR2024/matches");
-  //void test = bigAssMatchJsonFirebasePrep();
-  for (int i = 0; i < 40; i++) {
-    await ref.set({getPref("1", "1")});
-  }
-}
-
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   firebaseInit();
-  print(v.reorganizePD(v.pageData));
   runApp(const ScoutingApp());
 }
 
@@ -362,6 +356,71 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(
               height: 20,
             ),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25),
+                border: Border.all(
+                    style: BorderStyle.solid,
+                    color: Color.fromRGBO(1, 1, 1, 0.4),
+                    width: 5),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color.fromRGBO(30, 30, 30, 1),
+                    offset: Offset(6, 6),
+                    blurRadius: 15,
+                    spreadRadius: 1,
+                  )
+                ],
+                gradient: LinearGradient(
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
+                  colors: const [
+                    Color.fromARGB(255, 158, 155, 158),
+                    Color.fromARGB(255, 55, 55, 56),
+                  ],
+                ),
+              ),
+              child: ElevatedButton(
+                onPressed: () {
+                  bigAssMatchJsonFirebasePrep();
+                  Future.delayed(const Duration(milliseconds: 500), () {
+                    bigAssMatchFirebasePush(v.allBotMatchData);
+                  });
+                  print(v.allBotMatchData);
+                  showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('Success!'),
+                    content: const Text(
+                      'Data has been pushed!'
+                    ),
+                    actions: [
+                      TextButton(
+                        child: const Text('OK'),
+                        onPressed: () => Navigator.pop(context),
+                      )
+                    ],
+                  ),
+                  );
+                },
+                style: TextButton.styleFrom(
+                  elevation: 0,
+                  shadowColor: const Color.fromRGBO(157, 90, 38, 1),
+                  textStyle: const TextStyle(
+                    fontSize: 20,
+                  ),
+                  padding: const EdgeInsets.only(
+                      left: 14, top: 12, right: 14, bottom: 12),
+                  backgroundColor: Colors.transparent,
+                  side: const BorderSide(
+                      width: 3, color: Color.fromRGBO(157, 90, 38, 0)),
+                ),
+                child: const Text(
+                  "Connect Data",
+                  style: TextStyle(color: Colors.white),
+                ).animate().fade(delay: 500.ms).slide(delay: 500.ms),
+              ),
+            ),
           ].animate().fade(delay: 300.ms).slide(delay: 300.ms)),
         ));
   }
@@ -628,25 +687,25 @@ class _AutoPageState extends State<AutoPage> {
           ElevatedButton(
             onPressed: () {
               if (selectedStart[0]) {
-              v.pageData["startingPosition"] = 0;
+                v.pageData["startingPosition"] = 0;
               } else if (selectedStart[1]) {
-              v.pageData["startingPosition"] = 1;
+                v.pageData["startingPosition"] = 1;
               } else if (selectedStart[2]) {
-              v.pageData["startingPosition"] = 2;
+                v.pageData["startingPosition"] = 2;
               }
               if (selectedAuto[0]) {
-              v.pageData["autoScoring"] = 0;
+                v.pageData["autoScoring"] = 0;
               } else if (selectedAuto[1]) {
-              v.pageData["autoScoring"] = 1;
+                v.pageData["autoScoring"] = 1;
               } else if (selectedAuto[2]) {
-              v.pageData["autoScoring"] = 2;
+                v.pageData["autoScoring"] = 2;
               }
               if (selectedEnd[0]) {
-              v.pageData["wingLeave"] = 0;
+                v.pageData["wingLeave"] = 0;
               } else if (selectedEnd[1]) {
-              v.pageData["wingLeave"] = 1;
+                v.pageData["wingLeave"] = 1;
               } else if (selectedEnd[2]) {
-              v.pageData["wingLeave"] = 2;
+                v.pageData["wingLeave"] = 2;
               }
               Navigator.pushNamed(context, '/teleop');
             },
@@ -675,6 +734,7 @@ class TeleopPage extends StatefulWidget {
   @override
   State<TeleopPage> createState() => _TeleopPageState();
 }
+
 class _TeleopPageState extends State<TeleopPage> {
   int _counter = 0;
   int _counter2 = 0;
@@ -684,31 +744,37 @@ class _TeleopPageState extends State<TeleopPage> {
       _counter++;
     });
   }
+
   void _incrementCounter2() {
     setState(() {
       _counter--;
     });
   }
+
   void _incrementCounter3() {
     setState(() {
       _counter2++;
     });
   }
+
   void _incrementCounter4() {
     setState(() {
       _counter2--;
     });
   }
+
   void _incrementCounter5() {
     setState(() {
       _counter3++;
     });
   }
+
   void _incrementCounter6() {
     setState(() {
       _counter3--;
     });
   }
+
   bool? isChecked = false;
   bool? isChecked2 = false;
   bool? isChecked3 = false;
@@ -723,7 +789,7 @@ class _TeleopPageState extends State<TeleopPage> {
         drawer: const NavBar(),
         appBar: AppBar(
           leading: Builder(
-          builder: (BuildContext context) {
+            builder: (BuildContext context) {
               return IconButton(
                 icon: const Icon(
                   Icons.menu,
@@ -852,14 +918,176 @@ class _TeleopPageState extends State<TeleopPage> {
                   ),
                 ],
               ),
-              Positioned(
-              top: 90,
-              bottom: 60,
-              right: 165,
-               child:
-              FloatingActionButton(onPressed: _incrementCounter,
-              backgroundColor: Colors.transparent,
-              heroTag: "tag1",
+              Container(
+                padding: EdgeInsets.all(0),
+                transform: Matrix4.translationValues(0, 0, 10),
+                child: Stack(
+                  fit: StackFit.loose,
+                  children: [
+                    Align(
+                      alignment: AlignmentDirectional(-1.05, -0.86),
+                      child: Container(
+                        color: Colors.transparent,
+                        constraints: BoxConstraints.tight(Size(50, 50)),
+                        // child: TextButton(onPressed: (){}, child: Text("M")),
+                        child: CheckboxListTile(
+                          contentPadding: EdgeInsets.all(3),
+                          checkColor: Colors.white,
+                          activeColor: Colors.grey,
+                          value: isChecked,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              isChecked = (value);
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: AlignmentDirectional(-1.05, -0.44),
+                      child: Container(
+                        color: Colors.transparent,
+                        constraints: BoxConstraints.tight(Size(50, 50)),
+                        // child: TextButton(onPressed: (){}, child: Text("M")),
+                        child: CheckboxListTile(
+                          contentPadding: EdgeInsets.all(3),
+                          checkColor: Colors.white,
+                          activeColor: Colors.grey,
+                          value: isChecked2,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              isChecked2 = (value);
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: AlignmentDirectional(-1.05, -0.03),
+                      child: Container(
+                        color: Colors.transparent,
+                        constraints: BoxConstraints.tight(Size(50, 50)),
+                        // child: TextButton(onPressed: (){}, child: Text("M")),
+                        child: CheckboxListTile(
+                          contentPadding: EdgeInsets.all(3),
+                          checkColor: Colors.white,
+                          activeColor: Colors.grey,
+                          value: isChecked3,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              isChecked3 = (value);
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: AlignmentDirectional(-1.05, 0.39),
+                      child: Container(
+                        color: Colors.transparent,
+                        constraints: BoxConstraints.tight(Size(50, 50)),
+                        // child: TextButton(onPressed: (){}, child: Text("M")),
+                        child: CheckboxListTile(
+                          contentPadding: EdgeInsets.all(3),
+                          checkColor: Colors.white,
+                          activeColor: Colors.grey,
+                          value: isChecked4,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              isChecked4 = (value);
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: AlignmentDirectional(-1.05, 0.80),
+                      child: Container(
+                        color: Colors.transparent,
+                        constraints: BoxConstraints.tight(Size(50, 50)),
+                        // child: TextButton(onPressed: (){}, child: Text("M")),
+                        child: CheckboxListTile(
+                          contentPadding: EdgeInsets.all(3),
+                          checkColor: Colors.white,
+                          activeColor: Colors.grey,
+                          value: isChecked5,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              isChecked5 = (value);
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: AlignmentDirectional(0.28, -0.75),
+                      child: Container(
+                        color: Colors.transparent,
+                        constraints: BoxConstraints.tight(Size(50, 50)),
+                        // child: TextButton(onPressed: (){}, child: Text("M")),
+                        child: CheckboxListTile(
+                          contentPadding: EdgeInsets.all(3),
+                          checkColor: Colors.white,
+                          activeColor: Colors.grey,
+                          value: isChecked6,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              isChecked6 = (value);
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: AlignmentDirectional(0.28, -0.39),
+                      child: Container(
+                        color: Colors.transparent,
+                        constraints: BoxConstraints.tight(Size(50, 50)),
+                        // child: TextButton(onPressed: (){}, child: Text("M")),
+                        child: CheckboxListTile(
+                          contentPadding: EdgeInsets.all(3),
+                          checkColor: Colors.white,
+                          activeColor: Colors.grey,
+                          value: isChecked7,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              isChecked7 = (value);
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: AlignmentDirectional(0.28, -0.03),
+                      child: Container(
+                        color: Colors.transparent,
+                        constraints: BoxConstraints.tight(Size(50, 50)),
+                        // child: TextButton(onPressed: (){}, child: Text("M")),
+                        child: CheckboxListTile(
+                          contentPadding: EdgeInsets.all(3),
+                          checkColor: Colors.white,
+                          activeColor: Colors.grey,
+                          value: isChecked8,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              isChecked8 = (value);
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(
+                      'assets/images/field.png',
+                    ),
+                  ),
+                ),
+                width: 300,
+                height: 300,
+                alignment: Alignment.topCenter,
               ),
               Container(
                   transform: Matrix4.translationValues(0, 0, 10),
@@ -932,48 +1160,7 @@ class _TeleopPageState extends State<TeleopPage> {
                   style: TextStyle(color: Colors.white, fontSize: 25),
                 ),
               )
-              ),
-              Positioned(
-                top: 90,
-                bottom: 30,
-                child: Container(
-                child:Text('$_counter',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 36
-                ),),),
-              )
             ],
-          )
-        ),
-        Text('Field Pickup',
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 24
-        ),
-        ),
-        Container(
-            transform:Matrix4.translationValues(0,0,10),
-            child: 
-          Stack(
-            fit:StackFit.loose,
-            children: [ 
-          Align(
-            alignment: AlignmentDirectional(-1.05, -0.86),
-            child:Container(
-            color: Colors.transparent,
-            constraints: BoxConstraints.tight(Size(50, 50)),
-            // child: TextButton(onPressed: (){}, child: Text("M")),
-            child: CheckboxListTile(
-            contentPadding: EdgeInsets.all(3),
-          checkColor: Colors.white,
-          activeColor: Colors.grey,
-          value: isChecked,
-          onChanged: (bool? value) {
-            setState(() {
-              isChecked = (value);
-          });
-          },
           ),
         )
         );
@@ -1195,25 +1382,25 @@ class _EndgamePageState extends State<EndgamePage> {
           ElevatedButton(
             onPressed: () {
               if (selectedStage[0]) {
-              v.pageData["stagePlacement"] = 0;
+                v.pageData["stagePlacement"] = 0;
               } else if (selectedStage[1]) {
-              v.pageData["stagePlacement"] = 1;
+                v.pageData["stagePlacement"] = 1;
               } else if (selectedStage[2]) {
-              v.pageData["stagePlacement"] = 2;
+                v.pageData["stagePlacement"] = 2;
               }
               if (selectedStageNumber[0]) {
-              v.pageData["stageHang"] = 0;
+                v.pageData["stageHang"] = 0;
               } else if (selectedStageNumber[1]) {
-              v.pageData["stageHang"] = 1;
+                v.pageData["stageHang"] = 1;
               } else if (selectedStageNumber[2]) {
-              v.pageData["stageHang"] = 2;
+                v.pageData["stageHang"] = 2;
               }
               if (selectedPosition[0]) {
-              v.pageData["positionBots"] = 0;
+                v.pageData["positionBots"] = 0;
               } else if (selectedPosition[1]) {
-              v.pageData["positionBots"] = 1;
+                v.pageData["positionBots"] = 1;
               } else if (selectedPosition[2]) {
-              v.pageData["positionBots"] = 2;
+                v.pageData["positionBots"] = 2;
               }
               if (selectedPlacement[0]) {
                 v.pageData["stagePlacement"] = 0;
@@ -1223,7 +1410,8 @@ class _EndgamePageState extends State<EndgamePage> {
                 v.pageData["stagePlacement"] = 2;
               }
               v.pageData["matchNotes"] = matchNotes.text;
-              setPref(v.pageData["robotNum"], v.pageData["matchNum"], v.pageData);
+              setPref(
+                  v.pageData["robotNum"], v.pageData["matchNum"], v.pageData);
               Navigator.pushNamed(context, '/');
             },
             style: TextButton.styleFrom(
@@ -1291,14 +1479,30 @@ class _SchedulePageState extends State<SchedulePage> {
             alignment: Alignment.center,
           ),
         ),
-        body: Center(
-            child: Column(children: <Widget>[
-          const SizedBox(
-            height: 20,
-          ),
-        ])));
+        body: WebViewWidget(controller: controller),
+      );
   }
 }
+WebViewController controller = WebViewController()
+  ..setJavaScriptMode(JavaScriptMode.unrestricted)
+  ..setBackgroundColor(const Color(0x00000000))
+  ..setNavigationDelegate(
+    NavigationDelegate(
+      onProgress: (int progress) {
+        // Update loading bar.
+      },
+      onPageStarted: (String url) {},
+      onPageFinished: (String url) {},
+      onWebResourceError: (WebResourceError error) {},
+      onNavigationRequest: (NavigationRequest request) {
+        if (request.url.startsWith('https://www.youtube.com/')) {
+          return NavigationDecision.prevent;
+        }
+        return NavigationDecision.navigate;
+      },
+    ),
+  )
+  ..loadRequest(Uri.parse('https://docs.google.com/spreadsheets/d/19tyje0fh_LlKKTaoMsnlHxIeKMulCJcj4pF-jQjb5tQ/edit?usp=sharing'));
 
 class AnalyticsPage extends StatefulWidget {
   const AnalyticsPage({super.key, required this.title});
@@ -1474,45 +1678,39 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
             "What is the drive train?",
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
-          SizedBox(
-            width: 350,
-            child: TextField(
-                textAlign: TextAlign.center,
-                controller: weightText,
-                style: const TextStyle(fontSize: 20),
-                decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
-                  filled: true,
-                  fillColor: const Color.fromRGBO(255, 255, 255, 1),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  hintText: 'Input answer here',
-                )),
-          ),
+          TextField(
+              textAlign: TextAlign.center,
+              controller: drivetrainText,
+              style: const TextStyle(fontSize: 20),
+              decoration: InputDecoration(
+                contentPadding:
+                    EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
+                filled: true,
+                fillColor: const Color.fromRGBO(255, 255, 255, 1),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                hintText: 'Input answer here',
+              )),
           const Gap(20),
           const Text(
             "What is the dimensions of your Robot",
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
-          SizedBox(
-            width: 350,
-            child: TextField(
-                textAlign: TextAlign.center,
-                controller: weightText,
-                style: const TextStyle(fontSize: 20),
-                decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
-                  filled: true,
-                  fillColor: const Color.fromRGBO(255, 255, 255, 1),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  hintText: 'Input answer here',
-                )),
-          ),
+          TextField(
+              textAlign: TextAlign.center,
+              controller: dimensionText,
+              style: const TextStyle(fontSize: 20),
+              decoration: InputDecoration(
+                contentPadding:
+                    EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
+                filled: true,
+                fillColor: const Color.fromRGBO(255, 255, 255, 1),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                hintText: 'Input answer here',
+              )),
           const Gap(20),
           const Text(
             "What is the weight of your Robot?",
@@ -1540,133 +1738,115 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
             "Do you have a floor or feeder intake?",
             style: TextStyle(color: Colors.white, fontSize: 19),
           ),
-          SizedBox(
-            width: 350,
-            child: TextField(
-                textAlign: TextAlign.center,
-                controller: weightText,
-                style: const TextStyle(fontSize: 20),
-                decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
-                  filled: true,
-                  fillColor: const Color.fromRGBO(255, 255, 255, 1),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  hintText: 'Input answer here',
-                )),
-          ),
+          TextField(
+              textAlign: TextAlign.center,
+              controller: mechanismText,
+              style: const TextStyle(fontSize: 20),
+              decoration: InputDecoration(
+                contentPadding:
+                    EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
+                filled: true,
+                fillColor: const Color.fromRGBO(255, 255, 255, 1),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                hintText: 'Input answer here',
+              )),
           Gap(20),
           const Text(
             "Do you score through the speaker, amp, or both?",
             style: TextStyle(color: Colors.white, fontSize: 17),
           ),
-                    SizedBox(
-            width: 350,
-            child: TextField(
-                textAlign: TextAlign.center,
-                controller: weightText,
-                style: const TextStyle(fontSize: 20),
-                decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
-                  filled: true,
-                  fillColor: const Color.fromRGBO(255, 255, 255, 1),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  hintText: 'Input answer here',
-                )),
-          ),
+          TextField(
+              textAlign: TextAlign.center,
+              controller: scoreText,
+              style: const TextStyle(fontSize: 20),
+              decoration: InputDecoration(
+                contentPadding:
+                    EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
+                filled: true,
+                fillColor: const Color.fromRGBO(255, 255, 255, 1),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                hintText: 'Input answer here',
+              )),
           Gap(20),
           const Text(
             "Can you hang on stage?",
             style: TextStyle(color: Colors.white, fontSize: 19),
           ),
-          SizedBox(
-            width: 350,
-            child: TextField(
-                textAlign: TextAlign.center,
-                controller: weightText,
-                style: const TextStyle(fontSize: 20),
-                decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
-                  filled: true,
-                  fillColor: const Color.fromRGBO(255, 255, 255, 1),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  hintText: 'Input answer here',
-                )),
-          ),
+          TextField(
+              textAlign: TextAlign.center,
+              controller: chainText,
+              style: const TextStyle(fontSize: 20),
+              decoration: InputDecoration(
+                contentPadding:
+                    EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
+                filled: true,
+                fillColor: const Color.fromRGBO(255, 255, 255, 1),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                hintText: 'Input answer here',
+              )),
           Gap(20),
           const Text(
             "Can you achieve harmony?",
             style: TextStyle(color: Colors.white, fontSize: 19),
           ),
-          SizedBox(
-            width: 350,
-            child: TextField(
-                textAlign: TextAlign.center,
-                controller: weightText,
-                style: const TextStyle(fontSize: 20),
-                decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
-                  filled: true,
-                  fillColor: const Color.fromRGBO(255, 255, 255, 1),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  hintText: 'Input answer here',
-                )),
-          ),
+          TextField(
+              textAlign: TextAlign.center,
+              controller: harmonyText,
+              style: const TextStyle(fontSize: 20),
+              decoration: InputDecoration(
+                contentPadding:
+                    EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
+                filled: true,
+                fillColor: const Color.fromRGBO(255, 255, 255, 1),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                hintText: 'Input answer here',
+              )),
           Gap(20),
           const Text(
             "Can you score on the stage?",
             style: TextStyle(color: Colors.white, fontSize: 19),
           ),
-          SizedBox(
-            width: 350,
-            child: TextField(
-                textAlign: TextAlign.center,
-                controller: weightText,
-                style: const TextStyle(fontSize: 20),
-                decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
-                  filled: true,
-                  fillColor: const Color.fromRGBO(255, 255, 255, 1),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  hintText: 'Input answer here',
-                )),
-          ),
+          TextField(
+              textAlign: TextAlign.center,
+              controller: stagescoreText,
+              style: const TextStyle(fontSize: 20),
+              decoration: InputDecoration(
+                contentPadding:
+                    EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
+                filled: true,
+                fillColor: const Color.fromRGBO(255, 255, 255, 1),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                hintText: 'Input answer here',
+              )),
           Gap(20),
           const Text(
             "Do you prioritize floor pickup or feeder pickup?",
             style: TextStyle(color: Colors.white, fontSize: 17),
           ),
-          SizedBox(
-            width: 350,
-            child: TextField(
-                textAlign: TextAlign.center,
-                controller: weightText,
-                style: const TextStyle(fontSize: 20),
-                decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
-                  filled: true,
-                  fillColor: const Color.fromRGBO(255, 255, 255, 1),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  hintText: 'Input answer here',
-                )),
-          ),
+          TextField(
+              textAlign: TextAlign.center,
+              controller: feederfloorText,
+              style: const TextStyle(fontSize: 20),
+              decoration: InputDecoration(
+                contentPadding:
+                    EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
+                filled: true,
+                fillColor: const Color.fromRGBO(255, 255, 255, 1),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                hintText: 'Input answer here',
+              )),
           const Gap(20),
           ElevatedButton(
             onPressed: () {
@@ -1755,5 +1935,15 @@ class _SScoutingPageState extends State<SScoutingPage> {
             alignment: Alignment.center,
           ),
         ));
+  }
+}
+
+void bigAssMatchFirebasePush(Map<dynamic, dynamic> data) async {
+  if (data != {}) {
+    DatabaseReference ref = FirebaseDatabase.instance.ref("SMR2024/matches");
+    //void test = bigAssMatchJsonFirebasePrep();
+    for (String key in data.keys) {
+      ref.child(key).set(data[key]);
+    }
   }
 }
