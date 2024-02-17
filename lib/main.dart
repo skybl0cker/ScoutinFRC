@@ -822,12 +822,12 @@ class _TeleopPageState extends State<TeleopPage> {
           ),
         ),
         body: Center(
-            child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  Expanded(child: 
                   Container(
                       padding: EdgeInsetsDirectional.only(end: 10),
                       transform: Matrix4.translationValues(0, 0, 10),
@@ -871,6 +871,8 @@ class _TeleopPageState extends State<TeleopPage> {
                           )
                         ],
                       )),
+                  ),
+                  Expanded(child: 
                   Container(
                       transform: Matrix4.translationValues(0, 0, 10),
                       child: Stack(
@@ -913,6 +915,7 @@ class _TeleopPageState extends State<TeleopPage> {
                           )
                         ],
                       )),
+                  ),
                 ],
               ),
               Container(
@@ -1087,7 +1090,6 @@ class _TeleopPageState extends State<TeleopPage> {
                 alignment: Alignment.topCenter,
               ),
               Container(
-                
                   transform: Matrix4.translationValues(0, 0, 10),
                   child: Stack(
                     alignment: Alignment.topCenter,
@@ -1095,7 +1097,7 @@ class _TeleopPageState extends State<TeleopPage> {
                       Image.asset(
                         'assets/images/source.png',
                         width: 200,
-                        height: 200,
+                        height: 175,
                       ),
                       Positioned(
                         top: 80,
@@ -1117,7 +1119,7 @@ class _TeleopPageState extends State<TeleopPage> {
                             heroTag: "tag6",
                           )),
                       Positioned(
-                        top: 55,
+                        top: 42,
                         bottom: 30,
                         child: Container(
                           child: Text(
@@ -1160,7 +1162,8 @@ class _TeleopPageState extends State<TeleopPage> {
               )
             ],
           ),
-        )));
+        )
+        );
   }
 }
 
@@ -1170,12 +1173,21 @@ const List<Widget> endStage = <Widget>[
   Text('Harmony')
 ];
 
-const List<Widget> endStageNumber = <Widget>[Text('1'), Text('2'), Text('3')];
+const List<Widget> endStageNumber = <Widget>[
+  Text('1'),
+  Text('2'), 
+  Text('3')];
 
 const List<Widget> wingPosition = <Widget>[
   Text('Neither'),
   Text('Inside'),
   Text('Outside')
+];
+
+const List<Widget> endPlacement = <Widget>[
+  Text('Yes'),
+  Text('No'),
+  Text('Placeholder')
 ];
 
 class EndgamePage extends StatefulWidget {
@@ -1190,6 +1202,7 @@ class _EndgamePageState extends State<EndgamePage> {
   final List<bool> selectedStage = <bool>[false, false, false];
   final List<bool> selectedStageNumber = <bool>[false, false, false];
   final List<bool> selectedPosition = <bool>[false, false, false];
+  final List<bool> selectedPlacement = <bool>[false, false, false];
   @override
   Widget build(BuildContext context) {
     TextEditingController matchNotes = TextEditingController();
@@ -1235,7 +1248,7 @@ class _EndgamePageState extends State<EndgamePage> {
             'Endgame',
             style: TextStyle(color: Colors.white, fontSize: 37),
           ),
-          const Gap(20),
+          const Gap(15),
           const Text(
             "Stage",
             style: TextStyle(color: Colors.white, fontSize: 25),
@@ -1262,7 +1275,7 @@ class _EndgamePageState extends State<EndgamePage> {
             isSelected: selectedStage, // MAKE A NEW ONE OF THESE
             children: endStage, //MAKE A NEW ONE OF THESE
           ),
-          const Gap(20),
+          const Gap(15),
           const Text(
             "Bots on Stage",
             style: TextStyle(color: Colors.white, fontSize: 25),
@@ -1289,7 +1302,7 @@ class _EndgamePageState extends State<EndgamePage> {
             isSelected: selectedStageNumber, // MAKE A NEW ONE OF THESE
             children: endStageNumber, //MAKE A NEW ONE OF THESE
           ),
-          const Gap(20),
+          const Gap(15),
           const Text(
             "Robot Position",
             style: TextStyle(color: Colors.white, fontSize: 25),
@@ -1315,6 +1328,33 @@ class _EndgamePageState extends State<EndgamePage> {
             ),
             isSelected: selectedPosition, // MAKE A NEW ONE OF THESE
             children: wingPosition, //MAKE A NEW ONE OF THESE
+          ),
+          Gap(15),
+          const Text(
+            "Did he score on stage?",
+            style: TextStyle(color: Colors.white, fontSize: 25),
+          ),
+          ToggleButtons(
+            onPressed: (int index) {
+              setState(() {
+                for (int i = 0; i < selectedPlacement.length; i++) {
+                  selectedPlacement[i] =
+                      i == index; //CHECK AND MAKE SURE IT DOES WHAT IT SHOULD
+                }
+              });
+            },
+            borderRadius: const BorderRadius.all(Radius.circular(12)),
+            selectedBorderColor: const Color.fromRGBO(196, 188, 65, 1),
+            borderWidth: 2.5,
+            selectedColor: Colors.black,
+            fillColor: Colors.yellow,
+            color: Colors.white,
+            constraints: const BoxConstraints(
+              minHeight: 40.0,
+              minWidth: 80.0,
+            ),
+            isSelected: selectedPlacement, // MAKE A NEW ONE OF THESE
+            children: endPlacement, //MAKE A NEW ONE OF THESE
           ),
           const Gap(20),
           const Text(
@@ -1361,6 +1401,13 @@ class _EndgamePageState extends State<EndgamePage> {
                 v.pageData["positionBots"] = 1;
               } else if (selectedPosition[2]) {
                 v.pageData["positionBots"] = 2;
+              }
+              if (selectedPlacement[0]) {
+                v.pageData["stagePlacement"] = 0;
+              } else if (selectedPlacement[1]) {
+                v.pageData["stagePlacement"] = 1;
+              } else if (selectedPlacement[2]) {
+                v.pageData["stagePlacement"] = 2;
               }
               v.pageData["matchNotes"] = matchNotes.text;
               setPref(
@@ -1467,6 +1514,8 @@ class AnalyticsPage extends StatefulWidget {
 class _AnalyticsHomePageState extends State<AnalyticsPage> {
   @override
   Widget build(BuildContext context) {
+    setPref(
+    v.pageData["robotNum"], v.pageData["matchNum"], v.pageData);
     return Scaffold(
         drawer: const NavBar(),
         appBar: AppBar(
@@ -1503,7 +1552,67 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
             alignment: Alignment.center,
           ),
         ),
-        body: const Center(child: Column(children: <Widget>[])));
+        body: Center(
+          child: SingleChildScrollView(child:
+           Column(
+            children: <Widget>[
+              GridView.count(crossAxisCount: 3,
+                primary: false,
+                padding: const EdgeInsets.all(20),
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                shrinkWrap: true,
+                children: <Widget>[
+                  Container(
+                    child: Text('Test',
+                    style: TextStyle(color: Colors.white, fontSize: 25),
+                    ),
+                    padding: const EdgeInsets.all(10),
+                    color: Colors.red,
+                  ),
+                  Container(
+                    child: Text('Test',
+                    style: TextStyle(color: Colors.white, fontSize: 25),
+                    ),
+                    padding: const EdgeInsets.all(10),
+                    color: Colors.orange,
+                  ),
+                  Container(
+                    child: Text('Test',
+                    style: TextStyle(color: Colors.white, fontSize: 25),
+                    ),
+                    padding: const EdgeInsets.all(10),
+                    color: Colors.yellow,
+                  ),
+                  Container(
+                    child: Text('Test',
+                    style: TextStyle(color: Colors.white, fontSize: 25),
+                    ),
+                    padding: const EdgeInsets.all(10),
+                    color: Colors.green,
+                  ),
+                  Container(
+                    child: Text('Test',
+                    style: TextStyle(color: Colors.white, fontSize: 25),
+                    ),
+                    padding: const EdgeInsets.all(10),
+                    color: Colors.blue,
+                  ),
+                  Container(
+                    child: Text('Test',
+                    style: TextStyle(color: Colors.white, fontSize: 25),
+                    ),
+                    padding: const EdgeInsets.all(10),
+                    color: Colors.purple,
+
+                  ),
+                 ],         
+               )
+              ]
+             )
+           )
+        )
+          );
   }
 }
 
