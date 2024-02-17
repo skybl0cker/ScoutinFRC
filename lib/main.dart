@@ -1880,7 +1880,7 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
           Gap(20),
           const Text(
             "Do you score through the speaker, amp, or both?",
-            style: TextStyle(color: Colors.white, fontSize: 17),
+            style: TextStyle(color: Colors.white, fontSize: 16),
           ),
           SizedBox(
             width: 350,
