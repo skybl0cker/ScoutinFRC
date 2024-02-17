@@ -509,8 +509,16 @@ class _MatchNumPageState extends State<MatchNumPage> {
           const Gap(25),
           ElevatedButton(
             onPressed: () {
+              if (robotNum.text == "") {
+                v.pageData["robotNum"] = "None";
+              } else {
               v.pageData["robotNum"] = robotNum.text;
+              }
+              if (matchNum.text == "") {
+                v.pageData["matchNum"] = "None";
+              } else {
               v.pageData["matchNum"] = matchNum.text;
+              }
               Navigator.pushNamed(context, '/auto');
             },
             style: TextButton.styleFrom(
@@ -747,7 +755,9 @@ class _TeleopPageState extends State<TeleopPage> {
 
   void _incrementCounter2() {
     setState(() {
-      _counter--;
+      if (_counter > 0) {
+        _counter--;
+      }
     });
   }
 
@@ -759,7 +769,9 @@ class _TeleopPageState extends State<TeleopPage> {
 
   void _incrementCounter4() {
     setState(() {
-      _counter2--;
+      if (_counter2 > 0) {
+        _counter2--;
+      }
     });
   }
 
@@ -771,7 +783,9 @@ class _TeleopPageState extends State<TeleopPage> {
 
   void _incrementCounter6() {
     setState(() {
-      _counter3--;
+      if (_counter3 > 0) {
+        _counter3--;
+      }
     });
   }
 
@@ -822,100 +836,146 @@ class _TeleopPageState extends State<TeleopPage> {
           ),
         ),
         body: Center(
+            child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(child: 
                   Container(
                       padding: EdgeInsetsDirectional.only(end: 10),
                       transform: Matrix4.translationValues(0, 0, 10),
                       child: Stack(
                         alignment: Alignment.topCenter,
                         children: [
-                          Image.asset(
-                            'assets/images/amp.png',
-                            width: 200,
-                            height: 200,
-                          ),
-                          Positioned(
-                            top: 90,
-                            bottom: 60,
-                            right: 165,
-                            child: FloatingActionButton(
-                              onPressed: _incrementCounter,
-                              backgroundColor: Colors.transparent,
-                              heroTag: "tag1",
+                          ConstrainedBox(
+                            constraints: BoxConstraints(
+                              maxWidth: MediaQuery.of(context).size.width *
+                                  0.45, // 45% of screen width
+                              maxHeight: MediaQuery.of(context).size.height *
+                                  0.25, // 25% of screen height
+                            ),
+                            child: Image.asset(
+                              'assets/images/amp.png',
+                              fit: BoxFit.cover, // Adjust the box fit as needed
                             ),
                           ),
                           Positioned(
-                              top: 90,
-                              bottom: 60,
-                              left: 165,
-                              child: FloatingActionButton(
-                                onPressed: _incrementCounter2,
-                                backgroundColor: Colors.transparent,
-                                heroTag: "tag2",
-                              )),
+                            top: MediaQuery.of(context).size.height *
+                                0.09, // Example adjustment
+                            left: MediaQuery.of(context).size.width *
+                                -0.01, // Example adjustment
+                            child: FloatingActionButton(
+                              onPressed: () => _incrementCounter(),
+                              backgroundColor:
+                                  Colors.transparent, // Example color
+                              heroTag: "tag1",
+                              //child: Icon(Icons.add),
+                            ),
+                          ),
                           Positioned(
-                            top: 90,
-                            bottom: 30,
+                            top: MediaQuery.of(context).size.height *
+                                0.09, // Example adjustment
+                            right: MediaQuery.of(context).size.width *
+                                -0.01, // Example adjustment
+                            child: FloatingActionButton(
+                              onPressed: () => _incrementCounter2(),
+                              backgroundColor:
+                                  Colors.transparent, // Example color
+                              heroTag: "tag2",
+                              //child: Icon(Icons.remove),
+                            ),
+                          ),
+                          Positioned(
+                            top: MediaQuery.of(context).size.height *
+                                0.07, // Adjust based on your layout needs
                             child: Container(
+                              width: MediaQuery.of(context).size.width *
+                                  0.45, // Adjust to match the image width or as required
+                              height: MediaQuery.of(context).size.height *
+                                  0.1, //Set an appropriate height for the container
+                              alignment: Alignment
+                                  .center, // Center the text within the container
                               child: Text(
                                 '$_counter',
                                 style: TextStyle(
-                                    color: Colors.white, fontSize: 36),
+                                  color: Colors.white,
+                                  fontSize: 36,
+                                ),
+                                textAlign: TextAlign
+                                    .center, // Ensure the text is centered if the container is wider
                               ),
                             ),
                           )
                         ],
                       )),
-                  ),
-                  Expanded(child: 
                   Container(
                       transform: Matrix4.translationValues(0, 0, 10),
                       child: Stack(
                         alignment: Alignment.topCenter,
                         children: [
-                          Image.asset(
-                            'assets/images/speaker.png',
-                            width: 200,
-                            height: 200,
-                          ),
-                          Positioned(
-                            top: 80,
-                            bottom: 60,
-                            right: 150,
-                            child: FloatingActionButton(
-                              onPressed: _incrementCounter3,
-                              backgroundColor: Colors.transparent,
-                              heroTag: "tag3",
+                          ConstrainedBox(
+                            constraints: BoxConstraints(
+                              maxWidth: MediaQuery.of(context).size.width *
+                                  0.45, // 45% of screen width
+                              maxHeight: MediaQuery.of(context).size.height *
+                                  0.25, // 25% of screen height
+                            ),
+                            child: Image.asset(
+                              'assets/images/speaker.png',
+                              width: 200,
+                              height: 200,
                             ),
                           ),
                           Positioned(
-                              top: 80,
-                              bottom: 60,
-                              left: 150,
-                              child: FloatingActionButton(
-                                onPressed: _incrementCounter4,
-                                backgroundColor: Colors.transparent,
-                                heroTag: "tag4",
-                              )),
+                            top: MediaQuery.of(context).size.height *
+                                0.09, // Example adjustment
+                            left: MediaQuery.of(context).size.width *
+                                -0.01, // Example adjustment
+                            child: FloatingActionButton(
+                              onPressed: () => _incrementCounter3(),
+                              backgroundColor:
+                                  Colors.transparent, // Example color
+                              heroTag: "tag3",
+                              //child: Icon(Icons.add),
+                            ),
+                          ),
                           Positioned(
-                            top: 35,
-                            bottom: 30,
+                            top: MediaQuery.of(context).size.height *
+                                0.09, // Example adjustment
+                            right: MediaQuery.of(context).size.width *
+                                -0.01, // Example adjustment
+                            child: FloatingActionButton(
+                              onPressed: () => _incrementCounter4(),
+                              backgroundColor:
+                                  Colors.transparent, // Example color
+                              heroTag: "tag4",
+                              //child: Icon(Icons.remove),
+                            ),
+                          ),
+                          Positioned(
+                            top: MediaQuery.of(context).size.height *
+                                0.025, // Adjust based on your layout needs
                             child: Container(
+                              width: MediaQuery.of(context).size.width *
+                                  0.45, // Adjust to match the image width or as required
+                              height: MediaQuery.of(context).size.height *
+                                  0.1, // Set an appropriate height for the container
+                              alignment: Alignment
+                                  .center, // Center the text within the container
                               child: Text(
                                 '$_counter2',
                                 style: TextStyle(
-                                    color: Colors.white, fontSize: 36),
+                                  color: Colors.white,
+                                  fontSize: 36,
+                                ),
+                                textAlign: TextAlign
+                                    .center, // Ensure the text is centered if the container is wider
                               ),
                             ),
                           )
                         ],
                       )),
-                  ),
                 ],
               ),
               Container(
@@ -1162,6 +1222,7 @@ class _TeleopPageState extends State<TeleopPage> {
               )
             ],
           ),
+        )
         )
         );
   }
@@ -1556,11 +1617,12 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
           child: SingleChildScrollView(child:
            Column(
             children: <Widget>[
-              GridView.count(crossAxisCount: 3,
+              GridView.count(crossAxisCount: 4,
                 primary: false,
                 padding: const EdgeInsets.all(20),
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
+                childAspectRatio: 1.75,
                 shrinkWrap: true,
                 children: <Widget>[
                   Container(
