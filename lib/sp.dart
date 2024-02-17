@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'variables.dart' as v;
 import 'navbar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 void setPref(
     String robotNum, String matchNum, Map<String, Object> pData) async {
   // Obtain shared preferences.
@@ -55,12 +54,10 @@ void setPref(
   print(temp);
   pagePref.setStringList("$robotNum/$matchNum", temp);
 }
-
 void frick() async {
     final SharedPreferences pagePref = await SharedPreferences.getInstance();
 pagePref.clear();
 }
-
 void bigAssMatchJsonFirebasePrep() async {
   // Obtain shared preferences.
   final SharedPreferences pagePref = await SharedPreferences.getInstance();
@@ -76,7 +73,6 @@ void bigAssMatchJsonFirebasePrep() async {
   }
   v.allBotMatchData = bigAssData;
 }
-
 Future<List<String>> getPref(String robotNum, String matchNum) async {
   // Obtain shared preferences.
   final SharedPreferences pagePref = await SharedPreferences.getInstance();
