@@ -1323,6 +1323,12 @@ const List<Widget> endPlacement = <Widget>[
   Text('Placeholder')
 ];
 
+const List<Widget> microphonePlacement = <Widget>[
+  Text("1"),
+  Text("2"),
+  Text("3")
+];
+
 class EndgamePage extends StatefulWidget {
   const EndgamePage({super.key, required this.title});
   final String title;
@@ -1336,6 +1342,7 @@ class _EndgamePageState extends State<EndgamePage> {
   final List<bool> selectedStageNumber = <bool>[false, false, false];
   final List<bool> selectedPosition = <bool>[false, false, false];
   final List<bool> selectedPlacement = <bool>[false, false, false];
+  final List<bool> selectedMicrophone = <bool>[false, false, false];
   @override
   Widget build(BuildContext context) {
     TextEditingController matchNotes = TextEditingController();
@@ -1381,7 +1388,7 @@ class _EndgamePageState extends State<EndgamePage> {
             'Endgame',
             style: TextStyle(color: Colors.white, fontSize: 37),
           ),
-          const Gap(15),
+          const Gap(10),
           const Text(
             "Stage",
             style: TextStyle(color: Colors.white, fontSize: 25),
@@ -1396,10 +1403,10 @@ class _EndgamePageState extends State<EndgamePage> {
               });
             },
             borderRadius: const BorderRadius.all(Radius.circular(12)),
-            selectedBorderColor: const Color.fromRGBO(198, 65, 65, 1),
+            selectedBorderColor: const Color.fromARGB(255, 106, 32, 140),
             borderWidth: 2.5,
-            selectedColor: Colors.black,
-            fillColor: Colors.red,
+            selectedColor: Colors.white,
+            fillColor: Colors.purple,
             color: Colors.white,
             constraints: const BoxConstraints(
               minHeight: 40.0,
@@ -1408,7 +1415,7 @@ class _EndgamePageState extends State<EndgamePage> {
             isSelected: selectedStage, // MAKE A NEW ONE OF THESE
             children: endStage, //MAKE A NEW ONE OF THESE
           ),
-          const Gap(15),
+          const Gap(10),
           const Text(
             "Bots on Stage",
             style: TextStyle(color: Colors.white, fontSize: 25),
@@ -1423,10 +1430,10 @@ class _EndgamePageState extends State<EndgamePage> {
               });
             },
             borderRadius: const BorderRadius.all(Radius.circular(12)),
-            selectedBorderColor: const Color.fromRGBO(50, 87, 39, 1),
+            selectedBorderColor: const Color.fromARGB(255, 106, 32, 140),
             borderWidth: 2.5,
-            selectedColor: Colors.black,
-            fillColor: Colors.green,
+            selectedColor: Colors.white,
+            fillColor: Colors.purple,
             color: Colors.white,
             constraints: const BoxConstraints(
               minHeight: 40.0,
@@ -1435,7 +1442,7 @@ class _EndgamePageState extends State<EndgamePage> {
             isSelected: selectedStageNumber, // MAKE A NEW ONE OF THESE
             children: endStageNumber, //MAKE A NEW ONE OF THESE
           ),
-          const Gap(15),
+          const Gap(10),
           const Text(
             "Robot Position",
             style: TextStyle(color: Colors.white, fontSize: 25),
@@ -1450,10 +1457,10 @@ class _EndgamePageState extends State<EndgamePage> {
               });
             },
             borderRadius: const BorderRadius.all(Radius.circular(12)),
-            selectedBorderColor: const Color.fromRGBO(196, 188, 65, 1),
+            selectedBorderColor: const Color.fromARGB(255, 106, 32, 140),
             borderWidth: 2.5,
-            selectedColor: Colors.black,
-            fillColor: Colors.yellow,
+            selectedColor: Colors.white,
+            fillColor: Colors.purple,
             color: Colors.white,
             constraints: const BoxConstraints(
               minHeight: 40.0,
@@ -1462,7 +1469,7 @@ class _EndgamePageState extends State<EndgamePage> {
             isSelected: selectedPosition, // MAKE A NEW ONE OF THESE
             children: wingPosition, //MAKE A NEW ONE OF THESE
           ),
-          Gap(15),
+          Gap(10),
           const Text(
             "Did he score on stage?",
             style: TextStyle(color: Colors.white, fontSize: 25),
@@ -1477,10 +1484,10 @@ class _EndgamePageState extends State<EndgamePage> {
               });
             },
             borderRadius: const BorderRadius.all(Radius.circular(12)),
-            selectedBorderColor: const Color.fromRGBO(196, 188, 65, 1),
+            selectedBorderColor: const Color.fromARGB(255, 106, 32, 140),
             borderWidth: 2.5,
-            selectedColor: Colors.black,
-            fillColor: Colors.yellow,
+            selectedColor: Colors.white,
+            fillColor: Colors.purple,
             color: Colors.white,
             constraints: const BoxConstraints(
               minHeight: 40.0,
@@ -1489,7 +1496,34 @@ class _EndgamePageState extends State<EndgamePage> {
             isSelected: selectedPlacement, // MAKE A NEW ONE OF THESE
             children: endPlacement, //MAKE A NEW ONE OF THESE
           ),
-          const Gap(20),
+          Gap(10),
+          const Text(
+            "How many landed on Microphone?",
+            style: TextStyle(color: Colors.white, fontSize: 23),
+          ),
+          ToggleButtons(
+            onPressed: (int index) {
+              setState(() {
+                for (int i = 0; i < selectedMicrophone.length; i++) {
+                  selectedMicrophone[i] =
+                      i == index; //CHECK AND MAKE SURE IT DOES WHAT IT SHOULD
+                }
+              });
+            },
+            borderRadius: const BorderRadius.all(Radius.circular(12)),
+            selectedBorderColor: const Color.fromARGB(255, 106, 32, 140),
+            borderWidth: 2.5,
+            selectedColor: Colors.white,
+            fillColor: Colors.purple,
+            color: Colors.white,
+            constraints: const BoxConstraints(
+              minHeight: 40.0,
+              minWidth: 80.0,
+            ),
+            isSelected: selectedMicrophone, // MAKE A NEW ONE OF THESE
+            children: microphonePlacement, //MAKE A NEW ONE OF THESE
+          ),
+          const Gap(10),
           const Text(
             'Match Notes',
             style: TextStyle(color: Colors.white, fontSize: 25),
@@ -1511,15 +1545,15 @@ class _EndgamePageState extends State<EndgamePage> {
                   hintText: 'Input answer here',
                 )),
           ),
-          const Gap(50),
+          const Gap(10),
           ElevatedButton(
             onPressed: () {
               if (selectedStage[0]) {
-                v.pageData["stagePlacement"] = 0;
+                v.pageData["stagePosition"] = 0;
               } else if (selectedStage[1]) {
-                v.pageData["stagePlacement"] = 1;
+                v.pageData["stagePosition"] = 1;
               } else if (selectedStage[2]) {
-                v.pageData["stagePlacement"] = 2;
+                v.pageData["stagePosition"] = 2;
               }
               if (selectedStageNumber[0]) {
                 v.pageData["stageHang"] = 0;
@@ -1541,6 +1575,13 @@ class _EndgamePageState extends State<EndgamePage> {
                 v.pageData["stagePlacement"] = 1;
               } else if (selectedPlacement[2]) {
                 v.pageData["stagePlacement"] = 2;
+              }
+              if (selectedMicrophone[0]) {
+                v.pageData["microphonePlacement"] = 0;
+              } else if (selectedMicrophone[1]) {
+                v.pageData["microphonePlacement"] = 1;
+              } else if (selectedMicrophone[2]) {
+                v.pageData["microphonePlacement"] = 2;
               }
               v.pageData["matchNotes"] = matchNotes.text;
               setPref(
@@ -1686,121 +1727,201 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
           ),
         ),
         body: Center(
-          child: SingleChildScrollView(child:
+          child:
            Column(
             children: <Widget>[
               GridView.count(crossAxisCount: 4,
                 primary: false,
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(5),
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
-                childAspectRatio: 1.75,
+                childAspectRatio: 1.50,
                 shrinkWrap: true,
                 children: <Widget>[
                   Container(
-                    child: TextButton(
-                    onPressed: (){},
-                    child: Text('Go',
-                    style: TextStyle(color: Colors.white, fontSize: 25),
-                    )
-                    ),
+                    child: TextButton(onPressed: () {}, child: Text("Go!",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20
+                    ),)),
                     padding: const EdgeInsets.all(10),
-                    color: Colors.red,
+                    color: Colors.red
                   ),
                   Container(
-                    child: Column(children: [
-                      Text('Notes',
-                    style: TextStyle(color: Colors.white, fontSize: 16),
-                    ),
-                    Text('(Auto)',
-                    style: TextStyle(color: Colors.white, fontSize: 10),
-                    ),
-                    ],),
+                    child: TextField(style: TextStyle(color: Colors.white),),
                     padding: const EdgeInsets.all(10),
-                    color: Colors.orange,
+                    color: Color.fromRGBO(96, 99, 108, 1),
                   ),
                   Container(
-                    child: Column(children: [
-                      Text('Notes',
-                    style: TextStyle(color: Colors.white, fontSize: 16),
-                    ),
-                    Text('(Teleop)',
-                    style: TextStyle(color: Colors.white, fontSize: 10),
-                    ),
-                    ],),
+                    child: TextField(style: TextStyle(color: Colors.white),),
                     padding: const EdgeInsets.all(10),
-                    color: Colors.yellow,
+                    color: Color.fromRGBO(96, 99, 108, 1),
                   ),
                   Container(
-                    child: Text('Feeder (Teleop)',
-                    style: TextStyle(color: Colors.white, fontSize: 10),
-                    ),
+                    child: TextField(style: TextStyle(color: Colors.white),),
                     padding: const EdgeInsets.all(10),
-                    color: Colors.green,
+                    color: Color.fromRGBO(96, 99, 108, 1),
                   ),
                   Container(
-                    child: Text('Test',
-                    style: TextStyle(color: Colors.white, fontSize: 25),
+                    child: Column(
+                    children: [
+                      Text("Notes", style: TextStyle(color: Colors.white, fontSize: 15),),
+                      Text("(Auto)", style: TextStyle(color: Colors.white, fontSize: 10),),
+                    ],
                     ),
                     padding: const EdgeInsets.all(10),
-                    color: Colors.blue,
+                    color: Color.fromRGBO(96, 99, 108, 1),
                   ),
                   Container(
-                    child: Text('Test',
-                    style: TextStyle(color: Colors.white, fontSize: 25),
-                    ),
                     padding: const EdgeInsets.all(10),
-                    color: Colors.purple,
+                    color: Color.fromRGBO(165, 176, 168, 1),
                   ),
                   Container(
-                    child: Text('Test',
-                    style: TextStyle(color: Colors.white, fontSize: 25),
-                    ),
                     padding: const EdgeInsets.all(10),
-                    color: Colors.lightBlue,
+                    color: Color.fromRGBO(165, 176, 168, 1),
                   ),
                   Container(
-                    child: Text('Test',
-                    style: TextStyle(color: Colors.white, fontSize: 25),
-                    ),
                     padding: const EdgeInsets.all(10),
-                    color: Colors.grey,
+                    color: Color.fromRGBO(165, 176, 168, 1),
                   ),
                   Container(
-                    child: Text('Test',
-                    style: TextStyle(color: Colors.white, fontSize: 25),
+                    child: Column(
+                    children: [
+                      Text("Notes", style: TextStyle(color: Colors.white, fontSize: 15),),
+                      Text("(Amp)", style: TextStyle(color: Colors.white, fontSize: 10),),
+                    ],
                     ),
                     padding: const EdgeInsets.all(10),
-                    color: Colors.lightGreen,
+                    color: Color.fromRGBO(96, 99, 108, 1),
                   ),
                   Container(
-                    child: Text('Test',
-                    style: TextStyle(color: Colors.white, fontSize: 25),
-                    ),
                     padding: const EdgeInsets.all(10),
-                    color: Colors.deepPurple,
+                    color: Color.fromRGBO(165, 176, 168, 1),
                   ),
                   Container(
-                    child: Text('Test',
-                    style: TextStyle(color: Colors.white, fontSize: 25),
-                    ),
                     padding: const EdgeInsets.all(10),
-                    color: Colors.deepOrange,
+                    color: Color.fromRGBO(165, 176, 168, 1),
                   ),
                   Container(
-                    child: Text('Test',
-                    style: TextStyle(color: Colors.white, fontSize: 25),
+                    padding: const EdgeInsets.all(10),
+                    color: Color.fromRGBO(165, 176, 168, 1),
+                  ),
+                  Container(
+                    child: Column(
+                    children: [
+                      Text("Notes", style: TextStyle(color: Colors.white, fontSize: 15),),
+                      Text("(Speaker)", style: TextStyle(color: Colors.white, fontSize: 10),),
+                    ],
                     ),
                     padding: const EdgeInsets.all(10),
-                    color: Colors.pink,
+                    color: Color.fromRGBO(96, 99, 108, 1),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    color: Color.fromRGBO(165, 176, 168, 1),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    color: Color.fromRGBO(165, 176, 168, 1),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    color: Color.fromRGBO(165, 176, 168, 1),
+                  ),
+                  Container(
+                    child: Column(
+                    children: [
+                      Text("Pickup", style: TextStyle(color: Colors.white, fontSize: 15),),
+                      Text("(Floor)", style: TextStyle(color: Colors.white, fontSize: 10),),
+                    ],
+                    ),
+                    padding: const EdgeInsets.all(10),
+                    color: Color.fromRGBO(96, 99, 108, 1),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    color: Color.fromRGBO(165, 176, 168, 1),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    color: Color.fromRGBO(165, 176, 168, 1),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    color: Color.fromRGBO(165, 176, 168, 1),
+                  ),
+                  Container(
+                    child: Column(
+                    children: [
+                      Text("Pickup", style: TextStyle(color: Colors.white, fontSize: 15),),
+                      Text("(Feeder)", style: TextStyle(color: Colors.white, fontSize: 10),),
+                    ],
+                    ),
+                    padding: const EdgeInsets.all(10),
+                    color: Color.fromRGBO(96, 99, 108, 1),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    color: Color.fromRGBO(165, 176, 168, 1),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    color: Color.fromRGBO(165, 176, 168, 1),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    color: Color.fromRGBO(165, 176, 168, 1),
+                  ),
+                  Container(
+                    child: Column(
+                    children: [
+                      Text("Hang", style: TextStyle(color: Colors.white, fontSize: 15),),
+                      Text("(Normal)", style: TextStyle(color: Colors.white, fontSize: 10),),
+                    ],
+                    ),
+                    padding: const EdgeInsets.all(10),
+                    color: Color.fromRGBO(96, 99, 108, 1),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    color: Color.fromRGBO(165, 176, 168, 1),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    color: Color.fromRGBO(165, 176, 168, 1),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    color: Color.fromRGBO(165, 176, 168, 1),
+                  ),
+                  Container(
+                    child: Column(
+                    children: [
+                      Text("Hang", style: TextStyle(color: Colors.white, fontSize: 15),),
+                      Text("(Harmony)", style: TextStyle(color: Colors.white, fontSize: 10),),
+                    ],
+                    ),
+                    padding: const EdgeInsets.all(10),
+                    color: Color.fromRGBO(96, 99, 108, 1),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    color: Color.fromRGBO(165, 176, 168, 1),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    color: Color.fromRGBO(165, 176, 168, 1),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    color: Color.fromRGBO(165, 176, 168, 1),
                   ),
                  ],         
                )
               ]
              )
            )
-        )
-          );
+        );
   }
 }
 
@@ -1870,7 +1991,7 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
             width: 350,
             child: TextField(
                 textAlign: TextAlign.center,
-                controller: weightText,
+                controller: drivetrainText,
                 style: const TextStyle(fontSize: 20),
                 decoration: InputDecoration(
                   contentPadding:
@@ -1892,7 +2013,7 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
             width: 350,
             child: TextField(
                 textAlign: TextAlign.center,
-                controller: weightText,
+                controller: dimensionText,
                 style: const TextStyle(fontSize: 20),
                 decoration: InputDecoration(
                   contentPadding:
@@ -1936,7 +2057,7 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
             width: 350,
             child: TextField(
                 textAlign: TextAlign.center,
-                controller: weightText,
+                controller: mechanismText,
                 style: const TextStyle(fontSize: 20),
                 decoration: InputDecoration(
                   contentPadding:
@@ -1958,7 +2079,7 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
             width: 350,
             child: TextField(
                 textAlign: TextAlign.center,
-                controller: weightText,
+                controller: scoreText,
                 style: const TextStyle(fontSize: 20),
                 decoration: InputDecoration(
                   contentPadding:
@@ -1980,7 +2101,7 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
             width: 350,
             child: TextField(
                 textAlign: TextAlign.center,
-                controller: weightText,
+                controller: chainText,
                 style: const TextStyle(fontSize: 20),
                 decoration: InputDecoration(
                   contentPadding:
@@ -2002,7 +2123,7 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
             width: 350,
             child: TextField(
                 textAlign: TextAlign.center,
-                controller: weightText,
+                controller: harmonyText,
                 style: const TextStyle(fontSize: 20),
                 decoration: InputDecoration(
                   contentPadding:
@@ -2024,7 +2145,7 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
             width: 350,
             child: TextField(
                 textAlign: TextAlign.center,
-                controller: weightText,
+                controller: stagescoreText,
                 style: const TextStyle(fontSize: 20),
                 decoration: InputDecoration(
                   contentPadding:
@@ -2046,7 +2167,7 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
             width: 350,
             child: TextField(
                 textAlign: TextAlign.center,
-                controller: weightText,
+                controller: feederfloorText,
                 style: const TextStyle(fontSize: 20),
                 decoration: InputDecoration(
                   contentPadding:

@@ -14,14 +14,15 @@ dynamic pageData = {
   "6": false, //0 not picked up, 1 picked up
   "7": false, //0 not picked up, 1 picked up
   "8": false, 
-  "speakerPlacement": 0,
   "ampPlacement": 0,
+  "speakerPlacement": 0,
   "floorPickup": 0,
   "feederPickup": 0,//0 not picked up, 1 picked up
-  "stagePlacement": 0, //0 0 notes, 1 1 note, 2 2 notes, 3 3 notes
+  "stagePosition": 0,
   "stageHang": 0, //0 = no hang,1 hang on one closest to field,2 hang on one closest to amp,3 hang on other one
-  "microphonePlacement": 0,
   "positionBots": 0,
+  "stagePlacement": 0,
+  "microphonePlacement": 0,
   "matchNotes": "",
 };
 
@@ -37,6 +38,60 @@ dynamic pitData = {
   "harmony": 0,
   "stagescore": 0,
   "feederfloor": 0,
+};
+
+dynamic temprobotJson = {
+  'Robot One': {
+    "autoScoring" : "null",
+    "1" : "null",
+    "2" : "null",
+    "3" : "null",
+    "4" : "null",
+    "5" : "null",
+    "6" : "null",
+    "7" : "null",
+    "8" : "null",
+    "ampPlacement" : "null",
+    "speakerPlacement" : "null",
+    "floorPickup" : "null",
+    "feederPickup" : "null",
+    "stageHang" : "null",
+    "microphonePlacement" : "null"
+},
+  'Robot Two': {
+    "autoScoring" : "null",
+    "1" : "null",
+    "2" : "null",
+    "3" : "null",
+    "4" : "null",
+    "5" : "null",
+    "6" : "null",
+    "7" : "null",
+    "8" : "null",
+    "ampPlacement" : "null",
+    "speakerPlacement" : "null",
+    "floorPickup" : "null",
+    "feederPickup" : "null",
+    "stageHang" : "null",
+    "microphonePlacement" : "null"
+  },
+  'Robot Three': {
+    "autoScoring" : "null",
+    "1" : "null",
+    "2" : "null",
+    "3" : "null",
+    "4" : "null",
+    "5" : "null",
+    "6" : "null",
+    "7" : "null",
+    "8" : "null",
+    "ampPlacement" : "null",
+    "speakerPlacement" : "null",
+    "floorPickup" : "null",
+    "feederPickup" : "null",
+    "stageHang" : "null",
+    "microphonePlacement" : "null"
+  },
 };
 
 dynamic reorganizePD(dynamic data) {
