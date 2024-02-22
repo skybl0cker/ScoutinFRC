@@ -30,7 +30,6 @@ void setPref(
     "",
     "",
     "",
-    "",
   ];
   temp[0] = pData["robotNum"].toString();
   temp[1] = pData["matchNum"].toString();
@@ -51,10 +50,9 @@ void setPref(
   temp[16] = pData["floorPickup"].toString();
   temp[17] = pData["stagePosition"].toString();
   temp[18] = pData["stageHang"].toString();
-  temp[19] = pData["positionBots"].toString();
-  temp[20] = pData["stagePlacement"].toString();
-  temp[21] = pData["microphonePlacement"].toString();
-  temp[22] = pData["matchNotes"].toString();
+  temp[19] = pData["stagePlacement"].toString();
+  temp[20] = pData["microphonePlacement"].toString();
+  temp[21] = pData["matchNotes"].toString();
   print(temp);
   pagePref.setStringList("$robotNum/$matchNum", temp);
 }

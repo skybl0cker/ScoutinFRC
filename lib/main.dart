@@ -27,6 +27,11 @@ void firebasePull() async {
   final snapshot = await ref.child("SMR2024").get();
   if (snapshot.exists) {
     print(snapshot.value);
+    dynamic temp = snapshot.value;
+    for (dynamic robot in temp.keys) {
+      v.allBotMatchData2[robot] = temp[robot];
+    }
+    print(v.allBotMatchData2);
   } else {
     print('No data available.');
   }
@@ -387,6 +392,7 @@ class _HomePageState extends State<HomePage> {
                     bigAssMatchFirebasePush(v.allBotMatchData);
                   });
                   print(v.allBotMatchData);
+                  firebasePull();
                   showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
@@ -629,8 +635,12 @@ class _AutoPageState extends State<AutoPage> {
           ),
         ),
         body: Center(
-            child: Column(children: <Widget>[
-          const Gap(20),
+          child: SingleChildScrollView(child:
+             Column(children: <Widget>[
+              const Text(
+            'Auto',
+            style: TextStyle(color: Colors.white, fontSize: 37),
+          ),
           const Text(
             "Starting Position",
             style: TextStyle(color: Colors.white, fontSize: 25),
@@ -935,7 +945,12 @@ class _AutoPageState extends State<AutoPage> {
             ),
           )
           ),
-        ])));
+        ]
+        )
+          )
+        )
+        );
+
   }
 }
 
@@ -1001,7 +1016,7 @@ class _TeleopPageState extends State<TeleopPage> {
 
   void _incrementCounter8() {
     setState(() {
-      if (_counter3 > 0) {
+      if (_counter4 > 0) {
         _counter4--;
       }
     });
@@ -1045,9 +1060,12 @@ class _TeleopPageState extends State<TeleopPage> {
           ),
         ),
         body: Center(
-            child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
+              const Text(
+            'Teleop',
+            style: TextStyle(color: Colors.white, fontSize: 37),
+          ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -1269,6 +1287,7 @@ class _TeleopPageState extends State<TeleopPage> {
                       )
                     ],
                   )),
+                  Gap(20),
               ElevatedButton(
                 onPressed: () {
                   v.pageData["ampPlacement"] = _counter;
@@ -1295,7 +1314,6 @@ class _TeleopPageState extends State<TeleopPage> {
             ],
           ),
         )
-        )
         );
   }
 }
@@ -1311,11 +1329,6 @@ const List<Widget> endStageNumber = <Widget>[
   Text('2'), 
   Text('3')];
 
-const List<Widget> wingPosition = <Widget>[
-  Text('Neither'),
-  Text('Inside'),
-  Text('Outside')
-];
 
 const List<Widget> endPlacement = <Widget>[
   Text('Yes'),
@@ -1340,7 +1353,6 @@ class _EndgamePageState extends State<EndgamePage> {
   bool toggleButton2 = false;
   final List<bool> selectedStage = <bool>[false, false, false];
   final List<bool> selectedStageNumber = <bool>[false, false, false];
-  final List<bool> selectedPosition = <bool>[false, false, false];
   final List<bool> selectedPlacement = <bool>[false, false, false];
   final List<bool> selectedMicrophone = <bool>[false, false, false];
   @override
@@ -1442,36 +1454,9 @@ class _EndgamePageState extends State<EndgamePage> {
             isSelected: selectedStageNumber, // MAKE A NEW ONE OF THESE
             children: endStageNumber, //MAKE A NEW ONE OF THESE
           ),
-          const Gap(10),
-          const Text(
-            "Robot Position",
-            style: TextStyle(color: Colors.white, fontSize: 25),
-          ),
-          ToggleButtons(
-            onPressed: (int index) {
-              setState(() {
-                for (int i = 0; i < selectedPosition.length; i++) {
-                  selectedPosition[i] =
-                      i == index; //CHECK AND MAKE SURE IT DOES WHAT IT SHOULD
-                }
-              });
-            },
-            borderRadius: const BorderRadius.all(Radius.circular(12)),
-            selectedBorderColor: const Color.fromARGB(255, 106, 32, 140),
-            borderWidth: 2.5,
-            selectedColor: Colors.white,
-            fillColor: Colors.purple,
-            color: Colors.white,
-            constraints: const BoxConstraints(
-              minHeight: 40.0,
-              minWidth: 80.0,
-            ),
-            isSelected: selectedPosition, // MAKE A NEW ONE OF THESE
-            children: wingPosition, //MAKE A NEW ONE OF THESE
-          ),
           Gap(10),
           const Text(
-            "Did he score on stage?",
+            "Did the robot score in the trap?",
             style: TextStyle(color: Colors.white, fontSize: 25),
           ),
           ToggleButtons(
@@ -1498,7 +1483,7 @@ class _EndgamePageState extends State<EndgamePage> {
           ),
           Gap(10),
           const Text(
-            "How many landed on Microphone?",
+            "How many notes landed?",
             style: TextStyle(color: Colors.white, fontSize: 23),
           ),
           ToggleButtons(
@@ -1561,13 +1546,6 @@ class _EndgamePageState extends State<EndgamePage> {
                 v.pageData["stageHang"] = 1;
               } else if (selectedStageNumber[2]) {
                 v.pageData["stageHang"] = 2;
-              }
-              if (selectedPosition[0]) {
-                v.pageData["positionBots"] = 0;
-              } else if (selectedPosition[1]) {
-                v.pageData["positionBots"] = 1;
-              } else if (selectedPosition[2]) {
-                v.pageData["positionBots"] = 2;
               }
               if (selectedPlacement[0]) {
                 v.pageData["stagePlacement"] = 0;
@@ -1688,6 +1666,9 @@ class AnalyticsPage extends StatefulWidget {
 class _AnalyticsHomePageState extends State<AnalyticsPage> {
   @override
   Widget build(BuildContext context) {
+    TextEditingController robot1 = TextEditingController();
+    TextEditingController robot2 = TextEditingController();
+    TextEditingController robot3 = TextEditingController();
     setPref(
     v.pageData["robotNum"], v.pageData["matchNum"], v.pageData);
     return Scaffold(
@@ -1739,7 +1720,12 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
                 shrinkWrap: true,
                 children: <Widget>[
                   Container(
-                    child: TextButton(onPressed: () {}, child: Text("Go!",
+                    child: TextButton(onPressed: () {
+                      v.temprobotJson["Robot One"]["autoScoring"] = v.allBotMatchData2["robots"]["qpint"]["oqeihtqoiw"][1];
+                       setState(() {
+                        v.temprobotJson['autoScoring'].toString();
+                      });
+                    }, child: Text("Go!",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 20
@@ -1748,17 +1734,17 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
                     color: Colors.red
                   ),
                   Container(
-                    child: TextField(style: TextStyle(color: Colors.white),),
+                    child: TextField(controller: robot1 ,style: TextStyle(color: Colors.white),),
                     padding: const EdgeInsets.all(10),
                     color: Color.fromRGBO(96, 99, 108, 1),
                   ),
                   Container(
-                    child: TextField(style: TextStyle(color: Colors.white),),
+                    child: TextField(controller: robot2, style: TextStyle(color: Colors.white),),
                     padding: const EdgeInsets.all(10),
                     color: Color.fromRGBO(96, 99, 108, 1),
                   ),
                   Container(
-                    child: TextField(style: TextStyle(color: Colors.white),),
+                    child: TextField(controller: robot3, style: TextStyle(color: Colors.white),),
                     padding: const EdgeInsets.all(10),
                     color: Color.fromRGBO(96, 99, 108, 1),
                   ),
@@ -1773,6 +1759,7 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
                     color: Color.fromRGBO(96, 99, 108, 1),
                   ),
                   Container(
+                    child: Text(v.temprobotJson['autoScoring'].toString(),),
                     padding: const EdgeInsets.all(10),
                     color: Color.fromRGBO(165, 176, 168, 1),
                   ),
@@ -2273,7 +2260,7 @@ class _SScoutingPageState extends State<SScoutingPage> {
 
 void bigAssMatchFirebasePush(Map<dynamic, dynamic> data) async {
   if (data != {}) {
-    DatabaseReference ref = FirebaseDatabase.instance.ref("SMR2024/matches");
+    DatabaseReference ref = FirebaseDatabase.instance.ref("SMR2024/robots");
     //void test = bigAssMatchJsonFirebasePrep();
     for (String key in data.keys) {
       ref.child(key).set(data[key]);

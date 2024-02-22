@@ -20,13 +20,14 @@ dynamic pageData = {
   "feederPickup": 0,//0 not picked up, 1 picked up
   "stagePosition": 0,
   "stageHang": 0, //0 = no hang,1 hang on one closest to field,2 hang on one closest to amp,3 hang on other one
-  "positionBots": 0,
   "stagePlacement": 0,
   "microphonePlacement": 0,
   "matchNotes": "",
 };
 
 Map<dynamic, dynamic> allBotMatchData = {};
+
+Map<dynamic, dynamic> allBotMatchData2 = {};
 
 dynamic pitData = {
   "driveTrain": 0,
