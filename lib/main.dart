@@ -1764,10 +1764,12 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
                     color: Color.fromRGBO(165, 176, 168, 1),
                   ),
                   Container(
+                    child: Text(v.temprobotJson['autoScoring'].toString(),),
                     padding: const EdgeInsets.all(10),
                     color: Color.fromRGBO(165, 176, 168, 1),
                   ),
                   Container(
+                    child: Text(v.temprobotJson['autoScoring'].toString(),),
                     padding: const EdgeInsets.all(10),
                     color: Color.fromRGBO(165, 176, 168, 1),
                   ),
@@ -1782,14 +1784,17 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
                     color: Color.fromRGBO(96, 99, 108, 1),
                   ),
                   Container(
+                    child: Text(v.temprobotJson['ampPlacement'].toString(),),
                     padding: const EdgeInsets.all(10),
                     color: Color.fromRGBO(165, 176, 168, 1),
                   ),
                   Container(
+                    child: Text(v.temprobotJson['ampPlacement'].toString(),),
                     padding: const EdgeInsets.all(10),
                     color: Color.fromRGBO(165, 176, 168, 1),
                   ),
                   Container(
+                    child: Text(v.temprobotJson['ampPlacement'].toString(),),
                     padding: const EdgeInsets.all(10),
                     color: Color.fromRGBO(165, 176, 168, 1),
                   ),
@@ -1804,14 +1809,42 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
                     color: Color.fromRGBO(96, 99, 108, 1),
                   ),
                   Container(
+                    child: Text(v.temprobotJson['speakerPlacement'].toString(),),
                     padding: const EdgeInsets.all(10),
                     color: Color.fromRGBO(165, 176, 168, 1),
                   ),
                   Container(
+                    child: Text(v.temprobotJson['speakerPlacement'].toString(),),
                     padding: const EdgeInsets.all(10),
                     color: Color.fromRGBO(165, 176, 168, 1),
                   ),
                   Container(
+                    child: Text(v.temprobotJson['speakerPlacement'].toString(),),
+                    padding: const EdgeInsets.all(10),
+                    color: Color.fromRGBO(165, 176, 168, 1),
+                  ),
+                  Container(
+                    child: Column(
+                    children: [
+                      Text("Notes", style: TextStyle(color: Colors.white, fontSize: 15),),
+                      Text("(Trap)", style: TextStyle(color: Colors.white, fontSize: 10),),
+                    ],
+                    ),
+                    padding: const EdgeInsets.all(10),
+                    color: Color.fromRGBO(96, 99, 108, 1),
+                  ),
+                  Container(
+                    child: Text(v.temprobotJson['stagePlacement'].toString(),),
+                    padding: const EdgeInsets.all(10),
+                    color: Color.fromRGBO(165, 176, 168, 1),
+                  ),
+                  Container(
+                    child: Text(v.temprobotJson['stagePlacement'].toString(),),
+                    padding: const EdgeInsets.all(10),
+                    color: Color.fromRGBO(165, 176, 168, 1),
+                  ),
+                  Container(
+                    child: Text(v.temprobotJson['stagePlacement'].toString(),),
                     padding: const EdgeInsets.all(10),
                     color: Color.fromRGBO(165, 176, 168, 1),
                   ),
@@ -1826,14 +1859,17 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
                     color: Color.fromRGBO(96, 99, 108, 1),
                   ),
                   Container(
+                    child: Text(v.temprobotJson['floorPickup'].toString(),),
                     padding: const EdgeInsets.all(10),
                     color: Color.fromRGBO(165, 176, 168, 1),
                   ),
                   Container(
+                    child: Text(v.temprobotJson['floorPickup'].toString(),),
                     padding: const EdgeInsets.all(10),
                     color: Color.fromRGBO(165, 176, 168, 1),
                   ),
                   Container(
+                    child: Text(v.temprobotJson['floorPickup'].toString(),),
                     padding: const EdgeInsets.all(10),
                     color: Color.fromRGBO(165, 176, 168, 1),
                   ),
@@ -1848,14 +1884,17 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
                     color: Color.fromRGBO(96, 99, 108, 1),
                   ),
                   Container(
+                    child: Text(v.temprobotJson['feederPickup'].toString(),),
                     padding: const EdgeInsets.all(10),
                     color: Color.fromRGBO(165, 176, 168, 1),
                   ),
                   Container(
+                    child: Text(v.temprobotJson['feederPickup'].toString(),),
                     padding: const EdgeInsets.all(10),
                     color: Color.fromRGBO(165, 176, 168, 1),
                   ),
                   Container(
+                    child: Text(v.temprobotJson['feederPickup'].toString(),),
                     padding: const EdgeInsets.all(10),
                     color: Color.fromRGBO(165, 176, 168, 1),
                   ),
@@ -1870,14 +1909,17 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
                     color: Color.fromRGBO(96, 99, 108, 1),
                   ),
                   Container(
+                    child: Text(v.temprobotJson['stageHang'].toString(),),
                     padding: const EdgeInsets.all(10),
                     color: Color.fromRGBO(165, 176, 168, 1),
                   ),
                   Container(
+                    child: Text(v.temprobotJson['stageHang'].toString(),),
                     padding: const EdgeInsets.all(10),
                     color: Color.fromRGBO(165, 176, 168, 1),
                   ),
                   Container(
+                    child: Text(v.temprobotJson['stageHang'].toString(),),
                     padding: const EdgeInsets.all(10),
                     color: Color.fromRGBO(165, 176, 168, 1),
                   ),
@@ -1892,14 +1934,17 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
                     color: Color.fromRGBO(96, 99, 108, 1),
                   ),
                   Container(
+                    child: Text(v.temprobotJson['stageHang'].toString(),),
                     padding: const EdgeInsets.all(10),
                     color: Color.fromRGBO(165, 176, 168, 1),
                   ),
                   Container(
+                    child: Text(v.temprobotJson['stageHang'].toString(),),
                     padding: const EdgeInsets.all(10),
                     color: Color.fromRGBO(165, 176, 168, 1),
                   ),
                   Container(
+                    child: Text(v.temprobotJson['stageHang'].toString(),),
                     padding: const EdgeInsets.all(10),
                     color: Color.fromRGBO(165, 176, 168, 1),
                   ),
