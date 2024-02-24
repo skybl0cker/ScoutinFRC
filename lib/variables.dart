@@ -32,7 +32,6 @@ Map<dynamic, dynamic> allBotMatchData2 = {};
 
 dynamic pitData = {
   "robotNum": "",
-  'pit': "",
   "driveTrain": "",
   "dimensions": "",
   "weight": "",

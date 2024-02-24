@@ -1745,92 +1745,95 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
                             0.0, // microphone placement
                           ];
                           if (key == "Robot One") {
-                          for (dynamic match in v
-                              .allBotMatchData2[robot1.text]["matches"].keys) {
-                            counterVar += 1;
-                            for (int i = 2;
-                                i <
-                                    (v.allBotMatchData2[robot1.text]["matches"]
-                                                [match])
-                                            .length -
-                                        1;
-                                i++) {
-                              if (v.allBotMatchData2[robot1.text]["matches"]
-                                      [match][i] ==
-                                  "true") {
-                                counterJson[i - 2] = counterJson[i - 2] + 1;
-                              } else if (v.allBotMatchData2[robot1.text]
-                                      ["matches"][match][i] ==
-                                  "false") {
-                                counterJson[i - 2] = counterJson[i - 2] + 0;
-                              } else {
-                                counterJson[i - 2] = counterJson[i - 2] +
-                                    int.parse(v.allBotMatchData2[robot1.text]
-                                        ["matches"][match][i]);
+                            for (dynamic match in v
+                                .allBotMatchData2[robot1.text]["matches"]
+                                .keys) {
+                              counterVar += 1;
+                              for (int i = 2;
+                                  i <
+                                      (v.allBotMatchData2[robot1.text]
+                                                  ["matches"][match])
+                                              .length -
+                                          1;
+                                  i++) {
+                                if (v.allBotMatchData2[robot1.text]["matches"]
+                                        [match][i] ==
+                                    "true") {
+                                  counterJson[i - 2] = counterJson[i - 2] + 1;
+                                } else if (v.allBotMatchData2[robot1.text]
+                                        ["matches"][match][i] ==
+                                    "false") {
+                                  counterJson[i - 2] = counterJson[i - 2] + 0;
+                                } else {
+                                  counterJson[i - 2] = counterJson[i - 2] +
+                                      int.parse(v.allBotMatchData2[robot1.text]
+                                          ["matches"][match][i]);
+                                }
                               }
                             }
-                          }
-                          for (int i = 0; i < counterJson.length; i++) {
-                            counterJson[i] = counterJson[i] / counterVar;
-                          }
+                            for (int i = 0; i < counterJson.length; i++) {
+                              counterJson[i] = counterJson[i] / counterVar;
+                            }
                           } else if (key == "Robot Two") {
                             for (dynamic match in v
-                              .allBotMatchData2[robot2.text]["matches"].keys) {
-                            counterVar += 1;
-                            for (int i = 2;
-                                i <
-                                    (v.allBotMatchData2[robot2.text]["matches"]
-                                                [match])
-                                            .length -
-                                        1;
-                                i++) {
-                              if (v.allBotMatchData2[robot2.text]["matches"]
-                                      [match][i] ==
-                                  "true") {
-                                counterJson[i - 2] = counterJson[i - 2] + 1;
-                              } else if (v.allBotMatchData2[robot2.text]
-                                      ["matches"][match][i] ==
-                                  "false") {
-                                counterJson[i - 2] = counterJson[i - 2] + 0;
-                              } else {
-                                counterJson[i - 2] = counterJson[i - 2] +
-                                    int.parse(v.allBotMatchData2[robot2.text]
-                                        ["matches"][match][i]);
+                                .allBotMatchData2[robot2.text]["matches"]
+                                .keys) {
+                              counterVar += 1;
+                              for (int i = 2;
+                                  i <
+                                      (v.allBotMatchData2[robot2.text]
+                                                  ["matches"][match])
+                                              .length -
+                                          1;
+                                  i++) {
+                                if (v.allBotMatchData2[robot2.text]["matches"]
+                                        [match][i] ==
+                                    "true") {
+                                  counterJson[i - 2] = counterJson[i - 2] + 1;
+                                } else if (v.allBotMatchData2[robot2.text]
+                                        ["matches"][match][i] ==
+                                    "false") {
+                                  counterJson[i - 2] = counterJson[i - 2] + 0;
+                                } else {
+                                  counterJson[i - 2] = counterJson[i - 2] +
+                                      int.parse(v.allBotMatchData2[robot2.text]
+                                          ["matches"][match][i]);
+                                }
                               }
                             }
-                          }
-                          for (int i = 0; i < counterJson.length; i++) {
-                            counterJson[i] = counterJson[i] / counterVar;
-                          }
+                            for (int i = 0; i < counterJson.length; i++) {
+                              counterJson[i] = counterJson[i] / counterVar;
+                            }
                           } else if (key == "Robot Three") {
                             for (dynamic match in v
-                              .allBotMatchData2[robot3.text]["matches"].keys) {
-                            counterVar += 1;
-                            for (int i = 2;
-                                i <
-                                    (v.allBotMatchData2[robot3.text]["matches"]
-                                                [match])
-                                            .length -
-                                        1;
-                                i++) {
-                              if (v.allBotMatchData2[robot3.text]["matches"]
-                                      [match][i] ==
-                                  "true") {
-                                counterJson[i - 2] = counterJson[i - 2] + 1;
-                              } else if (v.allBotMatchData2[robot3.text]
-                                      ["matches"][match][i] ==
-                                  "false") {
-                                counterJson[i - 2] = counterJson[i - 2] + 0;
-                              } else {
-                                counterJson[i - 2] = counterJson[i - 2] +
-                                    int.parse(v.allBotMatchData2[robot3.text]
-                                        ["matches"][match][i]);
+                                .allBotMatchData2[robot3.text]["matches"]
+                                .keys) {
+                              counterVar += 1;
+                              for (int i = 2;
+                                  i <
+                                      (v.allBotMatchData2[robot3.text]
+                                                  ["matches"][match])
+                                              .length -
+                                          1;
+                                  i++) {
+                                if (v.allBotMatchData2[robot3.text]["matches"]
+                                        [match][i] ==
+                                    "true") {
+                                  counterJson[i - 2] = counterJson[i - 2] + 1;
+                                } else if (v.allBotMatchData2[robot3.text]
+                                        ["matches"][match][i] ==
+                                    "false") {
+                                  counterJson[i - 2] = counterJson[i - 2] + 0;
+                                } else {
+                                  counterJson[i - 2] = counterJson[i - 2] +
+                                      int.parse(v.allBotMatchData2[robot3.text]
+                                          ["matches"][match][i]);
+                                }
                               }
                             }
-                          }
-                          for (int i = 0; i < counterJson.length; i++) {
-                            counterJson[i] = counterJson[i] / counterVar;
-                          }
+                            for (int i = 0; i < counterJson.length; i++) {
+                              counterJson[i] = counterJson[i] / counterVar;
+                            }
                           }
                           v.temprobotJson[key] = counterJson;
                         }
@@ -1870,7 +1873,7 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
                 child: Column(
                   children: [
                     Text(
-                      "Notes",
+                      "Starting",
                       style: TextStyle(color: Colors.white, fontSize: 15),
                     ),
                     Text(
@@ -1907,11 +1910,11 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
                 child: Column(
                   children: [
                     Text(
-                      "Notes",
+                      "Scoring",
                       style: TextStyle(color: Colors.white, fontSize: 15),
                     ),
                     Text(
-                      "(Amp)",
+                      "(Auto)",
                       style: TextStyle(color: Colors.white, fontSize: 10),
                     ),
                   ],
@@ -1921,7 +1924,7 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
               ),
               Container(
                 child: Text(
-                  v.temprobotJson['ampPlacement'].toString(),
+                  v.temprobotJson['Robot One'][1].toString(),
                 ),
                 padding: const EdgeInsets.all(10),
                 color: Color.fromRGBO(165, 176, 168, 1),
@@ -2426,6 +2429,8 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
           const Gap(20),
           ElevatedButton(
             onPressed: () {
+              print(drivetrainText.text);
+              v.pitData["robotNum"] = "14";
               v.pitData["driveTrain"] = drivetrainText.text;
               v.pitData["dimensions"] = dimensionText.text;
               v.pitData["weight"] = weightText.text;
@@ -2435,8 +2440,7 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
               v.pitData["harmony"] = harmonyText.text;
               v.pitData["stageScore"] = stagescoreText.text;
               v.pitData["feederfloor"] = feederfloorText.text;
-              setPref(
-                  v.pitData["robotNum"], v.pitData["pit"], v.pitData);
+              setpitPref(v.pitData["robotNum"], v.pitData);
               Navigator.pushNamed(context, '/');
             },
             style: TextButton.styleFrom(
@@ -2510,6 +2514,17 @@ class _SScoutingPageState extends State<SScoutingPage> {
 void bigAssMatchFirebasePush(Map<dynamic, dynamic> data) async {
   if (data != {} && data.keys.isNotEmpty) {
     DatabaseReference ref = FirebaseDatabase.instance.ref("SMR2024/robots");
+    //void test = bigAssMatchJsonFirebasePrep();
+    print(data);
+    for (String key in data.keys) {
+      ref.child(key).set(data[key]);
+    }
+  }
+}
+
+void pitFirebasePush(Map<dynamic, dynamic> data) async {
+  if (data != {} && data.keys.isNotEmpty) {
+    DatabaseReference ref = FirebaseDatabase.instance.ref("SMR2024/pitData");
     //void test = bigAssMatchJsonFirebasePrep();
     print(data);
     for (String key in data.keys) {

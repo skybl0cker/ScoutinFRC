@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'variables.dart' as v;
 import 'navbar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 void setPref(
     String robotNum, String matchNum, Map<String, Object> pData) async {
   // Obtain shared preferences.
@@ -57,8 +58,7 @@ void setPref(
   pagePref.setStringList("$robotNum/$matchNum", temp);
 }
 
-void setpitPref(
-    String robotNum, String pit, Map<String, Object> pitData) async {
+void setpitPref(String robotNum, Map<String, Object> pitData) async {
   // Obtain shared preferences.
   final SharedPreferences pitPref = await SharedPreferences.getInstance();
   List<String> temp = <String>[
@@ -71,28 +71,25 @@ void setpitPref(
     "",
     "",
     "",
-    "",
-    "",
   ];
-  temp[0] = pitData["robotNum"].toString();
-  temp[1] = pitData["pit"].toString();
-  temp[2] = pitData["driveTrain"].toString();
-  temp[3] = pitData["dimensions"].toString();
-  temp[4] = (pitData["weight"].toString());
-  temp[5] = pitData["mechanism"].toString();
-  temp[6] = pitData["score"].toString();
-  temp[7] = pitData["chain"].toString();
-  temp[8] = pitData["harmony"].toString();
-  temp[9] = pitData["stagescore"].toString();
-  temp[10] = pitData["feederfloor"].toString();
+  temp[0] = pitData["driveTrain"].toString();
+  temp[1] = pitData["dimensions"].toString();
+  temp[2] = pitData["weight"].toString();
+  temp[3] = pitData["mechanism"].toString();
+  temp[4] = (pitData["score"].toString());
+  temp[5] = pitData["chain"].toString();
+  temp[6] = pitData["harmony"].toString();
+  temp[7] = pitData["stagescore"].toString();
+  temp[8] = pitData["feederfloor"].toString();
   print(temp);
-  pitPref.setStringList("$robotNum/$pit", temp);
+  pitPref.setStringList("$robotNum/pit", temp);
 }
 
 void frick() async {
-    final SharedPreferences pagePref = await SharedPreferences.getInstance();
-pagePref.clear();
+  final SharedPreferences pagePref = await SharedPreferences.getInstance();
+  pagePref.clear();
 }
+
 void bigAssMatchJsonFirebasePrep() async {
   // Obtain shared preferences.
   final SharedPreferences pagePref = await SharedPreferences.getInstance();
@@ -108,6 +105,7 @@ void bigAssMatchJsonFirebasePrep() async {
   }
   v.allBotMatchData = bigAssData;
 }
+
 Future<List<String>> getPref(String robotNum, String matchNum) async {
   // Obtain shared preferences.
   final SharedPreferences pagePref = await SharedPreferences.getInstance();
