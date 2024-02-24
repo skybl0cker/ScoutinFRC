@@ -1708,6 +1708,7 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
           ),
         ),
         body: Center(
+          child: SingleChildScrollView(
             child: Column(children: <Widget>[
           GridView.count(
             crossAxisCount: 4,
@@ -1873,7 +1874,7 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
                 child: Column(
                   children: [
                     Text(
-                      "Starting",
+                      "Position",
                       style: TextStyle(color: Colors.white, fontSize: 15),
                     ),
                     Text(
@@ -1888,6 +1889,7 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
               Container(
                 child: Text(
                   v.temprobotJson["Robot One"][0].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
                 ),
                 padding: const EdgeInsets.all(10),
                 color: Color.fromRGBO(165, 176, 168, 1),
@@ -1895,6 +1897,7 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
               Container(
                 child: Text(
                   v.temprobotJson["Robot Two"][0].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
                 ),
                 padding: const EdgeInsets.all(10),
                 color: Color.fromRGBO(165, 176, 168, 1),
@@ -1902,6 +1905,7 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
               Container(
                 child: Text(
                   v.temprobotJson["Robot Three"][0].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
                 ),
                 padding: const EdgeInsets.all(10),
                 color: Color.fromRGBO(165, 176, 168, 1),
@@ -1924,21 +1928,24 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
               ),
               Container(
                 child: Text(
-                  v.temprobotJson['Robot One'][1].toString(),
+                  v.temprobotJson["Robot One"][1].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
                 ),
                 padding: const EdgeInsets.all(10),
                 color: Color.fromRGBO(165, 176, 168, 1),
               ),
               Container(
                 child: Text(
-                  v.temprobotJson['ampPlacement'].toString(),
+                  v.temprobotJson["Robot Two"][1].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
                 ),
                 padding: const EdgeInsets.all(10),
                 color: Color.fromRGBO(165, 176, 168, 1),
               ),
               Container(
                 child: Text(
-                  v.temprobotJson['ampPlacement'].toString(),
+                  v.temprobotJson["Robot Three"][1].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
                 ),
                 padding: const EdgeInsets.all(10),
                 color: Color.fromRGBO(165, 176, 168, 1),
@@ -1947,7 +1954,407 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
                 child: Column(
                   children: [
                     Text(
-                      "Notes",
+                      "Leave",
+                      style: TextStyle(color: Colors.white, fontSize: 15),
+                    ),
+                    Text(
+                      "(Auto)",
+                      style: TextStyle(color: Colors.white, fontSize: 10),
+                    ),
+                  ],
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(96, 99, 108, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson["Robot One"][2].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson["Robot Two"][2].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson["Robot Three"][2].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Column(
+                  children: [
+                    Text(
+                      "Floor",
+                      style: TextStyle(color: Colors.white, fontSize: 15),
+                    ),
+                    Text(
+                      "(Note 1)",
+                      style: TextStyle(color: Colors.white, fontSize: 10),
+                    ),
+                  ],
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(96, 99, 108, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson["Robot One"][3].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson["Robot Two"][3].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson["Robot Three"][3].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Column(
+                  children: [
+                    Text(
+                      "Floor",
+                      style: TextStyle(color: Colors.white, fontSize: 15),
+                    ),
+                    Text(
+                      "(Note 2)",
+                      style: TextStyle(color: Colors.white, fontSize: 10),
+                    ),
+                  ],
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(96, 99, 108, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson["Robot One"][4].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson["Robot Two"][4].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson["Robot Three"][4].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Column(
+                  children: [
+                    Text(
+                      "Floor",
+                      style: TextStyle(color: Colors.white, fontSize: 15),
+                    ),
+                    Text(
+                      "(Note 3)",
+                      style: TextStyle(color: Colors.white, fontSize: 10),
+                    ),
+                  ],
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(96, 99, 108, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson["Robot One"][5].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson["Robot Two"][5].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson["Robot Three"][5].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Column(
+                  children: [
+                    Text(
+                      "Floor",
+                      style: TextStyle(color: Colors.white, fontSize: 15),
+                    ),
+                    Text(
+                      "(Note 4)",
+                      style: TextStyle(color: Colors.white, fontSize: 10),
+                    ),
+                  ],
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(96, 99, 108, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson["Robot One"][6].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson["Robot Two"][6].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson["Robot Three"][6].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Column(
+                  children: [
+                    Text(
+                      "Floor",
+                      style: TextStyle(color: Colors.white, fontSize: 15),
+                    ),
+                    Text(
+                      "(Note 5)",
+                      style: TextStyle(color: Colors.white, fontSize: 10),
+                    ),
+                  ],
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(96, 99, 108, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson["Robot One"][7].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson["Robot Two"][7].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson["Robot Three"][7].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Column(
+                  children: [
+                    Text(
+                      "Floor",
+                      style: TextStyle(color: Colors.white, fontSize: 15),
+                    ),
+                    Text(
+                      "(Note 6)",
+                      style: TextStyle(color: Colors.white, fontSize: 10),
+                    ),
+                  ],
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(96, 99, 108, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson["Robot One"][8].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson["Robot Two"][8].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson["Robot Three"][8].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Column(
+                  children: [
+                    Text(
+                      "Note",
+                      style: TextStyle(color: Colors.white, fontSize: 15),
+                    ),
+                    Text(
+                      "(Note 7)",
+                      style: TextStyle(color: Colors.white, fontSize: 10),
+                    ),
+                  ],
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(96, 99, 108, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson["Robot One"][9].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson["Robot Two"][9].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson["Robot Three"][9].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Column(
+                  children: [
+                    Text(
+                      "Floor",
+                      style: TextStyle(color: Colors.white, fontSize: 15),
+                    ),
+                    Text(
+                      "(Note 8)",
+                      style: TextStyle(color: Colors.white, fontSize: 10),
+                    ),
+                  ],
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(96, 99, 108, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson["Robot One"][10].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson["Robot Two"][10].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson["Robot Three"][10].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Column(
+                  children: [
+                    Text(
+                      "Score",
+                      style: TextStyle(color: Colors.white, fontSize: 15),
+                    ),
+                    Text(
+                      "(Amp)",
+                      style: TextStyle(color: Colors.white, fontSize: 10),
+                    ),
+                  ],
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(96, 99, 108, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson["Robot One"][11].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson["Robot Two"][11].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson["Robot Three"][11].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Column(
+                  children: [
+                    Text(
+                      "Score",
                       style: TextStyle(color: Colors.white, fontSize: 15),
                     ),
                     Text(
@@ -1961,58 +2368,24 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
               ),
               Container(
                 child: Text(
-                  v.temprobotJson['speakerPlacement'].toString(),
+                  v.temprobotJson["Robot One"][12].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
                 ),
                 padding: const EdgeInsets.all(10),
                 color: Color.fromRGBO(165, 176, 168, 1),
               ),
               Container(
                 child: Text(
-                  v.temprobotJson['speakerPlacement'].toString(),
+                  v.temprobotJson["Robot Two"][12].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
                 ),
                 padding: const EdgeInsets.all(10),
                 color: Color.fromRGBO(165, 176, 168, 1),
               ),
               Container(
                 child: Text(
-                  v.temprobotJson['speakerPlacement'].toString(),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Column(
-                  children: [
-                    Text(
-                      "Notes",
-                      style: TextStyle(color: Colors.white, fontSize: 15),
-                    ),
-                    Text(
-                      "(Trap)",
-                      style: TextStyle(color: Colors.white, fontSize: 10),
-                    ),
-                  ],
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(96, 99, 108, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson['stagePlacement'].toString(),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson['stagePlacement'].toString(),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson['stagePlacement'].toString(),
+                  v.temprobotJson["Robot Three"][12].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
                 ),
                 padding: const EdgeInsets.all(10),
                 color: Color.fromRGBO(165, 176, 168, 1),
@@ -2035,21 +2408,64 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
               ),
               Container(
                 child: Text(
-                  v.temprobotJson['floorPickup'].toString(),
+                  v.temprobotJson["Robot One"][13].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
                 ),
                 padding: const EdgeInsets.all(10),
                 color: Color.fromRGBO(165, 176, 168, 1),
               ),
               Container(
                 child: Text(
-                  v.temprobotJson['floorPickup'].toString(),
+                  v.temprobotJson["Robot Two"][13].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
                 ),
                 padding: const EdgeInsets.all(10),
                 color: Color.fromRGBO(165, 176, 168, 1),
               ),
               Container(
                 child: Text(
-                  v.temprobotJson['floorPickup'].toString(),
+                  v.temprobotJson["Robot Three"][13].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Column(
+                  children: [
+                    Text(
+                      "Stage",
+                      style: TextStyle(color: Colors.white, fontSize: 15),
+                    ),
+                    Text(
+                      "(Position)",
+                      style: TextStyle(color: Colors.white, fontSize: 10),
+                    ),
+                  ],
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(96, 99, 108, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson["Robot One"][14].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson["Robot Two"][14].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson["Robot Three"][14].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
                 ),
                 padding: const EdgeInsets.all(10),
                 color: Color.fromRGBO(165, 176, 168, 1),
@@ -2072,21 +2488,24 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
               ),
               Container(
                 child: Text(
-                  v.temprobotJson['feederPickup'].toString(),
+                  v.temprobotJson["Robot One"][15].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
                 ),
                 padding: const EdgeInsets.all(10),
                 color: Color.fromRGBO(165, 176, 168, 1),
               ),
               Container(
                 child: Text(
-                  v.temprobotJson['feederPickup'].toString(),
+                  v.temprobotJson["Robot Two"][15].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
                 ),
                 padding: const EdgeInsets.all(10),
                 color: Color.fromRGBO(165, 176, 168, 1),
               ),
               Container(
                 child: Text(
-                  v.temprobotJson['feederPickup'].toString(),
+                  v.temprobotJson["Robot Three"][15].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
                 ),
                 padding: const EdgeInsets.all(10),
                 color: Color.fromRGBO(165, 176, 168, 1),
@@ -2095,11 +2514,11 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
                 child: Column(
                   children: [
                     Text(
-                      "Hang",
+                      "Stage",
                       style: TextStyle(color: Colors.white, fontSize: 15),
                     ),
                     Text(
-                      "(Normal)",
+                      "(Hang)",
                       style: TextStyle(color: Colors.white, fontSize: 10),
                     ),
                   ],
@@ -2109,21 +2528,24 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
               ),
               Container(
                 child: Text(
-                  v.temprobotJson['stageHang'].toString(),
+                  v.temprobotJson["Robot One"][16].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
                 ),
                 padding: const EdgeInsets.all(10),
                 color: Color.fromRGBO(165, 176, 168, 1),
               ),
               Container(
                 child: Text(
-                  v.temprobotJson['stageHang'].toString(),
+                  v.temprobotJson["Robot Two"][16].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
                 ),
                 padding: const EdgeInsets.all(10),
                 color: Color.fromRGBO(165, 176, 168, 1),
               ),
               Container(
                 child: Text(
-                  v.temprobotJson['stageHang'].toString(),
+                  v.temprobotJson["Robot Three"][16].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
                 ),
                 padding: const EdgeInsets.all(10),
                 color: Color.fromRGBO(165, 176, 168, 1),
@@ -2132,11 +2554,11 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
                 child: Column(
                   children: [
                     Text(
-                      "Hang",
+                      "Stage",
                       style: TextStyle(color: Colors.white, fontSize: 15),
                     ),
                     Text(
-                      "(Harmony)",
+                      "(Placement)",
                       style: TextStyle(color: Colors.white, fontSize: 10),
                     ),
                   ],
@@ -2146,28 +2568,75 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
               ),
               Container(
                 child: Text(
-                  v.temprobotJson['stageHang'].toString(),
+                  v.temprobotJson["Robot One"][17].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
                 ),
                 padding: const EdgeInsets.all(10),
                 color: Color.fromRGBO(165, 176, 168, 1),
               ),
               Container(
                 child: Text(
-                  v.temprobotJson['stageHang'].toString(),
+                  v.temprobotJson["Robot Two"][17].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
                 ),
                 padding: const EdgeInsets.all(10),
                 color: Color.fromRGBO(165, 176, 168, 1),
               ),
               Container(
                 child: Text(
-                  v.temprobotJson['stageHang'].toString(),
+                  v.temprobotJson["Robot Three"][17].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Column(
+                  children: [
+                    Text(
+                      "Stage",
+                      style: TextStyle(color: Colors.white, fontSize: 15),
+                    ),
+                    Text(
+                      "(Microphone)",
+                      style: TextStyle(color: Colors.white, fontSize: 10),
+                    ),
+                  ],
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(96, 99, 108, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson["Robot One"][18].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson["Robot Two"][18].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson["Robot Three"][18].toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
                 ),
                 padding: const EdgeInsets.all(10),
                 color: Color.fromRGBO(165, 176, 168, 1),
               ),
             ],
           )
-        ])));
+            
+        ])
+        )
+        )
+        );
   }
 }
 
