@@ -31,15 +31,17 @@ Map<dynamic, dynamic> allBotMatchData = {};
 Map<dynamic, dynamic> allBotMatchData2 = {};
 
 dynamic pitData = {
-  "driveTrain": 0,
-  "dimensions": 0,
-  "weight": 0,
-  "mechanism": 0,
-  "score": 0,
-  "chain": 0,
-  "harmony": 0,
-  "stagescore": 0,
-  "feederfloor": 0,
+  "robotNum": "",
+  'pit': "",
+  "driveTrain": "",
+  "dimensions": "",
+  "weight": "",
+  "mechanism": "",
+  "score": "",
+  "chain": "",
+  "harmony": "",
+  "stagescore": "",
+  "feederfloor": "",
 };
 
 dynamic temprobotJson = {

@@ -56,6 +56,39 @@ void setPref(
   print(temp);
   pagePref.setStringList("$robotNum/$matchNum", temp);
 }
+
+void setpitPref(
+    String robotNum, String pit, Map<String, Object> pitData) async {
+  // Obtain shared preferences.
+  final SharedPreferences pitPref = await SharedPreferences.getInstance();
+  List<String> temp = <String>[
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+  ];
+  temp[0] = pitData["robotNum"].toString();
+  temp[1] = pitData["pit"].toString();
+  temp[2] = pitData["driveTrain"].toString();
+  temp[3] = pitData["dimensions"].toString();
+  temp[4] = (pitData["weight"].toString());
+  temp[5] = pitData["mechanism"].toString();
+  temp[6] = pitData["score"].toString();
+  temp[7] = pitData["chain"].toString();
+  temp[8] = pitData["harmony"].toString();
+  temp[9] = pitData["stagescore"].toString();
+  temp[10] = pitData["feederfloor"].toString();
+  print(temp);
+  pitPref.setStringList("$robotNum/$pit", temp);
+}
+
 void frick() async {
     final SharedPreferences pagePref = await SharedPreferences.getInstance();
 pagePref.clear();
