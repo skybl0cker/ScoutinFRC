@@ -1744,6 +1744,7 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
                             0.0, // stagePlacement
                             0.0, // microphone placement
                           ];
+                          if (key == "Robot One") {
                           for (dynamic match in v
                               .allBotMatchData2[robot1.text]["matches"].keys) {
                             counterVar += 1;
@@ -1771,6 +1772,65 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
                           }
                           for (int i = 0; i < counterJson.length; i++) {
                             counterJson[i] = counterJson[i] / counterVar;
+                          }
+                          } else if (key == "Robot Two") {
+                            for (dynamic match in v
+                              .allBotMatchData2[robot2.text]["matches"].keys) {
+                            counterVar += 1;
+                            for (int i = 2;
+                                i <
+                                    (v.allBotMatchData2[robot2.text]["matches"]
+                                                [match])
+                                            .length -
+                                        1;
+                                i++) {
+                              if (v.allBotMatchData2[robot2.text]["matches"]
+                                      [match][i] ==
+                                  "true") {
+                                counterJson[i - 2] = counterJson[i - 2] + 1;
+                              } else if (v.allBotMatchData2[robot2.text]
+                                      ["matches"][match][i] ==
+                                  "false") {
+                                counterJson[i - 2] = counterJson[i - 2] + 0;
+                              } else {
+                                counterJson[i - 2] = counterJson[i - 2] +
+                                    int.parse(v.allBotMatchData2[robot2.text]
+                                        ["matches"][match][i]);
+                              }
+                            }
+                          }
+                          for (int i = 0; i < counterJson.length; i++) {
+                            counterJson[i] = counterJson[i] / counterVar;
+                          }
+                          } else if (key == "Robot Three") {
+                            for (dynamic match in v
+                              .allBotMatchData2[robot3.text]["matches"].keys) {
+                            counterVar += 1;
+                            for (int i = 2;
+                                i <
+                                    (v.allBotMatchData2[robot3.text]["matches"]
+                                                [match])
+                                            .length -
+                                        1;
+                                i++) {
+                              if (v.allBotMatchData2[robot3.text]["matches"]
+                                      [match][i] ==
+                                  "true") {
+                                counterJson[i - 2] = counterJson[i - 2] + 1;
+                              } else if (v.allBotMatchData2[robot3.text]
+                                      ["matches"][match][i] ==
+                                  "false") {
+                                counterJson[i - 2] = counterJson[i - 2] + 0;
+                              } else {
+                                counterJson[i - 2] = counterJson[i - 2] +
+                                    int.parse(v.allBotMatchData2[robot3.text]
+                                        ["matches"][match][i]);
+                              }
+                            }
+                          }
+                          for (int i = 0; i < counterJson.length; i++) {
+                            counterJson[i] = counterJson[i] / counterVar;
+                          }
                           }
                           v.temprobotJson[key] = counterJson;
                         }
