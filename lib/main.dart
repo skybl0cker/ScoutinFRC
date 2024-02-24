@@ -14,8 +14,6 @@ import 'firebase_options.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-
-
 dynamic firebaseInit() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -24,12 +22,26 @@ dynamic firebaseInit() async {
 
 void firebasePull() async {
   final ref = FirebaseDatabase.instance.ref();
-  final snapshot = await ref.child("SMR2024").get();
+  final snapshot = await ref.child("SMR2024/robots").get();
   if (snapshot.exists) {
     print(snapshot.value);
     dynamic temp = snapshot.value;
     for (dynamic robot in temp.keys) {
-      v.allBotMatchData2[robot] = temp[robot];
+      for (dynamic match in temp[robot]) {
+        if (match != null) {
+          print(match[1]);
+          if (v.allBotMatchData2[match[0]] != null) {
+            v.allBotMatchData2[match[0]]["matches"]
+                .addEntries({match[1]: match}.entries);
+          } else {
+            v.allBotMatchData2.addEntries({
+              match[0]: {
+                "matches": {match[1]: match}
+              }
+            }.entries);
+          }
+        }
+      }
     }
     print(v.allBotMatchData2);
   } else {
@@ -388,25 +400,25 @@ class _HomePageState extends State<HomePage> {
               child: ElevatedButton(
                 onPressed: () {
                   bigAssMatchJsonFirebasePrep();
+                  print(v.allBotMatchData);
                   Future.delayed(const Duration(milliseconds: 500), () {
                     bigAssMatchFirebasePush(v.allBotMatchData);
                   });
                   print(v.allBotMatchData);
                   firebasePull();
+                  print(v.allBotMatchData2);
                   showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text('Success!'),
-                    content: const Text(
-                      'Data has been pushed!'
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text('Success!'),
+                      content: const Text('Data has been pushed!'),
+                      actions: [
+                        TextButton(
+                          child: const Text('OK'),
+                          onPressed: () => Navigator.pop(context),
+                        )
+                      ],
                     ),
-                    actions: [
-                      TextButton(
-                        child: const Text('OK'),
-                        onPressed: () => Navigator.pop(context),
-                      )
-                    ],
-                  ),
                   );
                 },
                 style: TextButton.styleFrom(
@@ -489,17 +501,16 @@ class _MatchNumPageState extends State<MatchNumPage> {
           ),
           SizedBox(
             width: 350,
-            child: 
-          TextField(
-              controller: robotNum,
-              style: const TextStyle(fontSize: 20),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: const Color.fromRGBO(255, 255, 255, 1),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12.0)),
-                hintText: 'ex: 3824',
-              )),
+            child: TextField(
+                controller: robotNum,
+                style: const TextStyle(fontSize: 20),
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: const Color.fromRGBO(255, 255, 255, 1),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0)),
+                  hintText: 'ex: 3824',
+                )),
           ),
           const Gap(80),
           const Text(
@@ -508,17 +519,16 @@ class _MatchNumPageState extends State<MatchNumPage> {
           ),
           SizedBox(
             width: 350,
-            child: 
-          TextField(
-              controller: matchNum,
-              style: const TextStyle(fontSize: 20),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: const Color.fromRGBO(255, 255, 255, 1),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12.0)),
-                hintText: 'ex: 1',
-              )),
+            child: TextField(
+                controller: matchNum,
+                style: const TextStyle(fontSize: 20),
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: const Color.fromRGBO(255, 255, 255, 1),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0)),
+                  hintText: 'ex: 1',
+                )),
           ),
           const Gap(25),
           ElevatedButton(
@@ -526,12 +536,12 @@ class _MatchNumPageState extends State<MatchNumPage> {
               if (robotNum.text == "") {
                 v.pageData["robotNum"] = "None";
               } else {
-              v.pageData["robotNum"] = robotNum.text;
+                v.pageData["robotNum"] = robotNum.text;
               }
               if (matchNum.text == "") {
                 v.pageData["matchNum"] = "None";
               } else {
-              v.pageData["matchNum"] = matchNum.text;
+                v.pageData["matchNum"] = matchNum.text;
               }
               Navigator.pushNamed(context, '/auto');
             },
@@ -635,9 +645,9 @@ class _AutoPageState extends State<AutoPage> {
           ),
         ),
         body: Center(
-          child: SingleChildScrollView(child:
-             Column(children: <Widget>[
-              const Text(
+            child: SingleChildScrollView(
+                child: Column(children: <Widget>[
+          const Text(
             'Auto',
             style: TextStyle(color: Colors.white, fontSize: 37),
           ),
@@ -722,235 +732,229 @@ class _AutoPageState extends State<AutoPage> {
             children: communityLeave, //MAKE A NEW ONE OF THESE
           ),
           Container(
-                padding: EdgeInsets.all(0),
-                transform: Matrix4.translationValues(0, 0, 10),
-                child: Stack(
-                  fit: StackFit.loose,
-                  children: [
-                    Align(
-                      alignment: AlignmentDirectional(-1.05, -0.86),
-                      child: Container(
-                        color: Colors.transparent,
-                        constraints: BoxConstraints.tight(Size(50, 50)),
-                        // child: TextButton(onPressed: (){}, child: Text("M")),
-                        child: CheckboxListTile(
-                          contentPadding: EdgeInsets.all(3),
-                          checkColor: Colors.white,
-                          activeColor: Colors.grey,
-                          value: isChecked,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              isChecked = (value);
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: AlignmentDirectional(-1.05, -0.44),
-                      child: Container(
-                        color: Colors.transparent,
-                        constraints: BoxConstraints.tight(Size(50, 50)),
-                        // child: TextButton(onPressed: (){}, child: Text("M")),
-                        child: CheckboxListTile(
-                          contentPadding: EdgeInsets.all(3),
-                          checkColor: Colors.white,
-                          activeColor: Colors.grey,
-                          value: isChecked2,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              isChecked2 = (value);
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: AlignmentDirectional(-1.05, -0.03),
-                      child: Container(
-                        color: Colors.transparent,
-                        constraints: BoxConstraints.tight(Size(50, 50)),
-                        // child: TextButton(onPressed: (){}, child: Text("M")),
-                        child: CheckboxListTile(
-                          contentPadding: EdgeInsets.all(3),
-                          checkColor: Colors.white,
-                          activeColor: Colors.grey,
-                          value: isChecked3,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              isChecked3 = (value);
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: AlignmentDirectional(-1.05, 0.39),
-                      child: Container(
-                        color: Colors.transparent,
-                        constraints: BoxConstraints.tight(Size(50, 50)),
-                        // child: TextButton(onPressed: (){}, child: Text("M")),
-                        child: CheckboxListTile(
-                          contentPadding: EdgeInsets.all(3),
-                          checkColor: Colors.white,
-                          activeColor: Colors.grey,
-                          value: isChecked4,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              isChecked4 = (value);
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: AlignmentDirectional(-1.05, 0.80),
-                      child: Container(
-                        color: Colors.transparent,
-                        constraints: BoxConstraints.tight(Size(50, 50)),
-                        // child: TextButton(onPressed: (){}, child: Text("M")),
-                        child: CheckboxListTile(
-                          contentPadding: EdgeInsets.all(3),
-                          checkColor: Colors.white,
-                          activeColor: Colors.grey,
-                          value: isChecked5,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              isChecked5 = (value);
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: AlignmentDirectional(0.28, -0.75),
-                      child: Container(
-                        color: Colors.transparent,
-                        constraints: BoxConstraints.tight(Size(50, 50)),
-                        // child: TextButton(onPressed: (){}, child: Text("M")),
-                        child: CheckboxListTile(
-                          contentPadding: EdgeInsets.all(3),
-                          checkColor: Colors.white,
-                          activeColor: Colors.grey,
-                          value: isChecked6,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              isChecked6 = (value);
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: AlignmentDirectional(0.28, -0.39),
-                      child: Container(
-                        color: Colors.transparent,
-                        constraints: BoxConstraints.tight(Size(50, 50)),
-                        // child: TextButton(onPressed: (){}, child: Text("M")),
-                        child: CheckboxListTile(
-                          contentPadding: EdgeInsets.all(3),
-                          checkColor: Colors.white,
-                          activeColor: Colors.grey,
-                          value: isChecked7,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              isChecked7 = (value);
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: AlignmentDirectional(0.28, -0.03),
-                      child: Container(
-                        color: Colors.transparent,
-                        constraints: BoxConstraints.tight(Size(50, 50)),
-                        // child: TextButton(onPressed: (){}, child: Text("M")),
-                        child: CheckboxListTile(
-                          contentPadding: EdgeInsets.all(3),
-                          checkColor: Colors.white,
-                          activeColor: Colors.grey,
-                          value: isChecked8,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              isChecked8 = (value);
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage(
-                      'assets/images/field.png',
+            padding: EdgeInsets.all(0),
+            transform: Matrix4.translationValues(0, 0, 10),
+            child: Stack(
+              fit: StackFit.loose,
+              children: [
+                Align(
+                  alignment: AlignmentDirectional(-1.05, -0.86),
+                  child: Container(
+                    color: Colors.transparent,
+                    constraints: BoxConstraints.tight(Size(50, 50)),
+                    // child: TextButton(onPressed: (){}, child: Text("M")),
+                    child: CheckboxListTile(
+                      contentPadding: EdgeInsets.all(3),
+                      checkColor: Colors.white,
+                      activeColor: Colors.grey,
+                      value: isChecked,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          isChecked = (value);
+                        });
+                      },
                     ),
                   ),
                 ),
-                width: 300,
-                height: 300,
-                alignment: Alignment.topCenter,
+                Align(
+                  alignment: AlignmentDirectional(-1.05, -0.44),
+                  child: Container(
+                    color: Colors.transparent,
+                    constraints: BoxConstraints.tight(Size(50, 50)),
+                    // child: TextButton(onPressed: (){}, child: Text("M")),
+                    child: CheckboxListTile(
+                      contentPadding: EdgeInsets.all(3),
+                      checkColor: Colors.white,
+                      activeColor: Colors.grey,
+                      value: isChecked2,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          isChecked2 = (value);
+                        });
+                      },
+                    ),
+                  ),
+                ),
+                Align(
+                  alignment: AlignmentDirectional(-1.05, -0.03),
+                  child: Container(
+                    color: Colors.transparent,
+                    constraints: BoxConstraints.tight(Size(50, 50)),
+                    // child: TextButton(onPressed: (){}, child: Text("M")),
+                    child: CheckboxListTile(
+                      contentPadding: EdgeInsets.all(3),
+                      checkColor: Colors.white,
+                      activeColor: Colors.grey,
+                      value: isChecked3,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          isChecked3 = (value);
+                        });
+                      },
+                    ),
+                  ),
+                ),
+                Align(
+                  alignment: AlignmentDirectional(-1.05, 0.39),
+                  child: Container(
+                    color: Colors.transparent,
+                    constraints: BoxConstraints.tight(Size(50, 50)),
+                    // child: TextButton(onPressed: (){}, child: Text("M")),
+                    child: CheckboxListTile(
+                      contentPadding: EdgeInsets.all(3),
+                      checkColor: Colors.white,
+                      activeColor: Colors.grey,
+                      value: isChecked4,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          isChecked4 = (value);
+                        });
+                      },
+                    ),
+                  ),
+                ),
+                Align(
+                  alignment: AlignmentDirectional(-1.05, 0.80),
+                  child: Container(
+                    color: Colors.transparent,
+                    constraints: BoxConstraints.tight(Size(50, 50)),
+                    // child: TextButton(onPressed: (){}, child: Text("M")),
+                    child: CheckboxListTile(
+                      contentPadding: EdgeInsets.all(3),
+                      checkColor: Colors.white,
+                      activeColor: Colors.grey,
+                      value: isChecked5,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          isChecked5 = (value);
+                        });
+                      },
+                    ),
+                  ),
+                ),
+                Align(
+                  alignment: AlignmentDirectional(0.28, -0.75),
+                  child: Container(
+                    color: Colors.transparent,
+                    constraints: BoxConstraints.tight(Size(50, 50)),
+                    // child: TextButton(onPressed: (){}, child: Text("M")),
+                    child: CheckboxListTile(
+                      contentPadding: EdgeInsets.all(3),
+                      checkColor: Colors.white,
+                      activeColor: Colors.grey,
+                      value: isChecked6,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          isChecked6 = (value);
+                        });
+                      },
+                    ),
+                  ),
+                ),
+                Align(
+                  alignment: AlignmentDirectional(0.28, -0.39),
+                  child: Container(
+                    color: Colors.transparent,
+                    constraints: BoxConstraints.tight(Size(50, 50)),
+                    // child: TextButton(onPressed: (){}, child: Text("M")),
+                    child: CheckboxListTile(
+                      contentPadding: EdgeInsets.all(3),
+                      checkColor: Colors.white,
+                      activeColor: Colors.grey,
+                      value: isChecked7,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          isChecked7 = (value);
+                        });
+                      },
+                    ),
+                  ),
+                ),
+                Align(
+                  alignment: AlignmentDirectional(0.28, -0.03),
+                  child: Container(
+                    color: Colors.transparent,
+                    constraints: BoxConstraints.tight(Size(50, 50)),
+                    // child: TextButton(onPressed: (){}, child: Text("M")),
+                    child: CheckboxListTile(
+                      contentPadding: EdgeInsets.all(3),
+                      checkColor: Colors.white,
+                      activeColor: Colors.grey,
+                      value: isChecked8,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          isChecked8 = (value);
+                        });
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(
+                  'assets/images/field.png',
+                ),
               ),
+            ),
+            width: 300,
+            height: 300,
+            alignment: Alignment.topCenter,
+          ),
           const Gap(20),
           Visibility(
-            visible:
-                isEveryGroupSelected2, // Controls visibility based on the selection state
-            child: ElevatedButton(
-            onPressed: () {
-              if (selectedStart[0]) {
-                v.pageData["startingPosition"] = 0;
-              } else if (selectedStart[1]) {
-                v.pageData["startingPosition"] = 1;
-              } else if (selectedStart[2]) {
-                v.pageData["startingPosition"] = 2;
-              }
-              if (selectedAuto[0]) {
-                v.pageData["autoScoring"] = 0;
-              } else if (selectedAuto[1]) {
-                v.pageData["autoScoring"] = 1;
-              } else if (selectedAuto[2]) {
-                v.pageData["autoScoring"] = 2;
-              }
-              if (selectedEnd[0]) {
-                v.pageData["wingLeave"] = 0;
-              } else if (selectedEnd[1]) {
-                v.pageData["wingLeave"] = 1;
-              } else if (selectedEnd[2]) {
-                v.pageData["wingLeave"] = 2;
-              }
-              v.pageData["1"] = isChecked;
-              v.pageData["2"] = isChecked2;
-              v.pageData["3"] = isChecked3;
-              v.pageData["4"] = isChecked4;
-              v.pageData["5"] = isChecked5;
-              v.pageData["6"] = isChecked6;
-              v.pageData["7"] = isChecked7;
-              v.pageData["8"] = isChecked8;
-              Navigator.pushNamed(context, '/teleop');
-            },
-            style: TextButton.styleFrom(
-              textStyle: const TextStyle(
-                fontSize: 40,
-              ),
-              padding: const EdgeInsets.only(
-                  left: 14, top: 12, right: 14, bottom: 12),
-              backgroundColor: Colors.blue,
-              side: const BorderSide(
-                  width: 3, color: Color.fromRGBO(65, 104, 196, 1)),
-            ),
-            child: const Text(
-              "Confirm",
-              style: TextStyle(color: Colors.white, fontSize: 25),
-            ),
-          )
-          ),
-        ]
-        )
-          )
-        )
-        );
-
+              visible:
+                  isEveryGroupSelected2, // Controls visibility based on the selection state
+              child: ElevatedButton(
+                onPressed: () {
+                  if (selectedStart[0]) {
+                    v.pageData["startingPosition"] = 0;
+                  } else if (selectedStart[1]) {
+                    v.pageData["startingPosition"] = 1;
+                  } else if (selectedStart[2]) {
+                    v.pageData["startingPosition"] = 2;
+                  }
+                  if (selectedAuto[0]) {
+                    v.pageData["autoScoring"] = 0;
+                  } else if (selectedAuto[1]) {
+                    v.pageData["autoScoring"] = 1;
+                  } else if (selectedAuto[2]) {
+                    v.pageData["autoScoring"] = 2;
+                  }
+                  if (selectedEnd[0]) {
+                    v.pageData["wingLeave"] = 0;
+                  } else if (selectedEnd[1]) {
+                    v.pageData["wingLeave"] = 1;
+                  } else if (selectedEnd[2]) {
+                    v.pageData["wingLeave"] = 2;
+                  }
+                  v.pageData["1"] = isChecked;
+                  v.pageData["2"] = isChecked2;
+                  v.pageData["3"] = isChecked3;
+                  v.pageData["4"] = isChecked4;
+                  v.pageData["5"] = isChecked5;
+                  v.pageData["6"] = isChecked6;
+                  v.pageData["7"] = isChecked7;
+                  v.pageData["8"] = isChecked8;
+                  Navigator.pushNamed(context, '/teleop');
+                },
+                style: TextButton.styleFrom(
+                  textStyle: const TextStyle(
+                    fontSize: 40,
+                  ),
+                  padding: const EdgeInsets.only(
+                      left: 14, top: 12, right: 14, bottom: 12),
+                  backgroundColor: Colors.blue,
+                  side: const BorderSide(
+                      width: 3, color: Color.fromRGBO(65, 104, 196, 1)),
+                ),
+                child: const Text(
+                  "Confirm",
+                  style: TextStyle(color: Colors.white, fontSize: 25),
+                ),
+              )),
+        ]))));
   }
 }
 
@@ -1021,6 +1025,7 @@ class _TeleopPageState extends State<TeleopPage> {
       }
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -1063,9 +1068,9 @@ class _TeleopPageState extends State<TeleopPage> {
           child: Column(
             children: <Widget>[
               const Text(
-            'Teleop',
-            style: TextStyle(color: Colors.white, fontSize: 37),
-          ),
+                'Teleop',
+                style: TextStyle(color: Colors.white, fontSize: 37),
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -1246,7 +1251,7 @@ class _TeleopPageState extends State<TeleopPage> {
                       )
                     ],
                   )),
-                  Container(
+              Container(
                   transform: Matrix4.translationValues(0, 0, 10),
                   child: Stack(
                     alignment: Alignment.topCenter,
@@ -1287,7 +1292,7 @@ class _TeleopPageState extends State<TeleopPage> {
                       )
                     ],
                   )),
-                  Gap(20),
+              Gap(20),
               ElevatedButton(
                 onPressed: () {
                   v.pageData["ampPlacement"] = _counter;
@@ -1313,8 +1318,7 @@ class _TeleopPageState extends State<TeleopPage> {
               )
             ],
           ),
-        )
-        );
+        ));
   }
 }
 
@@ -1324,11 +1328,7 @@ const List<Widget> endStage = <Widget>[
   Text('Harmony')
 ];
 
-const List<Widget> endStageNumber = <Widget>[
-  Text('1'),
-  Text('2'), 
-  Text('3')];
-
+const List<Widget> endStageNumber = <Widget>[Text('1'), Text('2'), Text('3')];
 
 const List<Widget> endPlacement = <Widget>[
   Text('Yes'),
@@ -1596,45 +1596,46 @@ class _SchedulePageState extends State<SchedulePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        drawer: const NavBar(),
-        appBar: AppBar(
-          leading: Builder(
-            builder: (BuildContext context) {
-              return IconButton(
-                icon: const Icon(
-                  Icons.menu,
-                  color: Color.fromRGBO(165, 176, 168, 1),
-                  size: 50,
-                ),
-                onPressed: () {
-                  Scaffold.of(context).openDrawer();
-                },
-                tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-              );
-            },
-          ),
-          actions: [
-            Container(
-                child: IconButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    icon: const Icon(
-                      Icons.arrow_back,
-                      color: Color.fromRGBO(165, 176, 168, 1),
-                      size: 50,
-                    )))
-          ],
-          backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
-          title: Image.asset(
-            'assets/images/rohawktics.png',
-            width: 75,
-            height: 75,
-            alignment: Alignment.center,
-          ),
+      drawer: const NavBar(),
+      appBar: AppBar(
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(
+                Icons.menu,
+                color: Color.fromRGBO(165, 176, 168, 1),
+                size: 50,
+              ),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+            );
+          },
         ),
-        body: WebViewWidget(controller: controller),
-      );
+        actions: [
+          Container(
+              child: IconButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: const Icon(
+                    Icons.arrow_back,
+                    color: Color.fromRGBO(165, 176, 168, 1),
+                    size: 50,
+                  )))
+        ],
+        backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
+        title: Image.asset(
+          'assets/images/rohawktics.png',
+          width: 75,
+          height: 75,
+          alignment: Alignment.center,
+        ),
+      ),
+      body: WebViewWidget(controller: controller),
+    );
   }
 }
+
 WebViewController controller = WebViewController()
   ..setJavaScriptMode(JavaScriptMode.unrestricted)
   ..setBackgroundColor(const Color(0x00000000))
@@ -1654,7 +1655,8 @@ WebViewController controller = WebViewController()
       },
     ),
   )
-  ..loadRequest(Uri.parse('https://docs.google.com/spreadsheets/d/19tyje0fh_LlKKTaoMsnlHxIeKMulCJcj4pF-jQjb5tQ/edit?usp=sharing'));
+  ..loadRequest(Uri.parse(
+      'https://docs.google.com/spreadsheets/d/19tyje0fh_LlKKTaoMsnlHxIeKMulCJcj4pF-jQjb5tQ/edit?usp=sharing'));
 
 class AnalyticsPage extends StatefulWidget {
   const AnalyticsPage({super.key, required this.title});
@@ -1669,8 +1671,6 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
     TextEditingController robot1 = TextEditingController();
     TextEditingController robot2 = TextEditingController();
     TextEditingController robot3 = TextEditingController();
-    setPref(
-    v.pageData["robotNum"], v.pageData["matchNum"], v.pageData);
     return Scaffold(
         drawer: const NavBar(),
         appBar: AppBar(
@@ -1708,252 +1708,403 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
           ),
         ),
         body: Center(
-          child:
-           Column(
+            child: Column(children: <Widget>[
+          GridView.count(
+            crossAxisCount: 4,
+            primary: false,
+            padding: const EdgeInsets.all(5),
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+            childAspectRatio: 1.50,
+            shrinkWrap: true,
             children: <Widget>[
-              GridView.count(crossAxisCount: 4,
-                primary: false,
-                padding: const EdgeInsets.all(5),
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-                childAspectRatio: 1.50,
-                shrinkWrap: true,
-                children: <Widget>[
-                  Container(
-                    child: TextButton(onPressed: () {
-                      v.temprobotJson["Robot One"]["autoScoring"] = v.allBotMatchData2["robots"]["qpint"]["oqeihtqoiw"][1];
-                       setState(() {
-                        v.temprobotJson['autoScoring'].toString();
-                      });
-                    }, child: Text("Go!",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20
-                    ),)),
-                    padding: const EdgeInsets.all(10),
-                    color: Colors.red
-                  ),
-                  Container(
-                    child: TextField(controller: robot1 ,style: TextStyle(color: Colors.white),),
-                    padding: const EdgeInsets.all(10),
-                    color: Color.fromRGBO(96, 99, 108, 1),
-                  ),
-                  Container(
-                    child: TextField(controller: robot2, style: TextStyle(color: Colors.white),),
-                    padding: const EdgeInsets.all(10),
-                    color: Color.fromRGBO(96, 99, 108, 1),
-                  ),
-                  Container(
-                    child: TextField(controller: robot3, style: TextStyle(color: Colors.white),),
-                    padding: const EdgeInsets.all(10),
-                    color: Color.fromRGBO(96, 99, 108, 1),
-                  ),
-                  Container(
-                    child: Column(
-                    children: [
-                      Text("Notes", style: TextStyle(color: Colors.white, fontSize: 15),),
-                      Text("(Auto)", style: TextStyle(color: Colors.white, fontSize: 10),),
-                    ],
+              Container(
+                  child: TextButton(
+                      onPressed: () {
+                        for (String key in v.temprobotJson.keys) {
+                          int counterVar = 0;
+                          dynamic counterJson = [
+                            0.0, //Starting Position
+                            0.0, //autoScoring
+                            0.0, //wingLeave
+                            0.0, // 1
+                            0.0, // 2
+                            0.0, // 3
+                            0.0, // 4
+                            0.0, // 5
+                            0.0, // 6
+                            0.0, // 7
+                            0.0, // 8
+                            0.0, // ampPlace
+                            0.0, // speaker place
+                            0.0, // floor pickup
+                            0.0, // stagePosition
+                            0.0, // feederPickup
+                            0.0, // stageHang
+                            0.0, // stagePlacement
+                            0.0, // microphone placement
+                          ];
+                          for (dynamic match in v
+                              .allBotMatchData2[robot1.text]["matches"].keys) {
+                            counterVar += 1;
+                            for (int i = 2;
+                                i <
+                                    (v.allBotMatchData2[robot1.text]["matches"]
+                                                [match])
+                                            .length -
+                                        1;
+                                i++) {
+                              if (v.allBotMatchData2[robot1.text]["matches"]
+                                      [match][i] ==
+                                  "true") {
+                                counterJson[i - 2] = counterJson[i - 2] + 1;
+                              } else if (v.allBotMatchData2[robot1.text]
+                                      ["matches"][match][i] ==
+                                  "false") {
+                                counterJson[i - 2] = counterJson[i - 2] + 0;
+                              } else {
+                                counterJson[i - 2] = counterJson[i - 2] +
+                                    int.parse(v.allBotMatchData2[robot1.text]
+                                        ["matches"][match][i]);
+                              }
+                            }
+                          }
+                          for (int i = 0; i < counterJson.length; i++) {
+                            counterJson[i] = counterJson[i] / counterVar;
+                          }
+                          v.temprobotJson[key] = counterJson;
+                        }
+                        setState(() {});
+                      },
+                      child: Text(
+                        "Go!",
+                        style: TextStyle(color: Colors.white, fontSize: 20),
+                      )),
+                  padding: const EdgeInsets.all(10),
+                  color: Colors.red),
+              Container(
+                child: TextField(
+                  controller: robot1,
+                  style: TextStyle(color: Colors.white),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(96, 99, 108, 1),
+              ),
+              Container(
+                child: TextField(
+                  controller: robot2,
+                  style: TextStyle(color: Colors.white),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(96, 99, 108, 1),
+              ),
+              Container(
+                child: TextField(
+                  controller: robot3,
+                  style: TextStyle(color: Colors.white),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(96, 99, 108, 1),
+              ),
+              Container(
+                child: Column(
+                  children: [
+                    Text(
+                      "Notes",
+                      style: TextStyle(color: Colors.white, fontSize: 15),
                     ),
-                    padding: const EdgeInsets.all(10),
-                    color: Color.fromRGBO(96, 99, 108, 1),
-                  ),
-                  Container(
-                    child: Text(v.temprobotJson['autoScoring'].toString(),),
-                    padding: const EdgeInsets.all(10),
-                    color: Color.fromRGBO(165, 176, 168, 1),
-                  ),
-                  Container(
-                    child: Text(v.temprobotJson['autoScoring'].toString(),),
-                    padding: const EdgeInsets.all(10),
-                    color: Color.fromRGBO(165, 176, 168, 1),
-                  ),
-                  Container(
-                    child: Text(v.temprobotJson['autoScoring'].toString(),),
-                    padding: const EdgeInsets.all(10),
-                    color: Color.fromRGBO(165, 176, 168, 1),
-                  ),
-                  Container(
-                    child: Column(
-                    children: [
-                      Text("Notes", style: TextStyle(color: Colors.white, fontSize: 15),),
-                      Text("(Amp)", style: TextStyle(color: Colors.white, fontSize: 10),),
-                    ],
+                    Text(
+                      "(Auto)",
+                      style: TextStyle(color: Colors.white, fontSize: 10),
                     ),
-                    padding: const EdgeInsets.all(10),
-                    color: Color.fromRGBO(96, 99, 108, 1),
-                  ),
-                  Container(
-                    child: Text(v.temprobotJson['ampPlacement'].toString(),),
-                    padding: const EdgeInsets.all(10),
-                    color: Color.fromRGBO(165, 176, 168, 1),
-                  ),
-                  Container(
-                    child: Text(v.temprobotJson['ampPlacement'].toString(),),
-                    padding: const EdgeInsets.all(10),
-                    color: Color.fromRGBO(165, 176, 168, 1),
-                  ),
-                  Container(
-                    child: Text(v.temprobotJson['ampPlacement'].toString(),),
-                    padding: const EdgeInsets.all(10),
-                    color: Color.fromRGBO(165, 176, 168, 1),
-                  ),
-                  Container(
-                    child: Column(
-                    children: [
-                      Text("Notes", style: TextStyle(color: Colors.white, fontSize: 15),),
-                      Text("(Speaker)", style: TextStyle(color: Colors.white, fontSize: 10),),
-                    ],
+                  ],
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(96, 99, 108, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson["Robot One"][0].toString(),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson["Robot Two"][0].toString(),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson["Robot Three"][0].toString(),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Column(
+                  children: [
+                    Text(
+                      "Notes",
+                      style: TextStyle(color: Colors.white, fontSize: 15),
                     ),
-                    padding: const EdgeInsets.all(10),
-                    color: Color.fromRGBO(96, 99, 108, 1),
-                  ),
-                  Container(
-                    child: Text(v.temprobotJson['speakerPlacement'].toString(),),
-                    padding: const EdgeInsets.all(10),
-                    color: Color.fromRGBO(165, 176, 168, 1),
-                  ),
-                  Container(
-                    child: Text(v.temprobotJson['speakerPlacement'].toString(),),
-                    padding: const EdgeInsets.all(10),
-                    color: Color.fromRGBO(165, 176, 168, 1),
-                  ),
-                  Container(
-                    child: Text(v.temprobotJson['speakerPlacement'].toString(),),
-                    padding: const EdgeInsets.all(10),
-                    color: Color.fromRGBO(165, 176, 168, 1),
-                  ),
-                  Container(
-                    child: Column(
-                    children: [
-                      Text("Notes", style: TextStyle(color: Colors.white, fontSize: 15),),
-                      Text("(Trap)", style: TextStyle(color: Colors.white, fontSize: 10),),
-                    ],
+                    Text(
+                      "(Amp)",
+                      style: TextStyle(color: Colors.white, fontSize: 10),
                     ),
-                    padding: const EdgeInsets.all(10),
-                    color: Color.fromRGBO(96, 99, 108, 1),
-                  ),
-                  Container(
-                    child: Text(v.temprobotJson['stagePlacement'].toString(),),
-                    padding: const EdgeInsets.all(10),
-                    color: Color.fromRGBO(165, 176, 168, 1),
-                  ),
-                  Container(
-                    child: Text(v.temprobotJson['stagePlacement'].toString(),),
-                    padding: const EdgeInsets.all(10),
-                    color: Color.fromRGBO(165, 176, 168, 1),
-                  ),
-                  Container(
-                    child: Text(v.temprobotJson['stagePlacement'].toString(),),
-                    padding: const EdgeInsets.all(10),
-                    color: Color.fromRGBO(165, 176, 168, 1),
-                  ),
-                  Container(
-                    child: Column(
-                    children: [
-                      Text("Pickup", style: TextStyle(color: Colors.white, fontSize: 15),),
-                      Text("(Floor)", style: TextStyle(color: Colors.white, fontSize: 10),),
-                    ],
+                  ],
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(96, 99, 108, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson['ampPlacement'].toString(),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson['ampPlacement'].toString(),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson['ampPlacement'].toString(),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Column(
+                  children: [
+                    Text(
+                      "Notes",
+                      style: TextStyle(color: Colors.white, fontSize: 15),
                     ),
-                    padding: const EdgeInsets.all(10),
-                    color: Color.fromRGBO(96, 99, 108, 1),
-                  ),
-                  Container(
-                    child: Text(v.temprobotJson['floorPickup'].toString(),),
-                    padding: const EdgeInsets.all(10),
-                    color: Color.fromRGBO(165, 176, 168, 1),
-                  ),
-                  Container(
-                    child: Text(v.temprobotJson['floorPickup'].toString(),),
-                    padding: const EdgeInsets.all(10),
-                    color: Color.fromRGBO(165, 176, 168, 1),
-                  ),
-                  Container(
-                    child: Text(v.temprobotJson['floorPickup'].toString(),),
-                    padding: const EdgeInsets.all(10),
-                    color: Color.fromRGBO(165, 176, 168, 1),
-                  ),
-                  Container(
-                    child: Column(
-                    children: [
-                      Text("Pickup", style: TextStyle(color: Colors.white, fontSize: 15),),
-                      Text("(Feeder)", style: TextStyle(color: Colors.white, fontSize: 10),),
-                    ],
+                    Text(
+                      "(Speaker)",
+                      style: TextStyle(color: Colors.white, fontSize: 10),
                     ),
-                    padding: const EdgeInsets.all(10),
-                    color: Color.fromRGBO(96, 99, 108, 1),
-                  ),
-                  Container(
-                    child: Text(v.temprobotJson['feederPickup'].toString(),),
-                    padding: const EdgeInsets.all(10),
-                    color: Color.fromRGBO(165, 176, 168, 1),
-                  ),
-                  Container(
-                    child: Text(v.temprobotJson['feederPickup'].toString(),),
-                    padding: const EdgeInsets.all(10),
-                    color: Color.fromRGBO(165, 176, 168, 1),
-                  ),
-                  Container(
-                    child: Text(v.temprobotJson['feederPickup'].toString(),),
-                    padding: const EdgeInsets.all(10),
-                    color: Color.fromRGBO(165, 176, 168, 1),
-                  ),
-                  Container(
-                    child: Column(
-                    children: [
-                      Text("Hang", style: TextStyle(color: Colors.white, fontSize: 15),),
-                      Text("(Normal)", style: TextStyle(color: Colors.white, fontSize: 10),),
-                    ],
+                  ],
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(96, 99, 108, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson['speakerPlacement'].toString(),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson['speakerPlacement'].toString(),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson['speakerPlacement'].toString(),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Column(
+                  children: [
+                    Text(
+                      "Notes",
+                      style: TextStyle(color: Colors.white, fontSize: 15),
                     ),
-                    padding: const EdgeInsets.all(10),
-                    color: Color.fromRGBO(96, 99, 108, 1),
-                  ),
-                  Container(
-                    child: Text(v.temprobotJson['stageHang'].toString(),),
-                    padding: const EdgeInsets.all(10),
-                    color: Color.fromRGBO(165, 176, 168, 1),
-                  ),
-                  Container(
-                    child: Text(v.temprobotJson['stageHang'].toString(),),
-                    padding: const EdgeInsets.all(10),
-                    color: Color.fromRGBO(165, 176, 168, 1),
-                  ),
-                  Container(
-                    child: Text(v.temprobotJson['stageHang'].toString(),),
-                    padding: const EdgeInsets.all(10),
-                    color: Color.fromRGBO(165, 176, 168, 1),
-                  ),
-                  Container(
-                    child: Column(
-                    children: [
-                      Text("Hang", style: TextStyle(color: Colors.white, fontSize: 15),),
-                      Text("(Harmony)", style: TextStyle(color: Colors.white, fontSize: 10),),
-                    ],
+                    Text(
+                      "(Trap)",
+                      style: TextStyle(color: Colors.white, fontSize: 10),
                     ),
-                    padding: const EdgeInsets.all(10),
-                    color: Color.fromRGBO(96, 99, 108, 1),
-                  ),
-                  Container(
-                    child: Text(v.temprobotJson['stageHang'].toString(),),
-                    padding: const EdgeInsets.all(10),
-                    color: Color.fromRGBO(165, 176, 168, 1),
-                  ),
-                  Container(
-                    child: Text(v.temprobotJson['stageHang'].toString(),),
-                    padding: const EdgeInsets.all(10),
-                    color: Color.fromRGBO(165, 176, 168, 1),
-                  ),
-                  Container(
-                    child: Text(v.temprobotJson['stageHang'].toString(),),
-                    padding: const EdgeInsets.all(10),
-                    color: Color.fromRGBO(165, 176, 168, 1),
-                  ),
-                 ],         
-               )
-              ]
-             )
-           )
-        );
+                  ],
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(96, 99, 108, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson['stagePlacement'].toString(),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson['stagePlacement'].toString(),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson['stagePlacement'].toString(),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Column(
+                  children: [
+                    Text(
+                      "Pickup",
+                      style: TextStyle(color: Colors.white, fontSize: 15),
+                    ),
+                    Text(
+                      "(Floor)",
+                      style: TextStyle(color: Colors.white, fontSize: 10),
+                    ),
+                  ],
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(96, 99, 108, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson['floorPickup'].toString(),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson['floorPickup'].toString(),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson['floorPickup'].toString(),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Column(
+                  children: [
+                    Text(
+                      "Pickup",
+                      style: TextStyle(color: Colors.white, fontSize: 15),
+                    ),
+                    Text(
+                      "(Feeder)",
+                      style: TextStyle(color: Colors.white, fontSize: 10),
+                    ),
+                  ],
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(96, 99, 108, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson['feederPickup'].toString(),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson['feederPickup'].toString(),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson['feederPickup'].toString(),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Column(
+                  children: [
+                    Text(
+                      "Hang",
+                      style: TextStyle(color: Colors.white, fontSize: 15),
+                    ),
+                    Text(
+                      "(Normal)",
+                      style: TextStyle(color: Colors.white, fontSize: 10),
+                    ),
+                  ],
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(96, 99, 108, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson['stageHang'].toString(),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson['stageHang'].toString(),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson['stageHang'].toString(),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Column(
+                  children: [
+                    Text(
+                      "Hang",
+                      style: TextStyle(color: Colors.white, fontSize: 15),
+                    ),
+                    Text(
+                      "(Harmony)",
+                      style: TextStyle(color: Colors.white, fontSize: 10),
+                    ),
+                  ],
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(96, 99, 108, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson['stageHang'].toString(),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson['stageHang'].toString(),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+              Container(
+                child: Text(
+                  v.temprobotJson['stageHang'].toString(),
+                ),
+                padding: const EdgeInsets.all(10),
+                color: Color.fromRGBO(165, 176, 168, 1),
+              ),
+            ],
+          )
+        ])));
   }
 }
 
@@ -2027,7 +2178,7 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
                 style: const TextStyle(fontSize: 20),
                 decoration: InputDecoration(
                   contentPadding:
-                   EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
+                      EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
                   filled: true,
                   fillColor: const Color.fromRGBO(255, 255, 255, 1),
                   border: OutlineInputBorder(
@@ -2049,7 +2200,7 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
                 style: const TextStyle(fontSize: 20),
                 decoration: InputDecoration(
                   contentPadding:
-                   EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
+                      EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
                   filled: true,
                   fillColor: const Color.fromRGBO(255, 255, 255, 1),
                   border: OutlineInputBorder(
@@ -2071,7 +2222,7 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
                 style: const TextStyle(fontSize: 20),
                 decoration: InputDecoration(
                   contentPadding:
-                   EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
+                      EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
                   filled: true,
                   fillColor: const Color.fromRGBO(255, 255, 255, 1),
                   border: OutlineInputBorder(
@@ -2093,7 +2244,7 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
                 style: const TextStyle(fontSize: 20),
                 decoration: InputDecoration(
                   contentPadding:
-                   EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
+                      EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
                   filled: true,
                   fillColor: const Color.fromRGBO(255, 255, 255, 1),
                   border: OutlineInputBorder(
@@ -2115,7 +2266,7 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
                 style: const TextStyle(fontSize: 20),
                 decoration: InputDecoration(
                   contentPadding:
-                   EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
+                      EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
                   filled: true,
                   fillColor: const Color.fromRGBO(255, 255, 255, 1),
                   border: OutlineInputBorder(
@@ -2137,7 +2288,7 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
                 style: const TextStyle(fontSize: 20),
                 decoration: InputDecoration(
                   contentPadding:
-                   EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
+                      EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
                   filled: true,
                   fillColor: const Color.fromRGBO(255, 255, 255, 1),
                   border: OutlineInputBorder(
@@ -2159,7 +2310,7 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
                 style: const TextStyle(fontSize: 20),
                 decoration: InputDecoration(
                   contentPadding:
-                   EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
+                      EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
                   filled: true,
                   fillColor: const Color.fromRGBO(255, 255, 255, 1),
                   border: OutlineInputBorder(
@@ -2181,7 +2332,7 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
                 style: const TextStyle(fontSize: 20),
                 decoration: InputDecoration(
                   contentPadding:
-                   EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
+                      EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
                   filled: true,
                   fillColor: const Color.fromRGBO(255, 255, 255, 1),
                   border: OutlineInputBorder(
@@ -2203,7 +2354,7 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
                 style: const TextStyle(fontSize: 20),
                 decoration: InputDecoration(
                   contentPadding:
-                   EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
+                      EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
                   filled: true,
                   fillColor: const Color.fromRGBO(255, 255, 255, 1),
                   border: OutlineInputBorder(
@@ -2304,9 +2455,10 @@ class _SScoutingPageState extends State<SScoutingPage> {
 }
 
 void bigAssMatchFirebasePush(Map<dynamic, dynamic> data) async {
-  if (data != {}) {
+  if (data != {} && data.keys.isNotEmpty) {
     DatabaseReference ref = FirebaseDatabase.instance.ref("SMR2024/robots");
     //void test = bigAssMatchJsonFirebasePrep();
+    print(data);
     for (String key in data.keys) {
       ref.child(key).set(data[key]);
     }
