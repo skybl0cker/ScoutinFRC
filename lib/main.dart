@@ -24,12 +24,10 @@ void firebasePull() async {
   final ref = FirebaseDatabase.instance.ref();
   final snapshot = await ref.child("SMR2024/robots").get();
   if (snapshot.exists) {
-    print(snapshot.value);
     dynamic temp = snapshot.value;
     for (dynamic robot in temp.keys) {
       for (dynamic match in temp[robot]) {
         if (match != null) {
-          print(match[1]);
           if (v.allBotMatchData2[match[0]] != null) {
             v.allBotMatchData2[match[0]]["matches"]
                 .addEntries({match[1]: match}.entries);
@@ -43,7 +41,7 @@ void firebasePull() async {
         }
       }
     }
-    print(v.allBotMatchData2);
+    print(v.allBotMatchData2.toString() + "900");
   } else {
     print('No data available.');
   }
@@ -400,13 +398,11 @@ class _HomePageState extends State<HomePage> {
               child: ElevatedButton(
                 onPressed: () {
                   bigAssMatchJsonFirebasePrep();
-                  print(v.allBotMatchData);
+
                   Future.delayed(const Duration(milliseconds: 500), () {
                     bigAssMatchFirebasePush(v.allBotMatchData);
                   });
-                  print(v.allBotMatchData);
                   firebasePull();
-                  print(v.allBotMatchData2);
                   showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
@@ -2898,7 +2894,6 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
           const Gap(20),
           ElevatedButton(
             onPressed: () {
-              print(drivetrainText.text);
               v.pitData["robotNum"] = "14";
               v.pitData["driveTrain"] = drivetrainText.text;
               v.pitData["dimensions"] = dimensionText.text;
@@ -2995,7 +2990,6 @@ void pitFirebasePush(Map<dynamic, dynamic> data) async {
   if (data != {} && data.keys.isNotEmpty) {
     DatabaseReference ref = FirebaseDatabase.instance.ref("SMR2024/pitData");
     //void test = bigAssMatchJsonFirebasePrep();
-    print(data);
     for (String key in data.keys) {
       ref.child(key).set(data[key]);
     }
