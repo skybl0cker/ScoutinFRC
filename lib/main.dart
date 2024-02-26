@@ -41,7 +41,7 @@ void firebasePull() async {
         }
       }
     }
-    print(v.allBotMatchData2.toString() + "900");
+    print("${v.allBotMatchData2}900");
   } else {
     print('No data available.');
   }
@@ -2646,6 +2646,7 @@ class PitScoutingPage extends StatefulWidget {
 class _PitScoutingPageState extends State<PitScoutingPage> {
   @override
   Widget build(BuildContext context) {
+    TextEditingController robotNumText = TextEditingController();
     TextEditingController drivetrainText = TextEditingController();
     TextEditingController dimensionText = TextEditingController();
     TextEditingController weightText = TextEditingController();
@@ -2694,6 +2695,28 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
         body: Center(
             child: SingleChildScrollView(
                 child: Column(children: <Widget>[
+          const Text(
+            "Robot Number",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          SizedBox(
+            width: 350,
+            child: TextField(
+                textAlign: TextAlign.center,
+                controller: robotNumText,
+                style: const TextStyle(fontSize: 20),
+                decoration: InputDecoration(
+                  contentPadding:
+                      EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
+                  filled: true,
+                  fillColor: const Color.fromRGBO(255, 255, 255, 1),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  hintText: 'ex. 3824',
+                )),
+          ),
+          const Gap(20),
           const Text(
             "What is the drive train?",
             style: TextStyle(color: Colors.white, fontSize: 20),
@@ -2894,7 +2917,7 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
           const Gap(20),
           ElevatedButton(
             onPressed: () {
-              v.pitData["robotNum"] = "14";
+              v.pitData["robotNum"] = robotNumText.text;
               v.pitData["driveTrain"] = drivetrainText.text;
               v.pitData["dimensions"] = dimensionText.text;
               v.pitData["weight"] = weightText.text;

@@ -71,16 +71,18 @@ void setpitPref(String robotNum, Map<String, Object> pitData) async {
     "",
     "",
     "",
+    "",
   ];
-  temp[0] = pitData["driveTrain"].toString();
-  temp[1] = pitData["dimensions"].toString();
-  temp[2] = pitData["weight"].toString();
-  temp[3] = pitData["mechanism"].toString();
-  temp[4] = (pitData["score"].toString());
-  temp[5] = pitData["chain"].toString();
-  temp[6] = pitData["harmony"].toString();
-  temp[7] = pitData["stagescore"].toString();
-  temp[8] = pitData["feederfloor"].toString();
+  temp[1] = pitData["driveTrain"].toString();
+  temp[2] = pitData["driveTrain"].toString();
+  temp[3] = pitData["dimensions"].toString();
+  temp[4] = pitData["weight"].toString();
+  temp[5] = pitData["mechanism"].toString();
+  temp[6] = (pitData["score"].toString());
+  temp[7] = pitData["chain"].toString();
+  temp[8] = pitData["harmony"].toString();
+  temp[9] = pitData["stagescore"].toString();
+  temp[10] = pitData["feederfloor"].toString();
   print(temp);
   pitPref.setStringList("$robotNum/pit", temp);
 }
