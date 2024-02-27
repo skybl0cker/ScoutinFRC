@@ -348,55 +348,6 @@ class _HomePageState extends State<HomePage> {
               ),
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/sscouting');
-                },
-                style: TextButton.styleFrom(
-                  elevation: 0,
-                  shadowColor: const Color.fromRGBO(157, 90, 38, 1),
-                  textStyle: const TextStyle(
-                    fontSize: 40,
-                  ),
-                  padding: const EdgeInsets.only(
-                      left: 14, top: 12, right: 14, bottom: 12),
-                  backgroundColor: Colors.transparent,
-                  side: const BorderSide(
-                      width: 3, color: Color.fromRGBO(157, 90, 38, 0)),
-                ),
-                child: const Text(
-                  "Super Scouting",
-                  style: TextStyle(color: Colors.white),
-                ).animate().fade(delay: 500.ms).slide(delay: 500.ms),
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25),
-                border: Border.all(
-                    style: BorderStyle.solid,
-                    color: Color.fromRGBO(1, 1, 1, 0.4),
-                    width: 5),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color.fromRGBO(30, 30, 30, 1),
-                    offset: Offset(6, 6),
-                    blurRadius: 15,
-                    spreadRadius: 1,
-                  )
-                ],
-                gradient: LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.bottomLeft,
-                  colors: const [
-                    Color.fromARGB(255, 158, 155, 158),
-                    Color.fromARGB(255, 55, 55, 56),
-                  ],
-                ),
-              ),
-              child: ElevatedButton(
-                onPressed: () {
                   bigAssMatchJsonFirebasePrep();
 
                   Future.delayed(const Duration(milliseconds: 500), () {
@@ -421,7 +372,7 @@ class _HomePageState extends State<HomePage> {
                   elevation: 0,
                   shadowColor: const Color.fromRGBO(157, 90, 38, 1),
                   textStyle: const TextStyle(
-                    fontSize: 20,
+                    fontSize: 30,
                   ),
                   padding: const EdgeInsets.only(
                       left: 14, top: 12, right: 14, bottom: 12),
@@ -2925,7 +2876,7 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
               v.pitData["score"] = scoreText.text;
               v.pitData["chain"] = chainText.text;
               v.pitData["harmony"] = harmonyText.text;
-              v.pitData["stageScore"] = stagescoreText.text;
+              v.pitData["stagescore"] = stagescoreText.text;
               v.pitData["feederfloor"] = feederfloorText.text;
               setpitPref(v.pitData["robotNum"], v.pitData);
               Navigator.pushNamed(context, '/');
