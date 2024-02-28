@@ -1659,7 +1659,7 @@ WebViewController controller = WebViewController()
     ),
   )
   ..loadRequest(Uri.parse(
-      'https://docs.google.com/spreadsheets/d/19tyje0fh_LlKKTaoMsnlHxIeKMulCJcj4pF-jQjb5tQ/edit?usp=sharing'));
+      'https://docs.google.com/spreadsheets/d/1ERnR2mWExDcxD3ngiNyzMHH7F7FrF2V_cqeTdyqnD5g/edit?usp=sharing'));
 
 class AnalyticsPage extends StatefulWidget {
   const AnalyticsPage({super.key, required this.title});
