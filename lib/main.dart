@@ -25,25 +25,39 @@ void firebasePull() async {
   final snapshot = await ref.child("SMR2024/robots").get();
   if (snapshot.exists) {
     dynamic temp = snapshot.value;
-    for (dynamic robot in temp.keys) {
-      for (dynamic match in temp[robot]) {
-        if (match != null) {
-          if (v.allBotMatchData2[match[0]] != null) {
-            v.allBotMatchData2[match[0]]["matches"]
-                .addEntries({match[1]: match}.entries);
-          } else {
-            v.allBotMatchData2.addEntries({
-              match[0]: {
-                "matches": {match[1]: match}
-              }
-            }.entries);
-          }
-        }
+    temp.forEach((robotKey, robotValue) {
+      // Ensure robotValue is treated as a list even if it's not
+      List<dynamic> matches = robotValue is List ? robotValue : [robotValue];
+      for (var match in matches) {
+        processMatch(robotKey, match); // Adjusted to pass robotKey and match
       }
-    }
+    });
     print("${v.allBotMatchData2}900");
   } else {
     print('No data available.');
+  }
+}
+
+void processMatch(dynamic robotKey, dynamic match) {
+  // Processing each match
+  if (match != null) {
+    var matchId = match[0]; // Assuming the first item is the match ID
+    var matchData = match; // Assuming 'match' contains the data you need
+    // Create a MapEntry from the match data
+    var newEntry = MapEntry(robotKey, matchData);
+    // Check if the robot already has recorded match data
+    if (v.allBotMatchData2[matchId] != null) {
+      // If so, update the existing data by converting the map to a list of MapEntry and then adding the new entry
+      v.allBotMatchData2[matchId]["matches"] = Map.fromEntries(
+          v.allBotMatchData2[matchId]["matches"].entries.toList()
+            ..add(newEntry));
+    } else {
+      // If not, create a new entry for this robot's match data
+      // This creates a new Map for "matches" with the robotKey and matchData
+      v.allBotMatchData2[matchId] = {
+        "matches": {robotKey: matchData}
+      };
+    }
   }
 }
 
@@ -349,7 +363,6 @@ class _HomePageState extends State<HomePage> {
               child: ElevatedButton(
                 onPressed: () {
                   bigAssMatchJsonFirebasePrep();
-
                   Future.delayed(const Duration(milliseconds: 500), () {
                     bigAssMatchFirebasePush(v.allBotMatchData);
                   });
@@ -1693,8 +1706,8 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
                             0.0, // microphone placement
                           ];
                           if (key == "Robot One") {
-                            for (dynamic match in v
-                                .allBotMatchData2[robot1.text]["matches"]
+                            for (dynamic match in 
+                            v.allBotMatchData2[robot1.text]["matches"]
                                 .keys) {
                               counterVar += 1;
                               for (int i = 2;
@@ -1723,8 +1736,8 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
                               counterJson[i] = counterJson[i] / counterVar;
                             }
                           } else if (key == "Robot Two") {
-                            for (dynamic match in v
-                                .allBotMatchData2[robot2.text]["matches"]
+                            for (dynamic match in 
+                            v.allBotMatchData2[robot2.text]["matches"]
                                 .keys) {
                               counterVar += 1;
                               for (int i = 2;
@@ -1753,8 +1766,8 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
                               counterJson[i] = counterJson[i] / counterVar;
                             }
                           } else if (key == "Robot Three") {
-                            for (dynamic match in v
-                                .allBotMatchData2[robot3.text]["matches"]
+                            for (dynamic match in 
+                            v.allBotMatchData2[robot3.text]["matches"]
                                 .keys) {
                               counterVar += 1;
                               for (int i = 2;
@@ -2953,7 +2966,6 @@ void bigAssMatchFirebasePush(Map<dynamic, dynamic> data) async {
   if (data != {} && data.keys.isNotEmpty) {
     DatabaseReference ref = FirebaseDatabase.instance.ref("SMR2024/robots");
     //void test = bigAssMatchJsonFirebasePrep();
-    print(data);
     for (String key in data.keys) {
       ref.child(key).set(data[key]);
     }
@@ -2962,7 +2974,7 @@ void bigAssMatchFirebasePush(Map<dynamic, dynamic> data) async {
 
 void pitFirebasePush(Map<dynamic, dynamic> data) async {
   if (data != {} && data.keys.isNotEmpty) {
-    DatabaseReference ref = FirebaseDatabase.instance.ref("SMR2024/pitData");
+    DatabaseReference ref = FirebaseDatabase.instance.ref("SMR2024/robots/pit");
     //void test = bigAssMatchJsonFirebasePrep();
     for (String key in data.keys) {
       ref.child(key).set(data[key]);

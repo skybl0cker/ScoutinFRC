@@ -16,11 +16,10 @@ dynamic pageData = {
   "8": false,
   "ampPlacement": 0,
   "speakerPlacement": 0,
+  "feederPickup": 0,
   "floorPickup": 0,
   "stagePosition": 0,
-  "feederPickup": 0,
-  "stageHang":
-      0, //0 = no hang,1 hang on one closest to field,2 hang on one closest to amp,3 hang on other one
+  "stageHang": 0, //0 = no hang,1 hang on one closest to field,2 hang on one closest to amp,3 hang on other one
   "stagePlacement": 0,
   "microphonePlacement": 0,
   "matchNotes": "",
