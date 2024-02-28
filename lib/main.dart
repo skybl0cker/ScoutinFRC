@@ -571,7 +571,6 @@ const List<Widget> autoScoring = <Widget>[
 ];
 
 const List<Widget> communityLeave = <Widget>[
-  Text('Neither'),
   Text('Inside'),
   Text('Left')
 ];
@@ -587,7 +586,7 @@ class _AutoPageState extends State<AutoPage> {
   bool toggleButton1 = false;
   final List<bool> selectedStart = <bool>[false, false, false];
   final List<bool> selectedAuto = <bool>[false, false, false];
-  final List<bool> selectedEnd = <bool>[false, false, false];
+  final List<bool> selectedEnd = <bool>[false, false];
   bool get isEveryGroupSelected2 =>
       selectedStart.contains(true) &&
       selectedAuto.contains(true) &&
@@ -1256,8 +1255,8 @@ class _TeleopPageState extends State<TeleopPage> {
                         height: 175,
                       ),
                       Positioned(
-                        top: 80,
-                        bottom: 60,
+                        top: 55,
+                        bottom: 75,
                         right: 150,
                         child: FloatingActionButton(
                           onPressed: _incrementCounter7,
@@ -1266,8 +1265,8 @@ class _TeleopPageState extends State<TeleopPage> {
                         ),
                       ),
                       Positioned(
-                          top: 80,
-                          bottom: 60,
+                          top: 55,
+                          bottom: 75,
                           left: 150,
                           child: FloatingActionButton(
                             onPressed: _incrementCounter8,
@@ -1275,12 +1274,12 @@ class _TeleopPageState extends State<TeleopPage> {
                             heroTag: "tag8",
                           )),
                       Positioned(
-                        top: 42,
+                        top: 35,
                         bottom: 30,
                         child: Container(
                           child: Text(
                             '$_counter4',
-                            style: TextStyle(color: Colors.white, fontSize: 30),
+                            style: TextStyle(color: Colors.white, fontSize: 75),
                           ),
                         ),
                       )
@@ -1317,17 +1316,20 @@ class _TeleopPageState extends State<TeleopPage> {
 }
 
 const List<Widget> endStage = <Widget>[
-  Text('In Wing'),
+  Text('On Ground'),
   Text('Hanging'),
   Text('Harmony')
 ];
 
-const List<Widget> endStageNumber = <Widget>[Text('1'), Text('2'), Text('3')];
+const List<Widget> endStageNumber = <Widget>[
+  Text('1'),
+   Text('2'),
+    Text('3')
+    ];
 
 const List<Widget> endPlacement = <Widget>[
   Text('Yes'),
   Text('No'),
-  Text('Placeholder')
 ];
 
 const List<Widget> microphonePlacement = <Widget>[
@@ -1347,7 +1349,7 @@ class _EndgamePageState extends State<EndgamePage> {
   bool toggleButton2 = false;
   final List<bool> selectedStage = <bool>[false, false, false];
   final List<bool> selectedStageNumber = <bool>[false, false, false];
-  final List<bool> selectedPlacement = <bool>[false, false, false];
+  final List<bool> selectedPlacement = <bool>[false, false];
   final List<bool> selectedMicrophone = <bool>[false, false, false];
   bool get isEveryGroupSelected2 =>
       selectedStage.contains(true) &&
