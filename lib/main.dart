@@ -13,6 +13,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:flutter/services.dart';
 
 dynamic firebaseInit() async {
   await Firebase.initializeApp(
@@ -315,7 +316,7 @@ class _HomePageState extends State<HomePage> {
               ),
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/pitscouting');
+                  navigateToPitScouting(context);
                 },
                 style: TextButton.styleFrom(
                   elevation: 0,
@@ -412,10 +413,35 @@ class MatchNumPage extends StatefulWidget {
 }
 
 class _MatchNumPageState extends State<MatchNumPage> {
+  final TextEditingController matchNum = TextEditingController();
+  final TextEditingController robotNum = TextEditingController();
+  bool isButtonVisible = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize text field listeners
+    matchNum.addListener(_updateButtonVisibility);
+    robotNum.addListener(_updateButtonVisibility);
+  }
+
+  @override
+  void dispose() {
+    matchNum.dispose();
+    robotNum.dispose();
+    super.dispose();
+  }
+
+  void _updateButtonVisibility() {
+    final bool fieldsPopulated =
+        matchNum.text.isNotEmpty && robotNum.text.isNotEmpty;
+    setState(() {
+      isButtonVisible = fieldsPopulated;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    TextEditingController matchNum = TextEditingController();
-    TextEditingController robotNum = TextEditingController();
     return Scaffold(
         drawer: const NavBar(),
         appBar: AppBar(
@@ -462,6 +488,10 @@ class _MatchNumPageState extends State<MatchNumPage> {
           SizedBox(
             width: 350,
             child: TextField(
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(
+                      RegExp(r'^[1-9][0-9]{0,4}')),
+                ],
                 controller: robotNum,
                 style: const TextStyle(fontSize: 20),
                 decoration: InputDecoration(
@@ -480,6 +510,9 @@ class _MatchNumPageState extends State<MatchNumPage> {
           SizedBox(
             width: 350,
             child: TextField(
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'^[1-9][0-9]*')),
+                ],
                 controller: matchNum,
                 style: const TextStyle(fontSize: 20),
                 decoration: InputDecoration(
@@ -491,35 +524,36 @@ class _MatchNumPageState extends State<MatchNumPage> {
                 )),
           ),
           const Gap(25),
-          ElevatedButton(
-            onPressed: () {
-              if (robotNum.text == "") {
-                v.pageData["robotNum"] = "None";
-              } else {
-                v.pageData["robotNum"] = robotNum.text;
-              }
-              if (matchNum.text == "") {
-                v.pageData["matchNum"] = "None";
-              } else {
-                v.pageData["matchNum"] = matchNum.text;
-              }
-              Navigator.pushNamed(context, '/auto');
-            },
-            style: TextButton.styleFrom(
-              textStyle: const TextStyle(
-                fontSize: 40,
+          if (isButtonVisible)
+            ElevatedButton(
+              onPressed: () {
+                if (robotNum.text == "") {
+                  v.pageData["robotNum"] = "None";
+                } else {
+                  v.pageData["robotNum"] = robotNum.text;
+                }
+                if (matchNum.text == "") {
+                  v.pageData["matchNum"] = "None";
+                } else {
+                  v.pageData["matchNum"] = matchNum.text;
+                }
+                Navigator.pushNamed(context, '/auto');
+              },
+              style: TextButton.styleFrom(
+                textStyle: const TextStyle(
+                  fontSize: 40,
+                ),
+                padding: const EdgeInsets.only(
+                    left: 14, top: 12, right: 14, bottom: 12),
+                backgroundColor: Colors.blue,
+                side: const BorderSide(
+                    width: 3, color: Color.fromRGBO(65, 104, 196, 1)),
               ),
-              padding: const EdgeInsets.only(
-                  left: 14, top: 12, right: 14, bottom: 12),
-              backgroundColor: Colors.blue,
-              side: const BorderSide(
-                  width: 3, color: Color.fromRGBO(65, 104, 196, 1)),
-            ),
-            child: const Text(
-              "Confirm",
-              style: TextStyle(color: Colors.white, fontSize: 25),
-            ),
-          )
+              child: const Text(
+                "Confirm",
+                style: TextStyle(color: Colors.white, fontSize: 25),
+              ),
+            )
         ])));
   }
 }
@@ -1315,6 +1349,11 @@ class _EndgamePageState extends State<EndgamePage> {
   final List<bool> selectedStageNumber = <bool>[false, false, false];
   final List<bool> selectedPlacement = <bool>[false, false, false];
   final List<bool> selectedMicrophone = <bool>[false, false, false];
+  bool get isEveryGroupSelected2 =>
+      selectedStage.contains(true) &&
+      selectedStageNumber.contains(true) &&
+      selectedPlacement.contains(true) &&
+      selectedMicrophone.contains(true);
   @override
   Widget build(BuildContext context) {
     TextEditingController matchNotes = TextEditingController();
@@ -1491,7 +1530,10 @@ class _EndgamePageState extends State<EndgamePage> {
                 )),
           ),
           const Gap(10),
-          ElevatedButton(
+          Visibility(
+              visible:
+                  isEveryGroupSelected2, // Controls visibility based on the selection state
+              child: ElevatedButton(
             onPressed: () {
               if (selectedStage[0]) {
                 v.pageData["stagePosition"] = 0;
@@ -1540,6 +1582,7 @@ class _EndgamePageState extends State<EndgamePage> {
               "Confirm",
               style: TextStyle(color: Colors.white, fontSize: 25),
             ),
+          )
           )
         ])));
   }
@@ -2600,6 +2643,49 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
   }
 }
 
+void navigateToPitScouting(BuildContext context) {
+  const correctPassword = "A9E5T"; // Example password
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      TextEditingController passwordController = TextEditingController();
+      return AlertDialog(
+        title: Text('Enter Password'),
+        content: TextField(
+          controller: passwordController,
+          obscureText: true, // Hide password input
+          decoration: InputDecoration(hintText: "Password"),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Submit'),
+            onPressed: () {
+              if (passwordController.text == correctPassword) {
+                Navigator.of(context).pop(); // Close the dialog
+                Navigator.pushNamed(context, '/pitscouting');
+              } else {
+                showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text('Erorr'),
+                      content: const Text('Password is incorrect.'),
+                      actions: [
+                        TextButton(
+                          child: const Text('OK'),
+                          onPressed: () => Navigator.pop(context),
+                        )
+                      ],
+                    ),
+                  );
+              }
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
 class PitScoutingPage extends StatefulWidget {
   const PitScoutingPage({super.key, required this.title});
   final String title;
@@ -2666,6 +2752,10 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
           SizedBox(
             width: 350,
             child: TextField(
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(
+                      RegExp(r'^[1-9][0-9]{0,4}')),
+                ],
                 textAlign: TextAlign.center,
                 controller: robotNumText,
                 style: const TextStyle(fontSize: 20),
