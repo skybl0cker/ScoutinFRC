@@ -26,11 +26,16 @@ void firebasePull() async {
   final snapshot = await ref.child("SMR2024/robots").get();
   if (snapshot.exists) {
     dynamic temp = snapshot.value;
+    print(temp.toString() + "This is what snapshot looks like Firebase");
     temp.forEach((robotKey, robotValue) {
+      print(robotKey.toString() + "For each");
       // Ensure robotValue is treated as a list even if it's not
       List<dynamic> matches = robotValue is List ? robotValue : [robotValue];
       for (var match in matches) {
-        processMatch(robotKey, match); // Adjusted to pass robotKey and match
+        for (dynamic key in match.keys) {
+          processMatch(
+              robotKey, match, key); // Adjusted to pass robotKey and match
+        }
       }
     });
     print("${v.allBotMatchData2}900");
@@ -39,24 +44,27 @@ void firebasePull() async {
   }
 }
 
-void processMatch(dynamic robotKey, dynamic match) {
+void processMatch(dynamic robotKey, dynamic match, dynamic matchKeyType) {
+  print(robotKey.toString() + "process match robot");
+  print(match.toString() + " process match match");
   // Processing each match
   if (match != null) {
-    var matchId = match[0]; // Assuming the first item is the match ID
+    var matchId = matchKeyType; // Assuming the first item is the match ID
+    print(matchId.toString() + "This is the match id");
     var matchData = match; // Assuming 'match' contains the data you need
     // Create a MapEntry from the match data
-    var newEntry = MapEntry(robotKey, matchData);
+    var newEntry = MapEntry(matchKeyType, matchData[matchKeyType]);
     // Check if the robot already has recorded match data
-    if (v.allBotMatchData2[matchId] != null) {
+    if (v.allBotMatchData2[robotKey] != null) {
       // If so, update the existing data by converting the map to a list of MapEntry and then adding the new entry
-      v.allBotMatchData2[matchId]["matches"] = Map.fromEntries(
-          v.allBotMatchData2[matchId]["matches"].entries.toList()
+      v.allBotMatchData2[robotKey]["matches"] = Map.fromEntries(
+          v.allBotMatchData2[robotKey]["matches"].entries.toList()
             ..add(newEntry));
     } else {
       // If not, create a new entry for this robot's match data
       // This creates a new Map for "matches" with the robotKey and matchData
-      v.allBotMatchData2[matchId] = {
-        "matches": {robotKey: matchData}
+      v.allBotMatchData2[robotKey] = {
+        "matches": {matchKeyType: matchData[matchKeyType]}
       };
     }
   }
@@ -570,10 +578,7 @@ const List<Widget> autoScoring = <Widget>[
   Text('Scored Cargo')
 ];
 
-const List<Widget> communityLeave = <Widget>[
-  Text('Inside'),
-  Text('Left')
-];
+const List<Widget> communityLeave = <Widget>[Text('Inside'), Text('Left')];
 
 class AutoPage extends StatefulWidget {
   const AutoPage({super.key, required this.title});
@@ -1321,11 +1326,7 @@ const List<Widget> endStage = <Widget>[
   Text('Harmony')
 ];
 
-const List<Widget> endStageNumber = <Widget>[
-  Text('1'),
-   Text('2'),
-    Text('3')
-    ];
+const List<Widget> endStageNumber = <Widget>[Text('1'), Text('2'), Text('3')];
 
 const List<Widget> endPlacement = <Widget>[
   Text('Yes'),
@@ -1536,56 +1537,55 @@ class _EndgamePageState extends State<EndgamePage> {
               visible:
                   isEveryGroupSelected2, // Controls visibility based on the selection state
               child: ElevatedButton(
-            onPressed: () {
-              if (selectedStage[0]) {
-                v.pageData["stagePosition"] = 0;
-              } else if (selectedStage[1]) {
-                v.pageData["stagePosition"] = 1;
-              } else if (selectedStage[2]) {
-                v.pageData["stagePosition"] = 2;
-              }
-              if (selectedStageNumber[0]) {
-                v.pageData["stageHang"] = 0;
-              } else if (selectedStageNumber[1]) {
-                v.pageData["stageHang"] = 1;
-              } else if (selectedStageNumber[2]) {
-                v.pageData["stageHang"] = 2;
-              }
-              if (selectedPlacement[0]) {
-                v.pageData["stagePlacement"] = 0;
-              } else if (selectedPlacement[1]) {
-                v.pageData["stagePlacement"] = 1;
-              } else if (selectedPlacement[2]) {
-                v.pageData["stagePlacement"] = 2;
-              }
-              if (selectedMicrophone[0]) {
-                v.pageData["microphonePlacement"] = 0;
-              } else if (selectedMicrophone[1]) {
-                v.pageData["microphonePlacement"] = 1;
-              } else if (selectedMicrophone[2]) {
-                v.pageData["microphonePlacement"] = 2;
-              }
-              v.pageData["matchNotes"] = matchNotes.text;
-              setPref(
-                  v.pageData["robotNum"], v.pageData["matchNum"], v.pageData);
-              Navigator.pushNamed(context, '/');
-            },
-            style: TextButton.styleFrom(
-              textStyle: const TextStyle(
-                fontSize: 40,
-              ),
-              padding: const EdgeInsets.only(
-                  left: 14, top: 12, right: 14, bottom: 12),
-              backgroundColor: Colors.blue,
-              side: const BorderSide(
-                  width: 3, color: Color.fromRGBO(65, 104, 196, 1)),
-            ),
-            child: const Text(
-              "Confirm",
-              style: TextStyle(color: Colors.white, fontSize: 25),
-            ),
-          )
-          )
+                onPressed: () {
+                  if (selectedStage[0]) {
+                    v.pageData["stagePosition"] = 0;
+                  } else if (selectedStage[1]) {
+                    v.pageData["stagePosition"] = 1;
+                  } else if (selectedStage[2]) {
+                    v.pageData["stagePosition"] = 2;
+                  }
+                  if (selectedStageNumber[0]) {
+                    v.pageData["stageHang"] = 0;
+                  } else if (selectedStageNumber[1]) {
+                    v.pageData["stageHang"] = 1;
+                  } else if (selectedStageNumber[2]) {
+                    v.pageData["stageHang"] = 2;
+                  }
+                  if (selectedPlacement[0]) {
+                    v.pageData["stagePlacement"] = 0;
+                  } else if (selectedPlacement[1]) {
+                    v.pageData["stagePlacement"] = 1;
+                  } else if (selectedPlacement[2]) {
+                    v.pageData["stagePlacement"] = 2;
+                  }
+                  if (selectedMicrophone[0]) {
+                    v.pageData["microphonePlacement"] = 0;
+                  } else if (selectedMicrophone[1]) {
+                    v.pageData["microphonePlacement"] = 1;
+                  } else if (selectedMicrophone[2]) {
+                    v.pageData["microphonePlacement"] = 2;
+                  }
+                  v.pageData["matchNotes"] = matchNotes.text;
+                  setPref(v.pageData["robotNum"], v.pageData["matchNum"],
+                      v.pageData);
+                  Navigator.pushNamed(context, '/');
+                },
+                style: TextButton.styleFrom(
+                  textStyle: const TextStyle(
+                    fontSize: 40,
+                  ),
+                  padding: const EdgeInsets.only(
+                      left: 14, top: 12, right: 14, bottom: 12),
+                  backgroundColor: Colors.blue,
+                  side: const BorderSide(
+                      width: 3, color: Color.fromRGBO(65, 104, 196, 1)),
+                ),
+                child: const Text(
+                  "Confirm",
+                  style: TextStyle(color: Colors.white, fontSize: 25),
+                ),
+              ))
         ])));
   }
 }
@@ -1676,6 +1676,7 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
     TextEditingController robot1 = TextEditingController();
     TextEditingController robot2 = TextEditingController();
     TextEditingController robot3 = TextEditingController();
+    print(v.allBotMatchData2.toString() + "When Analytics Opens");
     return Scaffold(
         drawer: const NavBar(),
         appBar: AppBar(
@@ -1713,8 +1714,8 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
           ),
         ),
         body: Center(
-          child: SingleChildScrollView(
-            child: Column(children: <Widget>[
+            child: SingleChildScrollView(
+                child: Column(children: <Widget>[
           GridView.count(
             crossAxisCount: 4,
             primary: false,
@@ -1751,8 +1752,8 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
                             0.0, // microphone placement
                           ];
                           if (key == "Robot One") {
-                            for (dynamic match in 
-                            v.allBotMatchData2[robot1.text]["matches"]
+                            for (dynamic match in v
+                                .allBotMatchData2[robot1.text]["matches"]
                                 .keys) {
                               counterVar += 1;
                               for (int i = 2;
@@ -1781,8 +1782,8 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
                               counterJson[i] = counterJson[i] / counterVar;
                             }
                           } else if (key == "Robot Two") {
-                            for (dynamic match in 
-                            v.allBotMatchData2[robot2.text]["matches"]
+                            for (dynamic match in v
+                                .allBotMatchData2[robot2.text]["matches"]
                                 .keys) {
                               counterVar += 1;
                               for (int i = 2;
@@ -1811,8 +1812,8 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
                               counterJson[i] = counterJson[i] / counterVar;
                             }
                           } else if (key == "Robot Three") {
-                            for (dynamic match in 
-                            v.allBotMatchData2[robot3.text]["matches"]
+                            for (dynamic match in v
+                                .allBotMatchData2[robot3.text]["matches"]
                                 .keys) {
                               counterVar += 1;
                               for (int i = 2;
@@ -2637,11 +2638,7 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
               ),
             ],
           )
-            
-        ])
-        )
-        )
-        );
+        ]))));
   }
 }
 
@@ -2667,18 +2664,18 @@ void navigateToPitScouting(BuildContext context) {
                 Navigator.pushNamed(context, '/pitscouting');
               } else {
                 showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: const Text('Erorr'),
-                      content: const Text('Password is incorrect.'),
-                      actions: [
-                        TextButton(
-                          child: const Text('OK'),
-                          onPressed: () => Navigator.pop(context),
-                        )
-                      ],
-                    ),
-                  );
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('Erorr'),
+                    content: const Text('Password is incorrect.'),
+                    actions: [
+                      TextButton(
+                        child: const Text('OK'),
+                        onPressed: () => Navigator.pop(context),
+                      )
+                    ],
+                  ),
+                );
               }
             },
           ),
