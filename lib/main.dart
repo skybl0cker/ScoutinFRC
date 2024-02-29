@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_unnecessary_containers, avoid_print, unused_import, unnecessary_import, prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last
+// ignore_for_file: avoid_unnecessary_containers, avoid_print, unused_import, unnecessary_import, prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last, unrelated_type_equality_checks
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -26,9 +26,9 @@ void firebasePull() async {
   final snapshot = await ref.child("SMR2024/robots").get();
   if (snapshot.exists) {
     dynamic temp = snapshot.value;
-    print(temp.toString() + "This is what snapshot looks like Firebase");
+    print("${temp}This is what snapshot looks like Firebase");
     temp.forEach((robotKey, robotValue) {
-      print(robotKey.toString() + "For each");
+      print("${robotKey}For each");
       // Ensure robotValue is treated as a list even if it's not
       List<dynamic> matches = robotValue is List ? robotValue : [robotValue];
       for (var match in matches) {
@@ -45,12 +45,12 @@ void firebasePull() async {
 }
 
 void processMatch(dynamic robotKey, dynamic match, dynamic matchKeyType) {
-  print(robotKey.toString() + "process match robot");
-  print(match.toString() + " process match match");
+  print("${robotKey}process match robot");
+  print("$match process match match");
   // Processing each match
   if (match != null) {
     var matchId = matchKeyType; // Assuming the first item is the match ID
-    print(matchId.toString() + "This is the match id");
+    print("${matchId}This is the match id");
     var matchData = match; // Assuming 'match' contains the data you need
     // Create a MapEntry from the match data
     var newEntry = MapEntry(matchKeyType, matchData[matchKeyType]);
@@ -567,9 +567,9 @@ class _MatchNumPageState extends State<MatchNumPage> {
 }
 
 const List<Widget> autoPosition = <Widget>[
-  Text('Left'),
+  Text('Closest'),
   Text('Middle'),
-  Text('Right')
+  Text('Farthest')
 ];
 
 const List<Widget> autoScoring = <Widget>[
@@ -578,7 +578,7 @@ const List<Widget> autoScoring = <Widget>[
   Text('Scored Cargo')
 ];
 
-const List<Widget> communityLeave = <Widget>[Text('Inside'), Text('Left')];
+const List<Widget> communityLeave = <Widget>[Text('Inside'), Text('Outside')];
 
 class AutoPage extends StatefulWidget {
   const AutoPage({super.key, required this.title});
@@ -1676,7 +1676,7 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
     TextEditingController robot1 = TextEditingController();
     TextEditingController robot2 = TextEditingController();
     TextEditingController robot3 = TextEditingController();
-    print(v.allBotMatchData2.toString() + "When Analytics Opens");
+    print("${v.allBotMatchData2}When Analytics Opens");
     return Scaffold(
         drawer: const NavBar(),
         appBar: AppBar(
@@ -2666,7 +2666,7 @@ void navigateToPitScouting(BuildContext context) {
                 showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
-                    title: const Text('Erorr'),
+                    title: const Text('Error'),
                     content: const Text('Password is incorrect.'),
                     actions: [
                       TextButton(
