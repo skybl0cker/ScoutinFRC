@@ -1354,9 +1354,7 @@ class _EndgamePageState extends State<EndgamePage> {
   final List<bool> selectedMicrophone = <bool>[false, false, false];
   bool get isEveryGroupSelected2 =>
       selectedStage.contains(true) &&
-      selectedStageNumber.contains(true) &&
-      selectedPlacement.contains(true) &&
-      selectedMicrophone.contains(true);
+      selectedPlacement.contains(true) ;
   @override
   Widget build(BuildContext context) {
     TextEditingController matchNotes = TextEditingController();
