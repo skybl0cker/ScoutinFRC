@@ -1,4 +1,6 @@
 // ignore_for_file: avoid_unnecessary_containers, avoid_print, unused_import, unnecessary_import, prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last, unrelated_type_equality_checks
+
+//Imports all packages + .dart files
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -14,13 +16,16 @@ import 'firebase_options.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter/services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
+//Initalizes Firebase to prepare for scouting
 dynamic firebaseInit() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 }
 
+//Pulls all data stored in firebase for use in analytics 
 void firebasePull() async {
   final ref = FirebaseDatabase.instance.ref();
   final snapshot = await ref.child("SMR2024/robots").get();
@@ -31,14 +36,16 @@ void firebasePull() async {
       print("${robotKey}For each");
       // Ensure robotValue is treated as a list even if it's not
       List<dynamic> matches = robotValue is List ? robotValue : [robotValue];
+      print(matches);
       for (var match in matches) {
+        print("$match");
         for (dynamic key in match.keys) {
           processMatch(
               robotKey, match, key); // Adjusted to pass robotKey and match
         }
       }
     });
-    print("${v.allBotMatchData2}900");
+    print("${v.allBotMatchData2}");
   } else {
     print('No data available.');
   }
@@ -70,10 +77,11 @@ void processMatch(dynamic robotKey, dynamic match, dynamic matchKeyType) {
   }
 }
 
+//Runs the actuall app
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  firebaseInit();
-  runApp(const ScoutingApp());
+  firebaseInit(); //runs the firebaseInit command
+  runApp(const ScoutingApp()); // runs the app 
 }
 
 class ScoutingApp extends StatelessWidget {
@@ -1750,9 +1758,13 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
                             0.0, // microphone placement
                           ];
                           if (key == "Robot One") {
+                            print(v.allBotMatchData2);
+                            print(robot1.text);
                             for (dynamic match in v
                                 .allBotMatchData2[robot1.text]["matches"]
                                 .keys) {
+                                  if (match != "pit"){
+                                  //THIS IS THE START
                               counterVar += 1;
                               for (int i = 2;
                                   i <
@@ -1775,6 +1787,8 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
                                           ["matches"][match][i]);
                                 }
                               }
+                                }
+                              //THIS IS THE End
                             }
                             for (int i = 0; i < counterJson.length; i++) {
                               counterJson[i] = counterJson[i] / counterVar;
@@ -1783,6 +1797,7 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
                             for (dynamic match in v
                                 .allBotMatchData2[robot2.text]["matches"]
                                 .keys) {
+                                                                    if (match != "pit"){
                               counterVar += 1;
                               for (int i = 2;
                                   i <
@@ -1806,6 +1821,7 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
                                 }
                               }
                             }
+                          }
                             for (int i = 0; i < counterJson.length; i++) {
                               counterJson[i] = counterJson[i] / counterVar;
                             }
@@ -1813,6 +1829,7 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
                             for (dynamic match in v
                                 .allBotMatchData2[robot3.text]["matches"]
                                 .keys) {
+                                                                    if (match != "pit"){
                               counterVar += 1;
                               for (int i = 2;
                                   i <
@@ -1835,7 +1852,7 @@ class _AnalyticsHomePageState extends State<AnalyticsPage> {
                                           ["matches"][match][i]);
                                 }
                               }
-                            }
+                            }}
                             for (int i = 0; i < counterJson.length; i++) {
                               counterJson[i] = counterJson[i] / counterVar;
                             }
