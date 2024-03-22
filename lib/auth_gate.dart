@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
+import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart'; // new
 import 'package:flutter/material.dart';
 
 import 'main.dart' as m;
@@ -7,7 +8,7 @@ import 'main.dart' as m;
 class AuthGate extends StatelessWidget {
  const AuthGate({super.key, required List<SignedOutAction> actions});
 
- @override
+  @override
  Widget build(BuildContext context) {
    return StreamBuilder<User?>(
      stream: FirebaseAuth.instance.authStateChanges(),
@@ -15,7 +16,8 @@ class AuthGate extends StatelessWidget {
        if (!snapshot.hasData) {
          return SignInScreen(
            providers: [
-              EmailAuthProvider()
+             EmailAuthProvider(),
+             GoogleProvider(clientId: "246498824596-3v3hk4cicnb4iomoht611u19r04rj8md"),  // new
            ],
            headerBuilder: (context, constraints, shrinkOffset) {
              return Padding(
@@ -30,16 +32,32 @@ class AuthGate extends StatelessWidget {
              return Padding(
                padding: const EdgeInsets.symmetric(vertical: 8.0),
                child: action == AuthAction.signIn
-                   ? const Text('Welcome to the HVA RoHAWKtics Scouting App, please sign in!',
-                   style: TextStyle(color: Colors.white),)
-                   : const Text('Welcome to HVA RoHAWKtics Scouting App, please sign up!',
-                   style: TextStyle(color: Colors.white),),
+                   ? const Text('Welcome to the RoHAWKtics Scouting App, please sign in!')
+                   : const Text('Welcome to the RoHAWKtics Scouting App, please sign up!'),
+             );
+           },
+           footerBuilder: (context, action) {
+             return const Padding(
+               padding: EdgeInsets.only(top: 16),
+               child: Text(
+                 'By signing in, you agree to our terms and conditions.',
+                 style: TextStyle(color: Colors.grey),
+               ),
+             );
+           },
+           sideBuilder: (context, shrinkOffset) {
+             return Padding(
+               padding: const EdgeInsets.all(20),
+               child: AspectRatio(
+                 aspectRatio: 1,
+                 child: Image.asset('flutterfire_300x.png'),
+               ),
              );
            },
          );
        }
 
-       return const m.HomePage(title: '');
+       return const m.HomePage(title: "");
      },
    );
  }
