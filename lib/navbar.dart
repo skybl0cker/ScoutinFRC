@@ -1,4 +1,10 @@
+// ignore_for_file: unused_import
+
+import 'package:firebase_ui_auth/firebase_ui_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
+import 'package:scouting2024/auth_gate.dart' as auth;
 import 'package:scouting2024/sp.dart';
 
 class NavBar extends StatelessWidget {
@@ -12,28 +18,15 @@ class NavBar extends StatelessWidget {
         // Remove padding
         padding: EdgeInsets.zero,
         children: [
-          UserAccountsDrawerHeader(
-            accountName: const Text('Placeholder'),
-            accountEmail: const Text('Placeholder'),
-            currentAccountPicture: CircleAvatar(
-              child: ClipOval(
-                child: Image.network(
-                  'https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM=',                  fit: BoxFit.cover,
-                  width: 90,
-                  height: 90,
-                ),
-              ),
-            ),
-            decoration: const BoxDecoration(
-              color: Color.fromRGBO(65, 68, 74, 1),
-            ),
-          ),
+          const Gap(120),
           ListTile(
             leading: const Icon(Icons.person),
             iconColor: Colors.white,
-            title: const Text('Profile'),
+            title: const Text('Sign Out'),
             textColor: Colors.white,
-            onTap: () {},
+            onTap: () {
+              FirebaseAuth.instance.signOut();
+            },
           ),
           ListTile(
             leading: const Icon(Icons.cloud),

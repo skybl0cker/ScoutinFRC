@@ -1,9 +1,21 @@
 PODS:
+  - desktop_webview_auth (0.0.1):
+    - Flutter
+  - Firebase/Auth (10.18.0):
+    - Firebase/CoreOnly
+    - FirebaseAuth (~> 10.18.0)
   - Firebase/CoreOnly (10.18.0):
     - FirebaseCore (= 10.18.0)
   - Firebase/Database (10.18.0):
     - Firebase/CoreOnly
     - FirebaseDatabase (~> 10.18.0)
+  - Firebase/DynamicLinks (10.18.0):
+    - Firebase/CoreOnly
+    - FirebaseDynamicLinks (~> 10.18.0)
+  - firebase_auth (4.16.0):
+    - Firebase/Auth (= 10.18.0)
+    - firebase_core
+    - Flutter
   - firebase_core (2.24.2):
     - Firebase/CoreOnly (= 10.18.0)
     - Flutter
@@ -11,7 +23,18 @@ PODS:
     - Firebase/Database (= 10.18.0)
     - firebase_core
     - Flutter
+  - firebase_dynamic_links (5.4.8):
+    - Firebase/DynamicLinks (= 10.18.0)
+    - firebase_core
+    - Flutter
   - FirebaseAppCheckInterop (10.21.0)
+  - FirebaseAuth (10.18.0):
+    - FirebaseAppCheckInterop (~> 10.17)
+    - FirebaseCore (~> 10.0)
+    - GoogleUtilities/AppDelegateSwizzler (~> 7.8)
+    - GoogleUtilities/Environment (~> 7.8)
+    - GTMSessionFetcher/Core (< 4.0, >= 2.1)
+    - RecaptchaInterop (~> 100.0)
   - FirebaseCore (10.18.0):
     - FirebaseCoreInternal (~> 10.0)
     - GoogleUtilities/Environment (~> 7.12)
@@ -23,15 +46,29 @@ PODS:
     - FirebaseCore (~> 10.0)
     - FirebaseSharedSwift (~> 10.0)
     - leveldb-library (~> 1.22)
+  - FirebaseDynamicLinks (10.18.0):
+    - FirebaseCore (~> 10.0)
   - FirebaseSharedSwift (10.21.0)
   - Flutter (1.0.0)
+  - GoogleUtilities/AppDelegateSwizzler (7.12.0):
+    - GoogleUtilities/Environment
+    - GoogleUtilities/Logger
+    - GoogleUtilities/Network
   - GoogleUtilities/Environment (7.12.0):
     - PromisesObjC (< 3.0, >= 1.2)
   - GoogleUtilities/Logger (7.12.0):
     - GoogleUtilities/Environment
+  - GoogleUtilities/Network (7.12.0):
+    - GoogleUtilities/Logger
+    - "GoogleUtilities/NSData+zlib"
+    - GoogleUtilities/Reachability
   - "GoogleUtilities/NSData+zlib (7.12.0)"
+  - GoogleUtilities/Reachability (7.12.0):
+    - GoogleUtilities/Logger
+  - GTMSessionFetcher/Core (3.3.2)
   - leveldb-library (1.22.3)
   - PromisesObjC (2.3.1)
+  - RecaptchaInterop (100.0.0)
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -39,8 +76,11 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
+  - desktop_webview_auth (from `.symlinks/plugins/desktop_webview_auth/ios`)
+  - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_database (from `.symlinks/plugins/firebase_database/ios`)
+  - firebase_dynamic_links (from `.symlinks/plugins/firebase_dynamic_links/ios`)
   - Flutter (from `Flutter`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
   - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/ios`)
@@ -49,19 +89,29 @@ SPEC REPOS:
   trunk:
     - Firebase
     - FirebaseAppCheckInterop
+    - FirebaseAuth
     - FirebaseCore
     - FirebaseCoreInternal
     - FirebaseDatabase
+    - FirebaseDynamicLinks
     - FirebaseSharedSwift
     - GoogleUtilities
+    - GTMSessionFetcher
     - leveldb-library
     - PromisesObjC
+    - RecaptchaInterop
 
 EXTERNAL SOURCES:
+  desktop_webview_auth:
+    :path: ".symlinks/plugins/desktop_webview_auth/ios"
+  firebase_auth:
+    :path: ".symlinks/plugins/firebase_auth/ios"
   firebase_core:
     :path: ".symlinks/plugins/firebase_core/ios"
   firebase_database:
     :path: ".symlinks/plugins/firebase_database/ios"
+  firebase_dynamic_links:
+    :path: ".symlinks/plugins/firebase_dynamic_links/ios"
   Flutter:
     :path: Flutter
   shared_preferences_foundation:
@@ -70,18 +120,25 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/webview_flutter_wkwebview/ios"
 
 SPEC CHECKSUMS:
+  desktop_webview_auth: d645139460ef203d50bd0cdb33356785dd939cce
   Firebase: 414ad272f8d02dfbf12662a9d43f4bba9bec2a06
+  firebase_auth: 8e9ec02991ca4659111cc671c84d0c010b6bfb26
   firebase_core: 0af4a2b24f62071f9bf283691c0ee41556dcb3f5
   firebase_database: 5d420ac53c48f3394445c8b83c530a42d149c3d4
+  firebase_dynamic_links: b626a11f5eb02033981ae377377c3f297eb4c1b0
   FirebaseAppCheckInterop: 69fc7d8f6a1cbfa973efb8d1723651de30d12525
+  FirebaseAuth: 12314b438fa76048540c8fb86d6cfc9e08595176
   FirebaseCore: 2322423314d92f946219c8791674d2f3345b598f
   FirebaseCoreInternal: 43c1788eaeee9d1b97caaa751af567ce11010d00
   FirebaseDatabase: ac770bf7525ff0340b105166037036c0e46c2c7e
+  FirebaseDynamicLinks: c37307441c53838d66a9650dabca9e0459502527
   FirebaseSharedSwift: 19b3f709993d6fa1d84941d41c01e3c4c11eab93
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   GoogleUtilities: 0759d1a57ebb953965c2dfe0ba4c82e95ccc2e34
+  GTMSessionFetcher: 0e876eea9782ec6462e91ab872711c357322c94f
   leveldb-library: e74c27d8fbd22854db7cb467968a0b8aa1db7126
   PromisesObjC: c50d2056b5253dadbd6c2bea79b0674bd5a52fa4
+  RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
   shared_preferences_foundation: b4c3b4cddf1c21f02770737f147a3f5da9d39695
   webview_flutter_wkwebview: 4f3e50f7273d31e5500066ed267e3ae4309c5ae4
 

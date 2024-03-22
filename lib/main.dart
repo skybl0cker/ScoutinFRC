@@ -17,6 +17,10 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_ui_auth/firebase_ui_auth.dart';
+import 'auth_gate.dart' as auth;
+
+
 
 //Initalizes Firebase to prepare for scouting
 dynamic firebaseInit() async {
@@ -78,9 +82,9 @@ void processMatch(dynamic robotKey, dynamic match, dynamic matchKeyType) {
 }
 
 //Runs the actuall app
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  firebaseInit(); //runs the firebaseInit command
+  await firebaseInit(); //runs the firebaseInit command
   runApp(const ScoutingApp()); // runs the app 
 }
 
@@ -89,11 +93,12 @@ class ScoutingApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+
+      home: auth.AuthGate(actions: [],),
       debugShowCheckedModeBanner: false,
       title: 'Scouting',
-      initialRoute: '/',
       routes: <String, WidgetBuilder>{
-        '/': (context) => const HomePage(
+        '/home': (context) => const HomePage(
               title: '',
             ),
         '/scouting': (context) => const MatchNumPage(
@@ -116,9 +121,33 @@ class ScoutingApp extends StatelessWidget {
             ),
       },
       theme: ThemeData(
+        primaryColor: Colors.white,
+        primaryTextTheme: TextTheme(),
+        colorScheme: Theme.of(context).colorScheme.copyWith(
+        ),
+        textTheme: TextTheme(
+      bodyLarge: TextStyle(),
+      bodyMedium: TextStyle(),
+      bodySmall: TextStyle(),
+      displayLarge: TextStyle(),
+      displayMedium: TextStyle(),
+      displaySmall: TextStyle(),
+      headlineLarge: TextStyle(),
+      headlineMedium: TextStyle(),
+      headlineSmall: TextStyle(),
+      titleLarge: TextStyle(),
+      titleMedium: TextStyle(),
+      titleSmall: TextStyle(),
+      labelLarge: TextStyle(),
+      labelMedium: TextStyle(),
+      labelSmall: TextStyle(),
+    ).apply(
+      bodyColor: Colors.white, 
+      displayColor: Colors.white, 
+    ),
         scaffoldBackgroundColor: const Color.fromRGBO(65, 68, 73, 1),
         useMaterial3: true,
-      ),
+      )
     );
   }
 }
@@ -353,70 +382,8 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(
               height: 20,
             ),
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25),
-                border: Border.all(
-                    style: BorderStyle.solid,
-                    color: Color.fromRGBO(1, 1, 1, 0.4),
-                    width: 5),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color.fromRGBO(30, 30, 30, 1),
-                    offset: Offset(6, 6),
-                    blurRadius: 15,
-                    spreadRadius: 1,
-                  )
-                ],
-                gradient: LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.bottomLeft,
-                  colors: const [
-                    Colors.purple,
-                    Color.fromARGB(255, 87, 0, 154),
-                  ],
-                ),
-              ),
-              child: ElevatedButton(
-                onPressed: () {
-                  bigAssMatchJsonFirebasePrep();
-                  Future.delayed(const Duration(milliseconds: 500), () {
-                    bigAssMatchFirebasePush(v.allBotMatchData);
-                  });
-                  firebasePull();
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: const Text('Success!'),
-                      content: const Text('Data has been pushed!'),
-                      actions: [
-                        TextButton(
-                          child: const Text('OK'),
-                          onPressed: () => Navigator.pop(context),
-                        )
-                      ],
-                    ),
-                  );
-                },
-                style: TextButton.styleFrom(
-                  elevation: 0,
-                  shadowColor: const Color.fromRGBO(157, 90, 38, 1),
-                  textStyle: const TextStyle(
-                    fontSize: 30,
-                  ),
-                  padding: const EdgeInsets.only(
-                      left: 14, top: 12, right: 14, bottom: 12),
-                  backgroundColor: Colors.transparent,
-                  side: const BorderSide(
-                      width: 3, color: Color.fromRGBO(157, 90, 38, 0)),
-                ),
-                child: const Text(
-                  "Connect Data",
-                  style: TextStyle(color: Colors.white),
-                ).animate().fade(delay: 500.ms).slide(delay: 500.ms),
-              ),
-            ),
-          ].animate().fade(delay: 300.ms).slide(delay: 300.ms)),
+          ]
+          ),
         ));
   }
 }
@@ -512,10 +479,12 @@ class _MatchNumPageState extends State<MatchNumPage> {
                 style: const TextStyle(fontSize: 20),
                 decoration: InputDecoration(
                   filled: true,
-                  fillColor: const Color.fromRGBO(255, 255, 255, 1),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.0)),
-                  hintText: 'ex: 3824',
+                  fillColor: const Color.fromRGBO(255, 255, 255, 0),
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                      borderSide: BorderSide(width: 1,color: Colors.white),
+                      ), 
+                  hintText: 'ex: 3824', hintStyle: TextStyle(color: Colors.white),
                 )),
           ),
           const Gap(80),
@@ -526,17 +495,20 @@ class _MatchNumPageState extends State<MatchNumPage> {
           SizedBox(
             width: 350,
             child: TextField(
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'^[1-9][0-9]*')),
+                  inputFormatters: [
+                  FilteringTextInputFormatter.allow(
+                      RegExp(r'^[1-9][0-9]{0,4}')),
                 ],
                 controller: matchNum,
                 style: const TextStyle(fontSize: 20),
                 decoration: InputDecoration(
                   filled: true,
-                  fillColor: const Color.fromRGBO(255, 255, 255, 1),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.0)),
-                  hintText: 'ex: 1',
+                  fillColor: const Color.fromRGBO(255, 255, 255, 0),
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                      borderSide: BorderSide(width: 1,color: Colors.white),
+                      ),
+                  hintText: 'ex: 1', hintStyle: TextStyle(color: Colors.white),
                 )),
           ),
           const Gap(25),
@@ -1528,14 +1500,13 @@ class _EndgamePageState extends State<EndgamePage> {
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontSize: 20),
                 decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
                   filled: true,
-                  fillColor: const Color.fromRGBO(255, 255, 255, 1),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  hintText: 'Input answer here',
+                  fillColor: const Color.fromRGBO(255, 255, 255, 0),
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                      borderSide: BorderSide(width: 1,color: Colors.white),
+                      ),
+                  hintText: 'ex: 1', hintStyle: TextStyle(color: Colors.white),
                 )),
           ),
           const Gap(10),
@@ -1575,6 +1546,10 @@ class _EndgamePageState extends State<EndgamePage> {
                   v.pageData["matchNotes"] = matchNotes.text;
                   setPref(v.pageData["robotNum"], v.pageData["matchNum"],
                       v.pageData);
+                  bigAssMatchJsonFirebasePrep();
+                  Future.delayed(const Duration(milliseconds: 500), () {
+                    bigAssMatchFirebasePush(v.allBotMatchData);
+                  });
                   Navigator.pushNamed(context, '/');
                 },
                 style: TextButton.styleFrom(
@@ -2774,14 +2749,13 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
                 controller: robotNumText,
                 style: const TextStyle(fontSize: 20),
                 decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
                   filled: true,
-                  fillColor: const Color.fromRGBO(255, 255, 255, 1),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  hintText: 'ex. 3824',
+                  fillColor: const Color.fromRGBO(255, 255, 255, 0),
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                      borderSide: BorderSide(width: 1,color: Colors.white),
+                      ),
+                  hintText: 'ex: 1', hintStyle: TextStyle(color: Colors.white),
                 )),
           ),
           const Gap(20),
@@ -2794,16 +2768,15 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
             child: TextField(
                 textAlign: TextAlign.center,
                 controller: drivetrainText,
-                style: const TextStyle(fontSize: 20),
+               style: const TextStyle(fontSize: 20),
                 decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
                   filled: true,
-                  fillColor: const Color.fromRGBO(255, 255, 255, 1),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  hintText: 'Input answer here',
+                  fillColor: const Color.fromRGBO(255, 255, 255, 0),
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                      borderSide: BorderSide(width: 1,color: Colors.white),
+                      ),
+                  hintText: 'ex: 1', hintStyle: TextStyle(color: Colors.white),
                 )),
           ),
           const Gap(20),
@@ -2818,14 +2791,13 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
                 controller: dimensionText,
                 style: const TextStyle(fontSize: 20),
                 decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
                   filled: true,
-                  fillColor: const Color.fromRGBO(255, 255, 255, 1),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  hintText: 'Input answer here',
+                  fillColor: const Color.fromRGBO(255, 255, 255, 0),
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                      borderSide: BorderSide(width: 1,color: Colors.white),
+                      ),
+                  hintText: 'ex: 1', hintStyle: TextStyle(color: Colors.white),
                 )),
           ),
           const Gap(20),
@@ -2840,14 +2812,13 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
                 controller: weightText,
                 style: const TextStyle(fontSize: 20),
                 decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
                   filled: true,
-                  fillColor: const Color.fromRGBO(255, 255, 255, 1),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  hintText: 'Input answer here',
+                  fillColor: const Color.fromRGBO(255, 255, 255, 0),
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                      borderSide: BorderSide(width: 1,color: Colors.white),
+                      ),
+                  hintText: 'ex: 1', hintStyle: TextStyle(color: Colors.white),
                 )),
           ),
           const Gap(20),
@@ -2862,14 +2833,13 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
                 controller: mechanismText,
                 style: const TextStyle(fontSize: 20),
                 decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
                   filled: true,
-                  fillColor: const Color.fromRGBO(255, 255, 255, 1),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  hintText: 'Input answer here',
+                  fillColor: const Color.fromRGBO(255, 255, 255, 0),
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                      borderSide: BorderSide(width: 1,color: Colors.white),
+                      ),
+                  hintText: 'ex: 1', hintStyle: TextStyle(color: Colors.white),
                 )),
           ),
           Gap(20),
@@ -2884,14 +2854,13 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
                 controller: scoreText,
                 style: const TextStyle(fontSize: 20),
                 decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
                   filled: true,
-                  fillColor: const Color.fromRGBO(255, 255, 255, 1),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  hintText: 'Input answer here',
+                  fillColor: const Color.fromRGBO(255, 255, 255, 0),
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                      borderSide: BorderSide(width: 1,color: Colors.white),
+                      ),
+                  hintText: 'ex: 1', hintStyle: TextStyle(color: Colors.white),
                 )),
           ),
           Gap(20),
@@ -2906,14 +2875,13 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
                 controller: chainText,
                 style: const TextStyle(fontSize: 20),
                 decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
                   filled: true,
-                  fillColor: const Color.fromRGBO(255, 255, 255, 1),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  hintText: 'Input answer here',
+                  fillColor: const Color.fromRGBO(255, 255, 255, 0),
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                      borderSide: BorderSide(width: 1,color: Colors.white),
+                      ),
+                  hintText: 'ex: 1', hintStyle: TextStyle(color: Colors.white),
                 )),
           ),
           Gap(20),
@@ -2928,14 +2896,13 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
                 controller: harmonyText,
                 style: const TextStyle(fontSize: 20),
                 decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
                   filled: true,
-                  fillColor: const Color.fromRGBO(255, 255, 255, 1),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  hintText: 'Input answer here',
+                  fillColor: const Color.fromRGBO(255, 255, 255, 0),
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                      borderSide: BorderSide(width: 1,color: Colors.white),
+                      ),
+                  hintText: 'ex: 1', hintStyle: TextStyle(color: Colors.white),
                 )),
           ),
           Gap(20),
@@ -2950,14 +2917,13 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
                 controller: stagescoreText,
                 style: const TextStyle(fontSize: 20),
                 decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
                   filled: true,
-                  fillColor: const Color.fromRGBO(255, 255, 255, 1),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  hintText: 'Input answer here',
+                  fillColor: const Color.fromRGBO(255, 255, 255, 0),
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                      borderSide: BorderSide(width: 1,color: Colors.white),
+                      ),
+                  hintText: 'ex: 1', hintStyle: TextStyle(color: Colors.white),
                 )),
           ),
           Gap(20),
@@ -2970,16 +2936,15 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
             child: TextField(
                 textAlign: TextAlign.center,
                 controller: feederfloorText,
-                style: const TextStyle(fontSize: 20),
+               style: const TextStyle(fontSize: 20),
                 decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.only(left: 14, top: 12, right: 14, bottom: 12),
                   filled: true,
-                  fillColor: const Color.fromRGBO(255, 255, 255, 1),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  hintText: 'Input answer here',
+                  fillColor: const Color.fromRGBO(255, 255, 255, 0),
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                      borderSide: BorderSide(width: 1,color: Colors.white),
+                      ),
+                  hintText: 'ex: 1', hintStyle: TextStyle(color: Colors.white),
                 )),
           ),
           const Gap(20),
@@ -2996,6 +2961,10 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
               v.pitData["stagescore"] = stagescoreText.text;
               v.pitData["feederfloor"] = feederfloorText.text;
               setpitPref(v.pitData["robotNum"], v.pitData);
+              bigAssMatchJsonFirebasePrep();
+                  Future.delayed(const Duration(milliseconds: 500), () {
+                    bigAssMatchFirebasePush(v.allBotMatchData);
+                  });
               Navigator.pushNamed(context, '/');
             },
             style: TextButton.styleFrom(
@@ -3066,9 +3035,10 @@ class _SScoutingPageState extends State<SScoutingPage> {
   }
 }
 
+
 void bigAssMatchFirebasePush(Map<dynamic, dynamic> data) async {
   if (data != {} && data.keys.isNotEmpty) {
-    DatabaseReference ref = FirebaseDatabase.instance.ref("SMR2024/robots");
+    DatabaseReference ref = FirebaseDatabase.instance.ref("RCR2024/robots");
     //void test = bigAssMatchJsonFirebasePrep();
     for (String key in data.keys) {
       ref.child(key).set(data[key]);
@@ -3078,7 +3048,7 @@ void bigAssMatchFirebasePush(Map<dynamic, dynamic> data) async {
 
 void pitFirebasePush(Map<dynamic, dynamic> data) async {
   if (data != {} && data.keys.isNotEmpty) {
-    DatabaseReference ref = FirebaseDatabase.instance.ref("SMR2024/robots/pit");
+    DatabaseReference ref = FirebaseDatabase.instance.ref("RCR2024/robots/pit");
     //void test = bigAssMatchJsonFirebasePrep();
     for (String key in data.keys) {
       ref.child(key).set(data[key]);
