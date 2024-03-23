@@ -17,7 +17,7 @@ class AuthGate extends StatelessWidget {
          return SignInScreen(
            providers: [
              EmailAuthProvider(),
-             GoogleProvider(clientId: "246498824596-3v3hk4cicnb4iomoht611u19r04rj8md"),  // new
+             GoogleProvider(clientId: "246498824596-93ae95j4i3lr4rmeq0mfu455jcdsjs6v.apps.googleusercontent.com"),  // new
            ],
            headerBuilder: (context, constraints, shrinkOffset) {
              return Padding(
@@ -50,7 +50,7 @@ class AuthGate extends StatelessWidget {
                padding: const EdgeInsets.all(20),
                child: AspectRatio(
                  aspectRatio: 1,
-                 child: Image.asset('flutterfire_300x.png'),
+                 child: Image.asset('assets/images/rohawktics.png'),
                ),
              );
            },

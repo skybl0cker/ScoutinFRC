@@ -57,5 +57,20 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>CFBundleURLTypes</key>
+<array>
+    <dict>
+        <key>CFBundleTypeRole</key>
+        <string>Editor</string>
+        <key>CFBundleURLSchemes</key>
+        <array>
+            <string>com.googleusercontent.apps.246498824596-93ae95j4i3lr4rmeq0mfu455jcdsjs6v</string>
+            <string>customscheme</string>
+        </array>
+        <key>CFBundleURLName</key>
+        <string>com.firebaseapp.firescout3824</string>
+    </dict>
+</array>
+
 </dict>
 </plist>
