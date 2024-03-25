@@ -4,7 +4,7 @@ FRC 3824's Scouting App, for the 2023-2024 First Robotics Competition Season.
 
 ## Short Introduction
 
-This is the repo for the work-in-progress Scouting Framework.
+This is the repo for the HVA RoHAWKtics Scouting App for the 2023-2024 season, this repo contains the code that should be used as a base for all future apps to use.
 
 Our links:
 
