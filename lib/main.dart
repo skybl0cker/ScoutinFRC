@@ -1,35 +1,36 @@
-// ignore_for_file: avoid_unnecessary_containers, avoid_print, unused_import, unnecessary_import, prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last, unrelated_type_equality_checks
+// ignore_for_file: avoid_unnecessary_containers, avoid_print, unused_import, unnecessary_import, prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last, unrelated_type_equality_checks, library_private_types_in_public_api, unused_element
 
-//Imports all packages + .dart files
+// Imports
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'navbar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'sp.dart';
 import 'package:gap/gap.dart';
-import 'variables.dart' as v;
 import 'package:flutter/animation.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
+import 'navbar.dart';
+import 'sp.dart';
+import 'variables.dart' as v;
+import 'firebase_options.dart';
 import 'auth_gate.dart' as auth;
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 
-
-//Initalizes Firebase to prepare for scouting
-dynamic firebaseInit() async {
+// Firebase Initialization
+Future<void> firebaseInit() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 }
 
-//Pulls all data stored in firebase for use in analytics 
+// Firebase Data Pull
 void firebasePull() async {
   final ref = FirebaseDatabase.instance.ref();
   final snapshot = await ref.child("SMR2024/robots").get();
@@ -44,8 +45,7 @@ void firebasePull() async {
       for (var match in matches) {
         print("$match");
         for (dynamic key in match.keys) {
-          processMatch(
-              robotKey, match, key); // Adjusted to pass robotKey and match
+          processMatch(robotKey, match, key); // Adjusted to pass robotKey and match
         }
       }
     });
@@ -81,70 +81,58 @@ void processMatch(dynamic robotKey, dynamic match, dynamic matchKeyType) {
   }
 }
 
-//Runs the actuall app
+// App Entry Point
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await firebaseInit(); //runs the firebaseInit command
   runApp(const ScoutingApp()); // runs the app 
 }
 
+// Main App Widget
 class ScoutingApp extends StatelessWidget {
-  const ScoutingApp({super.key});
+  const ScoutingApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-
-      home: auth.AuthGate(actions: [],),
+      home: auth.AuthGate(actions: []),
       debugShowCheckedModeBanner: false,
       title: 'Scouting',
       routes: <String, WidgetBuilder>{
-        '/home': (context) => const HomePage(
-              title: '',
-            ),
-        '/scouting': (context) => const MatchNumPage(
-              title: '',
-            ),
+        '/home': (context) => const HomePage(title: ''),
+        '/scouting': (context) => const MatchNumPage(title: ''),
         '/auto': (context) => const AutoPage(title: ''),
         '/teleop': (context) => const TeleopPage(title: ''),
         '/endgame': (context) => const EndgamePage(title: ''),
-        '/schedule': (context) => const SchedulePage(
-              title: '',
-            ),
-        '/analytics': (context) => const AnalyticsPage(
-              title: '',
-            ),
-        '/pitscouting': (context) => const PitScoutingPage(
-              title: '',
-            ),
-        '/sscouting': (context) => const SScoutingPage(
-              title: '',
-            ),
+        '/schedule': (context) => const SchedulePage(title: ''),
+        '/analytics': (context) => const AnalyticsPage(title: ''),
+        '/pitscouting': (context) => const PitScoutingPage(title: ''),
+        '/sscouting': (context) => const SScoutingPage(title: ''),
       },
       theme: ThemeData(
         primaryColor: Colors.white,
         primaryTextTheme: TextTheme(),
-        colorScheme: Theme.of(context).colorScheme.copyWith(
-        ),
+        colorScheme: Theme.of(context).colorScheme.copyWith(),
         textTheme: TextTheme(
-      bodyLarge: TextStyle(),
-      bodyMedium: TextStyle(),
-      bodySmall: TextStyle(),
-      displayLarge: TextStyle(),
-      displayMedium: TextStyle(),
-      displaySmall: TextStyle(),
-      headlineLarge: TextStyle(),
-      headlineMedium: TextStyle(),
-      headlineSmall: TextStyle(),
-      titleLarge: TextStyle(),
-      titleMedium: TextStyle(),
-      titleSmall: TextStyle(),
-      labelLarge: TextStyle(),
-      labelMedium: TextStyle(),
-      labelSmall: TextStyle(),
-    ).apply(
-      bodyColor: Colors.white, 
-      displayColor: Colors.white, 
-    ),
+          bodyLarge: TextStyle(),
+          bodyMedium: TextStyle(),
+          bodySmall: TextStyle(),
+          displayLarge: TextStyle(),
+          displayMedium: TextStyle(),
+          displaySmall: TextStyle(),
+          headlineLarge: TextStyle(),
+          headlineMedium: TextStyle(),
+          headlineSmall: TextStyle(),
+          titleLarge: TextStyle(),
+          titleMedium: TextStyle(),
+          titleSmall: TextStyle(),
+          labelLarge: TextStyle(),
+          labelMedium: TextStyle(),
+          labelSmall: TextStyle(),
+        ).apply(
+          bodyColor: Colors.white, 
+          displayColor: Colors.white, 
+        ),
         scaffoldBackgroundColor: const Color.fromRGBO(65, 68, 73, 1),
         useMaterial3: true,
       )
@@ -152,245 +140,125 @@ class ScoutingApp extends StatelessWidget {
   }
 }
 
+
 class HomePage extends StatefulWidget {
-  const HomePage({super.key, required this.title});
+  const HomePage({Key? key, required this.title}) : super(key: key);
   final String title;
+
   @override
-  State<HomePage> createState() => _HomePageState();
+  _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  double _scale = 1.0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        drawer: const NavBar(),
-        appBar: AppBar(
-          leading: Builder(
-            builder: (BuildContext context) {
-              return IconButton(
-                icon: const Icon(
-                  Icons.menu,
-                  color: Color.fromRGBO(165, 176, 168, 1),
-                  size: 50,
+      drawer: const NavBar(),
+      appBar: AppBar(
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(
+                Icons.menu,
+                color: Color.fromRGBO(165, 176, 168, 1),
+                size: 50,
+              ),
+              onPressed: () {
+                bigAssMatchJsonFirebasePrep();
+                Scaffold.of(context).openDrawer();
+              },
+              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+            );
+          },
+        ),
+        backgroundColor: const Color.fromRGBO(65, 68, 73, 1),
+        title: Image.asset(
+          'assets/images/rohawktics.png',
+          width: 75,
+          height: 75,
+        ),
+      ),
+      body: Center(
+        child: Column(
+          children: <Widget>[
+            _buildButton("Scouting", "/scouting", const Color.fromARGB(255, 190, 63, 63), const Color.fromARGB(255, 181, 8, 8)),
+            _buildButton("Schedule", "/schedule", const Color.fromARGB(255, 0, 72, 255), const Color.fromARGB(255, 8, 11, 181)),
+            _buildButton("Analytics", "/analytics", const Color.fromARGB(255, 53, 129, 75), const Color.fromARGB(255, 8, 94, 29)),
+            _buildButton("Pit Scouting", "/pitscouting", const Color.fromARGB(255, 240, 141, 61), const Color.fromARGB(255, 255, 115, 0)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildButton(String label, String route, Color color1, Color color2) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        onHover: (_) => setState(() => _scale = 1.05),
+        onExit: (_) => setState(() => _scale = 1.0),
+        child: GestureDetector(
+          onTapDown: (_) {
+            // Change the color of the button when it is pressed
+          },
+          onTapUp: (_) {
+            // Change the color of the button back to original when it is released
+          },
+          child: Transform.scale(
+            scale: _scale,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+                border: Border.all(
+                  style: BorderStyle.solid,
+                  color: const Color.fromRGBO(1, 1, 1, 0.4),
+                  width: 5,
                 ),
-                onPressed: () {
-                  bigAssMatchJsonFirebasePrep();
-                  Scaffold.of(context).openDrawer();
-                },
-                tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-              );
-            },
-          ),
-          backgroundColor: Color.fromRGBO(65, 68, 73, 1),
-          title: Image.asset(
-            'assets/images/rohawktics.png',
-            width: 75,
-            height: 75,
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color.fromRGBO(30, 30, 30, 0.8),
+                    offset: Offset(6, 6),
+                    blurRadius: 20,
+                    spreadRadius: 1,
+                  )
+                ],
+                gradient: LinearGradient(
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
+                  colors: [color1.withOpacity(0.9), color2.withOpacity(0.9)], // Adjust opacity for a smoother blend
+                ),
+              ),
+              child: ElevatedButton(
+                onPressed: () => Navigator.pushNamed(context, route),
+                style: TextButton.styleFrom(
+                  elevation: 0,
+                  shadowColor: Colors.transparent, // Remove shadow color
+                  textStyle: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold, fontFamily: 'Roboto'),
+                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 14),
+                  backgroundColor: Colors.transparent,
+                  side: const BorderSide(width: 3, color: Color.fromRGBO(198, 65, 65, 0)),
+                ),
+                child: Text(
+                  label,
+                  style: const TextStyle(color: Colors.white),
+                ).animate().fade(delay: const Duration(milliseconds: 500)).slide(delay: const Duration(milliseconds: 500)),
+              ),
+            ),
           ),
         ),
-        body: Center(
-          child: Column(
-              children: <Widget>[
-            const SizedBox(
-              height: 20,
-            ),
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25),
-                border: Border.all(
-                    style: BorderStyle.solid,
-                    color: Color.fromRGBO(1, 1, 1, 0.4),
-                    width: 5),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color.fromRGBO(30, 30, 30, 1),
-                    offset: Offset(6, 6),
-                    blurRadius: 15,
-                    spreadRadius: 1,
-                  )
-                ],
-                gradient: LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.bottomLeft,
-                  colors: const [
-                    Color.fromARGB(255, 190, 63, 63),
-                    Color.fromARGB(255, 181, 8, 8),
-                  ],
-                ),
-              ),
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/scouting');
-                },
-                style: TextButton.styleFrom(
-                  elevation: 0,
-                  shadowColor: const Color.fromRGBO(198, 65, 65, 1),
-                  textStyle: const TextStyle(fontSize: 40),
-                  padding: const EdgeInsets.only(
-                      left: 14, top: 12, right: 14, bottom: 12),
-                  backgroundColor: Colors.transparent,
-                  side: const BorderSide(
-                      width: 3, color: Color.fromRGBO(198, 65, 65, 0)),
-                ),
-                child: const Text(
-                  "Scouting",
-                  style: TextStyle(color: Colors.white),
-                ).animate().fade(delay: 500.ms).slide(delay: 500.ms),
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25),
-                border: Border.all(
-                    style: BorderStyle.solid,
-                    color: Color.fromRGBO(1, 1, 1, 0.4),
-                    width: 5),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color.fromRGBO(30, 30, 30, 1),
-                    offset: Offset(6, 6),
-                    blurRadius: 15,
-                    spreadRadius: 1,
-                  )
-                ],
-                gradient: LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.bottomLeft,
-                  colors: const [
-                    Color.fromARGB(255, 0, 72, 255),
-                    Color.fromARGB(255, 8, 11, 181),
-                  ],
-                ),
-              ),
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/schedule');
-                },
-                style: TextButton.styleFrom(
-                  elevation: 00,
-                  shadowColor: const Color.fromRGBO(65, 104, 196, 1),
-                  textStyle: const TextStyle(fontSize: 40),
-                  padding: const EdgeInsets.only(
-                      left: 14, top: 12, right: 14, bottom: 12),
-                  backgroundColor: Colors.transparent,
-                  side: const BorderSide(
-                      width: 3, color: Color.fromRGBO(65, 104, 196, 0)),
-                ),
-                child: const Text(
-                  "Schedule",
-                  style: TextStyle(color: Colors.white),
-                ).animate().fade(delay: 500.ms).slide(delay: 500.ms),
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25),
-                border: Border.all(
-                    style: BorderStyle.solid,
-                    color: Color.fromRGBO(1, 1, 1, 0.4),
-                    width: 5),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color.fromRGBO(30, 30, 30, 1),
-                    offset: Offset(6, 6),
-                    blurRadius: 15,
-                    spreadRadius: 1,
-                  )
-                ],
-                gradient: LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.bottomLeft,
-                  colors: const [
-                    Color.fromARGB(255, 53, 129, 75),
-                    Color.fromARGB(255, 8, 94, 29),
-                  ],
-                ),
-              ),
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/analytics');
-                },
-                style: TextButton.styleFrom(
-                  elevation: 00,
-                  shadowColor: const Color.fromRGBO(196, 188, 65, 1),
-                  textStyle: const TextStyle(fontSize: 40),
-                  padding: const EdgeInsets.only(
-                      left: 14, top: 12, right: 14, bottom: 12),
-                  backgroundColor: Colors.transparent,
-                  side: const BorderSide(
-                      width: 3, color: Color.fromRGBO(196, 188, 65, 0)),
-                ),
-                child: const Text(
-                  "Analytics",
-                  style: TextStyle(color: Colors.white),
-                ).animate().fade(delay: 500.ms).slide(delay: 500.ms),
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25),
-                border: Border.all(
-                    style: BorderStyle.solid,
-                    color: Color.fromRGBO(1, 1, 1, 0.4),
-                    width: 5),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color.fromRGBO(30, 30, 30, 1),
-                    offset: Offset(6, 6),
-                    blurRadius: 15,
-                    spreadRadius: 1,
-                  )
-                ],
-                gradient: LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.bottomLeft,
-                  colors: const [
-                    Color.fromARGB(255, 240, 141, 61),
-                    Color.fromARGB(255, 255, 115, 0),
-                  ],
-                ),
-              ),
-              child: ElevatedButton(
-                onPressed: () {
-                  navigateToPitScouting(context);
-                },
-                style: TextButton.styleFrom(
-                  elevation: 0,
-                  shadowColor: const Color.fromRGBO(50, 87, 39, 1),
-                  textStyle: const TextStyle(fontSize: 40),
-                  padding: const EdgeInsets.only(
-                      left: 14, top: 12, right: 14, bottom: 12),
-                  backgroundColor: Colors.transparent,
-                  side: const BorderSide(
-                      width: 3, color: Color.fromRGBO(50, 87, 39, 0)),
-                ),
-                child: const Text(
-                  "Pit Scouting",
-                  style: TextStyle(color: Colors.white),
-                ).animate().fade(delay: 500.ms).slide(delay: 500.ms),
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-          ]
-          ),
-        ));
+      ),
+    );
   }
 }
 
 class MatchNumPage extends StatefulWidget {
-  const MatchNumPage({super.key, required this.title});
+  const MatchNumPage({Key? key, required this.title}) : super(key: key);
+
   final String title;
+
   @override
   State<MatchNumPage> createState() => _MatchNumPageState();
 }
@@ -426,123 +294,110 @@ class _MatchNumPageState extends State<MatchNumPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        drawer: const NavBar(),
-        appBar: AppBar(
-          leading: Builder(
-            builder: (BuildContext context) {
-              return IconButton(
-                icon: const Icon(
-                  Icons.menu,
-                  color: Color.fromRGBO(165, 176, 168, 1),
-                  size: 50,
-                ),
-                onPressed: () {
-                  Scaffold.of(context).openDrawer();
-                },
-                tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-              );
-            },
-          ),
-          actions: [
-            Container(
-                child: IconButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    icon: const Icon(
-                      Icons.arrow_back,
-                      color: Color.fromRGBO(165, 176, 168, 1),
-                      size: 50,
-                    )))
-          ],
-          backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
-          title: Image.asset(
-            'assets/images/rohawktics.png',
-            width: 75,
-            height: 75,
-            alignment: Alignment.center,
-          ),
-        ),
-        body: Center(
-            child: Column(children: <Widget>[
-          const Gap(20),
-          const Text(
-            "Team Number",
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-          SizedBox(
-            width: 350,
-            child: TextField(
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(
-                      RegExp(r'^[1-9][0-9]{0,4}')),
-                ],
-                controller: robotNum,
-                style: const TextStyle(fontSize: 20),
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: const Color.fromRGBO(255, 255, 255, 0),
-                  enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                      borderSide: BorderSide(width: 1,color: Colors.white),
-                      ), 
-                  hintText: 'ex: 3824', hintStyle: TextStyle(color: Colors.white),
-                )),
-          ),
-          const Gap(80),
-          const Text(
-            "Match Number",
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-          SizedBox(
-            width: 350,
-            child: TextField(
-                  inputFormatters: [
-                  FilteringTextInputFormatter.allow(
-                      RegExp(r'^[1-9][0-9]{0,4}')),
-                ],
-                controller: matchNum,
-                style: const TextStyle(fontSize: 20),
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: const Color.fromRGBO(255, 255, 255, 0),
-                  enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                      borderSide: BorderSide(width: 1,color: Colors.white),
-                      ),
-                  hintText: 'ex: 1', hintStyle: TextStyle(color: Colors.white),
-                )),
-          ),
-          const Gap(25),
-          if (isButtonVisible)
-            ElevatedButton(
+      drawer: const NavBar(),
+      appBar: AppBar(
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(
+                Icons.menu,
+                color: Color.fromRGBO(165, 176, 168, 1),
+                size: 50,
+              ),
               onPressed: () {
-                if (robotNum.text == "") {
-                  v.pageData["robotNum"] = "None";
-                } else {
-                  v.pageData["robotNum"] = robotNum.text;
-                }
-                if (matchNum.text == "") {
-                  v.pageData["matchNum"] = "None";
-                } else {
-                  v.pageData["matchNum"] = matchNum.text;
-                }
-                Navigator.pushNamed(context, '/auto');
+                Scaffold.of(context).openDrawer();
               },
-              style: TextButton.styleFrom(
-                textStyle: const TextStyle(
-                  fontSize: 40,
-                ),
-                padding: const EdgeInsets.only(
-                    left: 14, top: 12, right: 14, bottom: 12),
-                backgroundColor: Colors.blue,
-                side: const BorderSide(
-                    width: 3, color: Color.fromRGBO(65, 104, 196, 1)),
+              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+            );
+          },
+        ),
+        actions: [
+          Container(
+            child: IconButton(
+              onPressed: () => Navigator.of(context).pop(),
+              icon: const Icon(
+                Icons.arrow_back,
+                color: Color.fromRGBO(165, 176, 168, 1),
+                size: 50,
               ),
-              child: const Text(
-                "Confirm",
-                style: TextStyle(color: Colors.white, fontSize: 25),
-              ),
-            )
-        ])));
+            ),
+          )
+        ],
+        backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
+        title: Image.asset(
+          'assets/images/rohawktics.png',
+          width: 75,
+          height: 75,
+          alignment: Alignment.center,
+        ),
+      ),
+      body: Center(
+        child: Column(
+          children: <Widget>[
+            const SizedBox(height: 20),
+            _buildTextField(
+              labelText: 'Team Number',
+              controller: robotNum,
+            ),
+            const SizedBox(height: 80),
+            _buildTextField(
+              labelText: 'Match Number',
+              controller: matchNum,
+            ),
+            const SizedBox(height: 25),
+            if (isButtonVisible) _buildConfirmButton(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required String labelText,
+    required TextEditingController controller,
+  }) {
+    return SizedBox(
+      width: 350,
+      child: TextField(
+        inputFormatters: [
+          FilteringTextInputFormatter.allow(RegExp(r'^[1-9][0-9]{0,4}')),
+        ],
+        controller: controller,
+        style: const TextStyle(fontSize: 20),
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: const Color.fromRGBO(255, 255, 255, 0),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12.0),
+            borderSide: const BorderSide(width: 1, color: Colors.white),
+          ),
+          hintText: 'ex: ${labelText == 'Team Number' ? '3824' : '1'}',
+          hintStyle: const TextStyle(color: Colors.white),
+          labelText: labelText,
+          labelStyle: const TextStyle(color: Colors.white, fontSize: 20),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildConfirmButton() {
+    return ElevatedButton(
+      onPressed: () {
+        v.pageData['robotNum'] = robotNum.text.isEmpty ? 'None' : robotNum.text;
+        v.pageData['matchNum'] = matchNum.text.isEmpty ? 'None' : matchNum.text;
+        Navigator.pushNamed(context, '/auto');
+      },
+      style: ElevatedButton.styleFrom(
+        textStyle: const TextStyle(fontSize: 40),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        backgroundColor: Colors.blue,
+        side: const BorderSide(width: 3, color: Color.fromRGBO(65, 104, 196, 1)),
+      ),
+      child: const Text(
+        'Confirm',
+        style: TextStyle(color: Colors.white, fontSize: 25),
+      ),
+    );
   }
 }
 
@@ -563,378 +418,231 @@ const List<Widget> communityLeave = <Widget>[Text('Inside'), Text('Outside')];
 class AutoPage extends StatefulWidget {
   const AutoPage({super.key, required this.title});
   final String title;
+
   @override
   State<AutoPage> createState() => _AutoPageState();
 }
 
 class _AutoPageState extends State<AutoPage> {
-  bool toggleButton1 = false;
-  final List<bool> selectedStart = <bool>[false, false, false];
-  final List<bool> selectedAuto = <bool>[false, false, false];
-  final List<bool> selectedEnd = <bool>[false, false];
+  final List<bool> selectedStart = List.filled(autoPosition.length, false);
+  final List<bool> selectedAuto = List.filled(autoScoring.length, false);
+  final List<bool> selectedEnd = List.filled(communityLeave.length, false);
+  final List<bool?> isCheckedList = List.filled(8, false);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      drawer: const NavBar(),
+      appBar: AppBar(
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(
+                Icons.menu,
+                color: Color.fromRGBO(165, 176, 168, 1),
+                size: 50,
+              ),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+            );
+          },
+        ),
+        actions: [
+          Container(
+            child: IconButton(
+              onPressed: () => Navigator.of(context).pop(),
+              icon: const Icon(
+                Icons.arrow_back,
+                color: Color.fromRGBO(165, 176, 168, 1),
+                size: 50,
+              ),
+            ),
+          )
+        ],
+        backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
+        title: Image.asset(
+          'assets/images/rohawktics.png',
+          width: 75,
+          height: 75,
+          alignment: Alignment.center,
+        ),
+      ),
+      body: Center(
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              const Text(
+                'Auto',
+                style: TextStyle(color: Colors.white, fontSize: 37),
+              ),
+              const Text(
+                "Starting Position",
+                style: TextStyle(color: Colors.white, fontSize: 25),
+              ),
+              _buildToggleButtons(selectedStart, autoPosition),
+              const Gap(20),
+              const Text(
+                "Auto Scoring",
+                style: TextStyle(color: Colors.white, fontSize: 25),
+              ),
+              _buildToggleButtons(selectedAuto, autoScoring),
+              const Gap(20),
+              const Text(
+                "Did they leave wing?",
+                style: TextStyle(color: Colors.white, fontSize: 25),
+              ),
+              _buildToggleButtons(selectedEnd, communityLeave),
+              _buildFieldCheckboxes(),
+              const Gap(20),
+              Visibility(
+                visible: isEveryGroupSelected2,
+                child: ElevatedButton(
+                  onPressed: () {
+                    _updatePageData();
+                    Navigator.pushNamed(context, '/teleop');
+                  },
+                  style: TextButton.styleFrom(
+                    textStyle: const TextStyle(fontSize: 40),
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                    backgroundColor: Colors.blue,
+                    side: const BorderSide(
+                      width: 3,
+                      color: Color.fromRGBO(65, 104, 196, 1),
+                    ),
+                  ),
+                  child: const Text(
+                    "Confirm",
+                    style: TextStyle(color: Colors.white, fontSize: 25),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildToggleButtons(List<bool> selected, List<Widget> children) {
+    return ToggleButtons(
+      onPressed: (int index) {
+        setState(() {
+          for (int i = 0; i < selected.length; i++) {
+            selected[i] = i == index;
+          }
+        });
+      },
+      borderRadius: const BorderRadius.all(Radius.circular(12)),
+      selectedBorderColor: const Color.fromARGB(255, 106, 32, 140),
+      borderWidth: 2.5,
+      selectedColor: Colors.white,
+      fillColor: Colors.purple,
+      color: Colors.white,
+      constraints: const BoxConstraints(minHeight: 40.0, minWidth: 80.0),
+      isSelected: selected,
+      children: children,
+    );
+  }
+
+  Widget _buildFieldCheckboxes() {
+    return Container(
+      padding: EdgeInsets.zero,
+      transform: Matrix4.translationValues(0, 0, 10),
+      child: Stack(
+        fit: StackFit.loose,
+        children: List.generate(8, (index) {
+          final alignment = _calculateAlignment(index);
+          return Align(
+            alignment: alignment,
+            child: Container(
+              color: Colors.transparent,
+              constraints: BoxConstraints.tight(Size(50, 50)),
+              child: CheckboxListTile(
+                contentPadding: EdgeInsets.all(3),
+                checkColor: Colors.white,
+                activeColor: Colors.grey,
+                value: isCheckedList[index],
+                onChanged: (bool? value) {
+                  setState(() {
+                    isCheckedList[index] = value;
+                  });
+                },
+              ),
+            ),
+          );
+        }),
+      ),
+      decoration: BoxDecoration(
+        image: const DecorationImage(
+          image: AssetImage('assets/images/field.png'),
+        ),
+      ),
+      width: 300,
+      height: 300,
+      alignment: Alignment.topCenter,
+    );
+  }
+
+  AlignmentDirectional _calculateAlignment(int index) {
+    switch (index) {
+      case 0:
+        return const AlignmentDirectional(-1.09, -0.90);
+      case 1:
+        return const AlignmentDirectional(-1.09, -0.46);
+      case 2:
+        return const AlignmentDirectional(-1.09, -0.03);
+      case 3:
+        return const AlignmentDirectional(-1.09, 0.40);
+      case 4:
+        return const AlignmentDirectional(-1.09, 0.82);
+      case 5:
+        return const AlignmentDirectional(0.29, -0.78);
+      case 6:
+        return const AlignmentDirectional(0.29, -0.40);
+      case 7:
+        return const AlignmentDirectional(0.29, -0.03);
+      default:
+        return AlignmentDirectional.topStart;
+    }
+  }
+
   bool get isEveryGroupSelected2 =>
       selectedStart.contains(true) &&
       selectedAuto.contains(true) &&
       selectedEnd.contains(true);
-  bool? isChecked = false;
-  bool? isChecked2 = false;
-  bool? isChecked3 = false;
-  bool? isChecked4 = false;
-  bool? isChecked5 = false;
-  bool? isChecked6 = false;
-  bool? isChecked7 = false;
-  bool? isChecked8 = false;
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        drawer: const NavBar(),
-        appBar: AppBar(
-          leading: Builder(
-            builder: (BuildContext context) {
-              return IconButton(
-                icon: const Icon(
-                  Icons.menu,
-                  color: Color.fromRGBO(165, 176, 168, 1),
-                  size: 50,
-                ),
-                onPressed: () {
-                  Scaffold.of(context).openDrawer();
-                },
-                tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-              );
-            },
-          ),
-          actions: [
-            Container(
-                child: IconButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    icon: const Icon(
-                      Icons.arrow_back,
-                      color: Color.fromRGBO(165, 176, 168, 1),
-                      size: 50,
-                    )))
-          ],
-          backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
-          title: Image.asset(
-            'assets/images/rohawktics.png',
-            width: 75,
-            height: 75,
-            alignment: Alignment.center,
-          ),
-        ),
-        body: Center(
-            child: SingleChildScrollView(
-                child: Column(children: <Widget>[
-          const Text(
-            'Auto',
-            style: TextStyle(color: Colors.white, fontSize: 37),
-          ),
-          const Text(
-            "Starting Position",
-            style: TextStyle(color: Colors.white, fontSize: 25),
-          ),
-          ToggleButtons(
-            onPressed: (int index) {
-              setState(() {
-                for (int i = 0; i < selectedStart.length; i++) {
-                  selectedStart[i] =
-                      i == index; //CHECK AND MAKE SURE IT DOES WHAT IT SHOULD
-                }
-              });
-            },
-            borderRadius: const BorderRadius.all(Radius.circular(12)),
-            selectedBorderColor: Color.fromARGB(255, 106, 32, 140),
-            borderWidth: 2.5,
-            selectedColor: Colors.white,
-            fillColor: Colors.purple,
-            color: Colors.white,
-            constraints: const BoxConstraints(
-              minHeight: 40.0,
-              minWidth: 80.0,
-            ),
-            isSelected: selectedStart, // MAKE A NEW ONE OF THESE
-            children: autoPosition, //MAKE A NEW ONE OF THESE
-          ),
-          const Gap(20),
-          const Text(
-            "Auto Scoring",
-            style: TextStyle(color: Colors.white, fontSize: 25),
-          ),
-          ToggleButtons(
-            onPressed: (int index) {
-              setState(() {
-                for (int i = 0; i < selectedAuto.length; i++) {
-                  selectedAuto[i] =
-                      i == index; //CHECK AND MAKE SURE IT DOES WHAT IT SHOULD
-                }
-              });
-            },
-            borderRadius: const BorderRadius.all(Radius.circular(12)),
-            selectedBorderColor: Color.fromARGB(255, 106, 32, 140),
-            borderWidth: 2.5,
-            selectedColor: Colors.white,
-            fillColor: Colors.purple,
-            color: Colors.white,
-            constraints: const BoxConstraints(
-              minHeight: 40.0,
-              minWidth: 80.0,
-            ),
-            isSelected: selectedAuto, // MAKE A NEW ONE OF THESE
-            children: autoScoring, //MAKE A NEW ONE OF THESE
-          ),
-          const Gap(20),
-          const Text(
-            "Did they leave wing?",
-            style: TextStyle(color: Colors.white, fontSize: 25),
-          ),
-          ToggleButtons(
-            onPressed: (int index) {
-              setState(() {
-                for (int i = 0; i < selectedEnd.length; i++) {
-                  selectedEnd[i] =
-                      i == index; //CHECK AND MAKE SURE IT DOES WHAT IT SHOULD
-                }
-              });
-            },
-            borderRadius: const BorderRadius.all(Radius.circular(12)),
-            selectedBorderColor: Color.fromARGB(255, 106, 32, 140),
-            borderWidth: 2.5,
-            selectedColor: Colors.white,
-            fillColor: Colors.purple,
-            color: Colors.white,
-            constraints: const BoxConstraints(
-              minHeight: 40.0,
-              minWidth: 80.0,
-            ),
-            isSelected: selectedEnd, // MAKE A NEW ONE OF THESE
-            children: communityLeave, //MAKE A NEW ONE OF THESE
-          ),
-          Container(
-            padding: EdgeInsets.all(0),
-            transform: Matrix4.translationValues(0, 0, 10),
-            child: Stack(
-              fit: StackFit.loose,
-              children: [
-                Align(
-                  alignment: AlignmentDirectional(-1.05, -0.86),
-                  child: Container(
-                    color: Colors.transparent,
-                    constraints: BoxConstraints.tight(Size(50, 50)),
-                    // child: TextButton(onPressed: (){}, child: Text("M")),
-                    child: CheckboxListTile(
-                      contentPadding: EdgeInsets.all(3),
-                      checkColor: Colors.white,
-                      activeColor: Colors.grey,
-                      value: isChecked,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          isChecked = (value);
-                        });
-                      },
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: AlignmentDirectional(-1.05, -0.44),
-                  child: Container(
-                    color: Colors.transparent,
-                    constraints: BoxConstraints.tight(Size(50, 50)),
-                    // child: TextButton(onPressed: (){}, child: Text("M")),
-                    child: CheckboxListTile(
-                      contentPadding: EdgeInsets.all(3),
-                      checkColor: Colors.white,
-                      activeColor: Colors.grey,
-                      value: isChecked2,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          isChecked2 = (value);
-                        });
-                      },
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: AlignmentDirectional(-1.05, -0.03),
-                  child: Container(
-                    color: Colors.transparent,
-                    constraints: BoxConstraints.tight(Size(50, 50)),
-                    // child: TextButton(onPressed: (){}, child: Text("M")),
-                    child: CheckboxListTile(
-                      contentPadding: EdgeInsets.all(3),
-                      checkColor: Colors.white,
-                      activeColor: Colors.grey,
-                      value: isChecked3,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          isChecked3 = (value);
-                        });
-                      },
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: AlignmentDirectional(-1.05, 0.39),
-                  child: Container(
-                    color: Colors.transparent,
-                    constraints: BoxConstraints.tight(Size(50, 50)),
-                    // child: TextButton(onPressed: (){}, child: Text("M")),
-                    child: CheckboxListTile(
-                      contentPadding: EdgeInsets.all(3),
-                      checkColor: Colors.white,
-                      activeColor: Colors.grey,
-                      value: isChecked4,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          isChecked4 = (value);
-                        });
-                      },
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: AlignmentDirectional(-1.05, 0.80),
-                  child: Container(
-                    color: Colors.transparent,
-                    constraints: BoxConstraints.tight(Size(50, 50)),
-                    // child: TextButton(onPressed: (){}, child: Text("M")),
-                    child: CheckboxListTile(
-                      contentPadding: EdgeInsets.all(3),
-                      checkColor: Colors.white,
-                      activeColor: Colors.grey,
-                      value: isChecked5,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          isChecked5 = (value);
-                        });
-                      },
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: AlignmentDirectional(0.28, -0.75),
-                  child: Container(
-                    color: Colors.transparent,
-                    constraints: BoxConstraints.tight(Size(50, 50)),
-                    // child: TextButton(onPressed: (){}, child: Text("M")),
-                    child: CheckboxListTile(
-                      contentPadding: EdgeInsets.all(3),
-                      checkColor: Colors.white,
-                      activeColor: Colors.grey,
-                      value: isChecked6,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          isChecked6 = (value);
-                        });
-                      },
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: AlignmentDirectional(0.28, -0.39),
-                  child: Container(
-                    color: Colors.transparent,
-                    constraints: BoxConstraints.tight(Size(50, 50)),
-                    // child: TextButton(onPressed: (){}, child: Text("M")),
-                    child: CheckboxListTile(
-                      contentPadding: EdgeInsets.all(3),
-                      checkColor: Colors.white,
-                      activeColor: Colors.grey,
-                      value: isChecked7,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          isChecked7 = (value);
-                        });
-                      },
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: AlignmentDirectional(0.28, -0.03),
-                  child: Container(
-                    color: Colors.transparent,
-                    constraints: BoxConstraints.tight(Size(50, 50)),
-                    // child: TextButton(onPressed: (){}, child: Text("M")),
-                    child: CheckboxListTile(
-                      contentPadding: EdgeInsets.all(3),
-                      checkColor: Colors.white,
-                      activeColor: Colors.grey,
-                      value: isChecked8,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          isChecked8 = (value);
-                        });
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(
-                  'assets/images/field.png',
-                ),
-              ),
-            ),
-            width: 300,
-            height: 300,
-            alignment: Alignment.topCenter,
-          ),
-          const Gap(20),
-          Visibility(
-              visible:
-                  isEveryGroupSelected2, // Controls visibility based on the selection state
-              child: ElevatedButton(
-                onPressed: () {
-                  if (selectedStart[0]) {
-                    v.pageData["startingPosition"] = 0;
-                  } else if (selectedStart[1]) {
-                    v.pageData["startingPosition"] = 1;
-                  } else if (selectedStart[2]) {
-                    v.pageData["startingPosition"] = 2;
-                  }
-                  if (selectedAuto[0]) {
-                    v.pageData["autoScoring"] = 0;
-                  } else if (selectedAuto[1]) {
-                    v.pageData["autoScoring"] = 1;
-                  } else if (selectedAuto[2]) {
-                    v.pageData["autoScoring"] = 2;
-                  }
-                  if (selectedEnd[0]) {
-                    v.pageData["wingLeave"] = 0;
-                  } else if (selectedEnd[1]) {
-                    v.pageData["wingLeave"] = 1;
-                  } else if (selectedEnd[2]) {
-                    v.pageData["wingLeave"] = 2;
-                  }
-                  v.pageData["1"] = isChecked;
-                  v.pageData["2"] = isChecked2;
-                  v.pageData["3"] = isChecked3;
-                  v.pageData["4"] = isChecked4;
-                  v.pageData["5"] = isChecked5;
-                  v.pageData["6"] = isChecked6;
-                  v.pageData["7"] = isChecked7;
-                  v.pageData["8"] = isChecked8;
-                  Navigator.pushNamed(context, '/teleop');
-                },
-                style: TextButton.styleFrom(
-                  textStyle: const TextStyle(
-                    fontSize: 40,
-                  ),
-                  padding: const EdgeInsets.only(
-                      left: 14, top: 12, right: 14, bottom: 12),
-                  backgroundColor: Colors.blue,
-                  side: const BorderSide(
-                      width: 3, color: Color.fromRGBO(65, 104, 196, 1)),
-                ),
-                child: const Text(
-                  "Confirm",
-                  style: TextStyle(color: Colors.white, fontSize: 25),
-                ),
-              )),
-        ]))));
+
+  void _updatePageData() {
+    if (selectedStart[0]) {
+      v.pageData["startingPosition"] = 0;
+    } else if (selectedStart[1]) {
+      v.pageData["startingPosition"] = 1;
+    } else if (selectedStart[2]) {
+      v.pageData["startingPosition"] = 2;
+    }
+    if (selectedAuto[0]) {
+      v.pageData["autoScoring"] = 0;
+    } else if (selectedAuto[
+          1]) {
+      v.pageData["autoScoring"] = 1;
+    } else if (selectedAuto[2]) {
+      v.pageData["autoScoring"] = 2;
+    }
+    if (selectedEnd[0]) {
+      v.pageData["wingLeave"] = 0;
+    } else if (selectedEnd[1]) {
+      v.pageData["wingLeave"] = 1;
+    } else if (selectedEnd[2]) {
+      v.pageData["wingLeave"] = 2;
+    }
+    for (int i = 0; i < isCheckedList.length; i++) {
+      v.pageData[(i + 1).toString()] = isCheckedList[i];
+    }
   }
 }
+
+
 
 class TeleopPage extends StatefulWidget {
   const TeleopPage({super.key, required this.title});
@@ -1578,7 +1286,33 @@ class SchedulePage extends StatefulWidget {
   State<SchedulePage> createState() => _SchedulePageState();
 }
 
+class MatchDetails {
+  final int matchNumber;
+  final List<String> redAlliance;
+  final List<String> blueAlliance;
+  final List<String> redScoutNames;
+  final List<String> blueScoutNames;
+
+  MatchDetails({
+    required this.matchNumber,
+    required this.redAlliance,
+    required this.blueAlliance,
+    required this.redScoutNames,
+    required this.blueScoutNames,
+  });
+}
+
 class _SchedulePageState extends State<SchedulePage> {
+  final List<MatchDetails> matches = [
+    MatchDetails(
+    matchNumber: 1,
+    redAlliance: ['3824', '1466', '3140'],
+    blueAlliance: ['4265', '4020', '6517'],
+    redScoutNames: ['Jackson', 'Luke', 'Cash'],
+    blueScoutNames: ['Jessica', 'Chase', 'Emily'],
+  ), // Add more matches here
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -1601,13 +1335,15 @@ class _SchedulePageState extends State<SchedulePage> {
         ),
         actions: [
           Container(
-              child: IconButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  icon: const Icon(
-                    Icons.arrow_back,
-                    color: Color.fromRGBO(165, 176, 168, 1),
-                    size: 50,
-                  )))
+            child: IconButton(
+              onPressed: () => Navigator.of(context).pop(),
+              icon: const Icon(
+                Icons.arrow_back,
+                color: Color.fromRGBO(165, 176, 168, 1),
+                size: 50,
+              ),
+            ),
+          ),
         ],
         backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
         title: Image.asset(
@@ -1617,32 +1353,149 @@ class _SchedulePageState extends State<SchedulePage> {
           alignment: Alignment.center,
         ),
       ),
-      body: WebViewWidget(controller: controller),
+      body: ListView.builder(
+        itemCount: matches.length,
+        itemBuilder: (context, index) {
+          return MatchCard(matchDetails: matches[index]);
+        },
+      ),
     );
   }
 }
 
-WebViewController controller = WebViewController()
-  ..setJavaScriptMode(JavaScriptMode.unrestricted)
-  ..setBackgroundColor(const Color(0x00000000))
-  ..setNavigationDelegate(
-    NavigationDelegate(
-      onProgress: (int progress) {
-        // Update loading bar.
-      },
-      onPageStarted: (String url) {},
-      onPageFinished: (String url) {},
-      onWebResourceError: (WebResourceError error) {},
-      onNavigationRequest: (NavigationRequest request) {
-        if (request.url.startsWith('0.0.0.0')) {
-          return NavigationDecision.prevent;
-        }
-        return NavigationDecision.navigate;
-      },
-    ),
-  )
-  ..loadRequest(Uri.parse(
-      'https://docs.google.com/spreadsheets/d/1ERnR2mWExDcxD3ngiNyzMHH7F7FrF2V_cqeTdyqnD5g/edit?usp=sharing'));
+class MatchCard extends StatelessWidget {
+  final MatchDetails matchDetails;
+
+  const MatchCard({Key? key, required this.matchDetails}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.all(10),
+      color: Colors.grey[500],
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Match ${matchDetails.matchNumber}',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
+            ),
+            SizedBox(height: 10), // Increased vertical spacing
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween, // Adjusted alignment
+              children: [
+                Expanded(
+                  flex: 4,
+                  child: AllianceInfo(
+                    allianceName: 'Red Alliance',
+                    robots: matchDetails.redAlliance,
+                    scoutNames: matchDetails.redScoutNames,
+                  ),
+                ),
+                SizedBox(width: 20), // Added spacing between alliances
+                Text(
+                  'vs',
+                  style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: Colors.black),
+                ),
+                SizedBox(width: 20), // Added spacing between alliances
+                Expanded(
+                  flex: 4,
+                  child: AllianceInfo(
+                    allianceName: 'Blue Alliance',
+                    robots: matchDetails.blueAlliance,
+                    scoutNames: matchDetails.blueScoutNames,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class AllianceInfo extends StatelessWidget {
+  final String allianceName;
+  final List<String> robots;
+  final List<String> scoutNames;
+
+  const AllianceInfo({Key? key, required this.allianceName, required this.robots, required this.scoutNames})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    Color textColor = allianceName == 'Red Alliance' ? Colors.red : Colors.blue;
+
+    return Row(
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              allianceName,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: textColor,
+                shadows: [
+                  Shadow(
+                    blurRadius: 4,
+                    color: Colors.black,
+                    offset: Offset(0, 0),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 6),
+            for (var i = 0; i < robots.length; i++)
+              Row(
+                children: [
+                  RobotInfo(
+                    robotName: robots[i],
+                    scoutName: scoutNames[i],
+                  ),
+                  SizedBox(width: 10), // Add spacing between robot info
+                ],
+              ),
+            SizedBox(height: 8),
+          ],
+        ),
+        
+      ],
+    );
+  }
+}
+
+
+
+class RobotInfo extends StatelessWidget {
+  final String robotName;
+  final String scoutName;
+
+  const RobotInfo({Key? key, required this.robotName, required this.scoutName}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          robotName,
+          style: TextStyle(fontSize: 16, color: Colors.black87), // Set text color
+        ),
+        Text(
+          scoutName,
+          style: TextStyle(fontSize: 14, color: Colors.black54), // Set text color
+        ),
+        SizedBox(height: 4), // Add some spacing between each robot info
+      ],
+    );
+  }
+}
+
 
 class AnalyticsPage extends StatefulWidget {
   const AnalyticsPage({super.key, required this.title});
