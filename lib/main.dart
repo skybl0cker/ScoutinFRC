@@ -1306,11 +1306,39 @@ class _SchedulePageState extends State<SchedulePage> {
   final List<MatchDetails> matches = [
     MatchDetails(
     matchNumber: 1,
-    redAlliance: ['3824', '1466', '3140'],
-    blueAlliance: ['4265', '4020', '6517'],
-    redScoutNames: ['Jackson', 'Luke', 'Cash'],
-    blueScoutNames: ['Jessica', 'Chase', 'Emily'],
-  ), // Add more matches here
+    redAlliance: ['Test', 'Test', 'Test'],
+    blueAlliance: ['Test', 'Test', 'Test'],
+    redScoutNames: ['Test', 'Test', 'Test'],
+    blueScoutNames: ['Test', 'Test', 'Test'],
+  ),
+  MatchDetails(
+    matchNumber: 2,
+    redAlliance: ['Test', 'Test', 'Test'],
+    blueAlliance: ['Test', 'Test', 'Test'],
+    redScoutNames: ['Test', 'Test', 'Test'],
+    blueScoutNames: ['Test', 'Test', 'Test'],
+  ),
+  MatchDetails(
+    matchNumber: 3,
+    redAlliance: ['Test', 'Test', 'Test'],
+    blueAlliance: ['Test', 'Test', 'Test'],
+    redScoutNames: ['Test', 'Test', 'Test'],
+    blueScoutNames: ['Test', 'Test', 'Test'],
+  ),
+  MatchDetails(
+    matchNumber: 4,
+    redAlliance: ['Test', 'Test', 'Test'],
+    blueAlliance: ['Test', 'Test', 'Test'],
+    redScoutNames: ['Test', 'Test', 'Test'],
+    blueScoutNames: ['Test', 'Test', 'Test'],
+  ),
+  MatchDetails(
+    matchNumber: 5,
+    redAlliance: ['Test', 'Test', 'Test'],
+    blueAlliance: ['Test', 'Test', 'Test'],
+    redScoutNames: ['Test', 'Test', 'Test'],
+    blueScoutNames: ['Test', 'Test', 'Test'],
+  ),
   ];
 
   @override
@@ -1371,41 +1399,63 @@ class MatchCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.all(10),
-      color: Colors.grey[500],
+      margin: const EdgeInsets.all(15), // Increased spacing
+      color: Colors.white, // Lighter background color
       child: Padding(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(15), // Increased spacing
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               'Match ${matchDetails.matchNumber}',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
+              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.black),
             ),
-            SizedBox(height: 10), // Increased vertical spacing
+            SizedBox(height: 8), // Increased spacing
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween, // Adjusted alignment
               children: [
                 Expanded(
-                  flex: 4,
-                  child: AllianceInfo(
-                    allianceName: 'Red Alliance',
-                    robots: matchDetails.redAlliance,
-                    scoutNames: matchDetails.redScoutNames,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Red Alliance',
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.red),
+                      ),
+                      SizedBox(height: 10), // Spacing
+                      for (var i = 0; i < matchDetails.redAlliance.length; i++)
+                        Row(
+                          children: [
+                            Text(
+                              '${matchDetails.redAlliance[i]} - ${matchDetails.redScoutNames[i]}',
+                              style: TextStyle(fontSize: 16, color: Colors.black87),
+                            ),
+                            SizedBox(width: 10), // Spacing between entries
+                          ],
+                        ),
+                    ],
                   ),
                 ),
-                SizedBox(width: 20), // Added spacing between alliances
-                Text(
-                  'vs',
-                  style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: Colors.black),
-                ),
-                SizedBox(width: 20), // Added spacing between alliances
+                SizedBox(width: 20), // Spacing between alliances
                 Expanded(
-                  flex: 4,
-                  child: AllianceInfo(
-                    allianceName: 'Blue Alliance',
-                    robots: matchDetails.blueAlliance,
-                    scoutNames: matchDetails.blueScoutNames,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Blue Alliance',
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.blue),
+                      ),
+                      SizedBox(height: 10), // Spacing
+                      for (var i = 0; i < matchDetails.blueAlliance.length; i++)
+                        Row(
+                          children: [
+                            Text(
+                              '${matchDetails.blueAlliance[i]} - ${matchDetails.blueScoutNames[i]}',
+                              style: TextStyle(fontSize: 16, color: Colors.black87),
+                            ),
+                            SizedBox(width: 10), // Spacing between entries
+                          ],
+                        ),
+                    ],
                   ),
                 ),
               ],
