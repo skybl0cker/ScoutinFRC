@@ -21,6 +21,14 @@ import 'variables.dart' as v;
 import 'firebase_options.dart';
 import 'auth_gate.dart' as auth;
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:dio/dio.dart';
+
+final dio = Dio();
+
+void getHttp() async {
+  final response = await dio.get('https://dart.dev');
+  print(response);
+}
 
 
 // Firebase Initialization
