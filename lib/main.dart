@@ -22,6 +22,7 @@ import 'firebase_options.dart';
 import 'auth_gate.dart' as auth;
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:dio/dio.dart';
+import 'dart:math';
 
 final dio = Dio();
 
@@ -112,7 +113,7 @@ class ScoutingApp extends StatelessWidget {
         '/auto': (context) => const AutoPage(title: ''),
         '/teleop': (context) => const TeleopPage(title: ''),
         '/endgame': (context) => const EndgamePage(title: ''),
-        '/schedule': (context) => const SchedulePage(title: ''),
+        '/schedule': (context) => SchedulePage(title: ''),
         '/analytics': (context) => const AnalyticsPage(title: ''),
         '/pitscouting': (context) => const PitScoutingPage(title: ''),
         '/sscouting': (context) => const SScoutingPage(title: ''),
@@ -1294,61 +1295,7 @@ class SchedulePage extends StatefulWidget {
   State<SchedulePage> createState() => _SchedulePageState();
 }
 
-class MatchDetails {
-  final int matchNumber;
-  final List<String> redAlliance;
-  final List<String> blueAlliance;
-  final List<String> redScoutNames;
-  final List<String> blueScoutNames;
-
-  MatchDetails({
-    required this.matchNumber,
-    required this.redAlliance,
-    required this.blueAlliance,
-    required this.redScoutNames,
-    required this.blueScoutNames,
-  });
-}
-
 class _SchedulePageState extends State<SchedulePage> {
-  final List<MatchDetails> matches = [
-    MatchDetails(
-    matchNumber: 1,
-    redAlliance: ['Test', 'Test', 'Test'],
-    blueAlliance: ['Test', 'Test', 'Test'],
-    redScoutNames: ['Test', 'Test', 'Test'],
-    blueScoutNames: ['Test', 'Test', 'Test'],
-  ),
-  MatchDetails(
-    matchNumber: 2,
-    redAlliance: ['Test', 'Test', 'Test'],
-    blueAlliance: ['Test', 'Test', 'Test'],
-    redScoutNames: ['Test', 'Test', 'Test'],
-    blueScoutNames: ['Test', 'Test', 'Test'],
-  ),
-  MatchDetails(
-    matchNumber: 3,
-    redAlliance: ['Test', 'Test', 'Test'],
-    blueAlliance: ['Test', 'Test', 'Test'],
-    redScoutNames: ['Test', 'Test', 'Test'],
-    blueScoutNames: ['Test', 'Test', 'Test'],
-  ),
-  MatchDetails(
-    matchNumber: 4,
-    redAlliance: ['Test', 'Test', 'Test'],
-    blueAlliance: ['Test', 'Test', 'Test'],
-    redScoutNames: ['Test', 'Test', 'Test'],
-    blueScoutNames: ['Test', 'Test', 'Test'],
-  ),
-  MatchDetails(
-    matchNumber: 5,
-    redAlliance: ['Test', 'Test', 'Test'],
-    blueAlliance: ['Test', 'Test', 'Test'],
-    redScoutNames: ['Test', 'Test', 'Test'],
-    blueScoutNames: ['Test', 'Test', 'Test'],
-  ),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -1371,15 +1318,13 @@ class _SchedulePageState extends State<SchedulePage> {
         ),
         actions: [
           Container(
-            child: IconButton(
-              onPressed: () => Navigator.of(context).pop(),
-              icon: const Icon(
-                Icons.arrow_back,
-                color: Color.fromRGBO(165, 176, 168, 1),
-                size: 50,
-              ),
-            ),
-          ),
+              child: IconButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: const Icon(
+                    Icons.arrow_back,
+                    color: Color.fromRGBO(165, 176, 168, 1),
+                    size: 50,
+                  )))
         ],
         backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
         title: Image.asset(
@@ -1389,170 +1334,32 @@ class _SchedulePageState extends State<SchedulePage> {
           alignment: Alignment.center,
         ),
       ),
-      body: ListView.builder(
-        itemCount: matches.length,
-        itemBuilder: (context, index) {
-          return MatchCard(matchDetails: matches[index]);
-        },
-      ),
+      body: WebViewWidget(controller: controller),
     );
   }
 }
 
-class MatchCard extends StatelessWidget {
-  final MatchDetails matchDetails;
-
-  const MatchCard({Key? key, required this.matchDetails}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.all(15), // Increased spacing
-      color: Colors.white, // Lighter background color
-      child: Padding(
-        padding: const EdgeInsets.all(15), // Increased spacing
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Match ${matchDetails.matchNumber}',
-              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.black),
-            ),
-            SizedBox(height: 8), // Increased spacing
-            Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Red Alliance',
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.red),
-                      ),
-                      SizedBox(height: 10), // Spacing
-                      for (var i = 0; i < matchDetails.redAlliance.length; i++)
-                        Row(
-                          children: [
-                            Text(
-                              '${matchDetails.redAlliance[i]} - ${matchDetails.redScoutNames[i]}',
-                              style: TextStyle(fontSize: 16, color: Colors.black87),
-                            ),
-                            SizedBox(width: 10), // Spacing between entries
-                          ],
-                        ),
-                    ],
-                  ),
-                ),
-                SizedBox(width: 20), // Spacing between alliances
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Blue Alliance',
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.blue),
-                      ),
-                      SizedBox(height: 10), // Spacing
-                      for (var i = 0; i < matchDetails.blueAlliance.length; i++)
-                        Row(
-                          children: [
-                            Text(
-                              '${matchDetails.blueAlliance[i]} - ${matchDetails.blueScoutNames[i]}',
-                              style: TextStyle(fontSize: 16, color: Colors.black87),
-                            ),
-                            SizedBox(width: 10), // Spacing between entries
-                          ],
-                        ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class AllianceInfo extends StatelessWidget {
-  final String allianceName;
-  final List<String> robots;
-  final List<String> scoutNames;
-
-  const AllianceInfo({Key? key, required this.allianceName, required this.robots, required this.scoutNames})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    Color textColor = allianceName == 'Red Alliance' ? Colors.red : Colors.blue;
-
-    return Row(
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              allianceName,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: textColor,
-                shadows: [
-                  Shadow(
-                    blurRadius: 4,
-                    color: Colors.black,
-                    offset: Offset(0, 0),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 6),
-            for (var i = 0; i < robots.length; i++)
-              Row(
-                children: [
-                  RobotInfo(
-                    robotName: robots[i],
-                    scoutName: scoutNames[i],
-                  ),
-                  SizedBox(width: 10), // Add spacing between robot info
-                ],
-              ),
-            SizedBox(height: 8),
-          ],
-        ),
-        
-      ],
-    );
-  }
-}
-
-
-
-class RobotInfo extends StatelessWidget {
-  final String robotName;
-  final String scoutName;
-
-  const RobotInfo({Key? key, required this.robotName, required this.scoutName}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          robotName,
-          style: TextStyle(fontSize: 16, color: Colors.black87), // Set text color
-        ),
-        Text(
-          scoutName,
-          style: TextStyle(fontSize: 14, color: Colors.black54), // Set text color
-        ),
-        SizedBox(height: 4), // Add some spacing between each robot info
-      ],
-    );
-  }
-}
+WebViewController controller = WebViewController()
+  ..setJavaScriptMode(JavaScriptMode.unrestricted)
+  ..setBackgroundColor(const Color(0x00000000))
+  ..setNavigationDelegate(
+    NavigationDelegate(
+      onProgress: (int progress) {
+        // Update loading bar.
+      },
+      onPageStarted: (String url) {},
+      onPageFinished: (String url) {},
+      onWebResourceError: (WebResourceError error) {},
+      onNavigationRequest: (NavigationRequest request) {
+        if (request.url.startsWith('0.0.0.0')) {
+          return NavigationDecision.prevent;
+        }
+        return NavigationDecision.navigate;
+      },
+    ),
+  )
+  ..loadRequest(Uri.parse(
+      'https://docs.google.com/spreadsheets/d/1ERnR2mWExDcxD3ngiNyzMHH7F7FrF2V_cqeTdyqnD5g/edit?usp=sharing'));
 
 
 class AnalyticsPage extends StatefulWidget {
