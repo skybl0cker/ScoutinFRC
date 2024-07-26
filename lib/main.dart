@@ -1,8 +1,9 @@
-// ignore_for_file: avoid_unnecessary_containers, avoid_print, unused_import, unnecessary_import, prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last, unrelated_type_equality_checks, library_private_types_in_public_api, unused_element
+// ignore_for_file: avoid_unnecessary_containers, avoid_print, unused_import, unnecessary_import, prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last, unrelated_type_equality_checks, library_private_types_in_public_api, unused_element, depend_on_referenced_packages, prefer_const_declarations
 
 // Imports
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gap/gap.dart';
@@ -21,16 +22,10 @@ import 'variables.dart' as v;
 import 'firebase_options.dart';
 import 'auth_gate.dart' as auth;
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:dio/dio.dart';
 import 'dart:math';
-
-final dio = Dio();
-
-void getHttp() async {
-  final response = await dio.get('https://dart.dev');
-  print(response);
-}
-
+import 'dart:convert';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:http/http.dart' as http;
 
 // Firebase Initialization
 Future<void> firebaseInit() async {
@@ -149,7 +144,6 @@ class ScoutingApp extends StatelessWidget {
   }
 }
 
-
 class HomePage extends StatefulWidget {
   const HomePage({Key? key, required this.title}) : super(key: key);
   final String title;
@@ -188,21 +182,25 @@ class _HomePageState extends State<HomePage> {
           width: 75,
           height: 75,
         ),
+        elevation: 0, // Remove shadow
       ),
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            _buildButton("Scouting", "/scouting", const Color.fromARGB(255, 190, 63, 63), const Color.fromARGB(255, 181, 8, 8)),
-            _buildButton("Schedule", "/schedule", const Color.fromARGB(255, 0, 72, 255), const Color.fromARGB(255, 8, 11, 181)),
-            _buildButton("Analytics", "/analytics", const Color.fromARGB(255, 53, 129, 75), const Color.fromARGB(255, 8, 94, 29)),
-            _buildButton("Pit Scouting", "/pitscouting", const Color.fromARGB(255, 240, 141, 61), const Color.fromARGB(255, 255, 115, 0)),
-          ],
+      body: Container(
+        color: const Color.fromRGBO(65, 68, 73, 1), // Gray background
+        child: Center(
+          child: Column(
+            children: <Widget>[
+              _buildButton("Scouting", "/scouting", Icons.search, const Color.fromARGB(255, 190, 63, 63), const Color.fromARGB(255, 181, 8, 8)),
+              _buildButton("Schedule", "/schedule", Icons.schedule, const Color.fromARGB(255, 0, 72, 255), const Color.fromARGB(255, 8, 11, 181)),
+              _buildButton("Analytics", "/analytics", Icons.analytics, const Color.fromARGB(255, 53, 129, 75), const Color.fromARGB(255, 8, 94, 29)),
+              _buildButton("Pit Scouting", "/pitscouting", Icons.checklist, const Color.fromARGB(255, 240, 141, 61), const Color.fromARGB(255, 255, 115, 0)),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildButton(String label, String route, Color color1, Color color2) {
+  Widget _buildButton(String label, String route, IconData icon, Color backgroundColor, Color borderColor) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: MouseRegion(
@@ -210,58 +208,86 @@ class _HomePageState extends State<HomePage> {
         onHover: (_) => setState(() => _scale = 1.05),
         onExit: (_) => setState(() => _scale = 1.0),
         child: GestureDetector(
-          onTapDown: (_) {
-            // Change the color of the button when it is pressed
-          },
-          onTapUp: (_) {
-            // Change the color of the button back to original when it is released
-          },
+          onTap: () => Navigator.pushNamed(context, route),
           child: Transform.scale(
             scale: _scale,
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
-                border: Border.all(
-                  style: BorderStyle.solid,
-                  color: const Color.fromRGBO(1, 1, 1, 0.4),
-                  width: 5,
+            child: SizedBox(
+            width: 300,
+            child: Stack(
+              alignment: Alignment.centerLeft,
+              children: [
+                Container(
+                  height: 70,
+                  margin: const EdgeInsets.only(left: 1), // Adjust margin for icon overlay
+                  decoration: BoxDecoration(
+                    color: Colors.white, // White background for text section
+                    borderRadius: BorderRadius.circular(15),
+                    border: Border.all(
+                      color: Colors.grey.shade300, // Lighter gray border for text
+                      width: 4,
+                    ),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.black26,
+                        offset: Offset(0, 4),
+                        blurRadius: 5,
+                        spreadRadius: 1,
+                      )
+                    ],
+                  ),
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 45), // Align text closer to the icon
+                      child: Text(
+                        label,
+                        style: const TextStyle(
+                          color: Colors.black, // Black text for better contrast
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color.fromRGBO(30, 30, 30, 0.8),
-                    offset: Offset(6, 6),
-                    blurRadius: 20,
-                    spreadRadius: 1,
-                  )
-                ],
-                gradient: LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.bottomLeft,
-                  colors: [color1.withOpacity(0.9), color2.withOpacity(0.9)], // Adjust opacity for a smoother blend
+                Positioned(
+                  left: 0,
+                  child: Container(
+                    width: 70,
+                    height: 70,
+                    decoration: BoxDecoration(
+                      color: backgroundColor,
+                      borderRadius: BorderRadius.circular(11), // Rounded edges for icon container
+                      border: Border.all(
+                        color: borderColor,
+                        width: 4, // Slightly bigger border for the icon
+                      ),
+                    ),
+                    child: Icon(
+                      icon,
+                      color: Colors.white,
+                      size: 40,
+                    ),
+                  ),
                 ),
-              ),
-              child: ElevatedButton(
-                onPressed: () => Navigator.pushNamed(context, route),
-                style: TextButton.styleFrom(
-                  elevation: 0,
-                  shadowColor: Colors.transparent, // Remove shadow color
-                  textStyle: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold, fontFamily: 'Roboto'),
-                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 14),
-                  backgroundColor: Colors.transparent,
-                  side: const BorderSide(width: 3, color: Color.fromRGBO(198, 65, 65, 0)),
+                Positioned(
+                  right: 16,
+                  child: const Icon(
+                    Icons.arrow_forward_ios,
+                    color: Colors.grey,
+                  ),
                 ),
-                child: Text(
-                  label,
-                  style: const TextStyle(color: Colors.white),
-                ).animate().fade(delay: const Duration(milliseconds: 500)).slide(delay: const Duration(milliseconds: 500)),
-              ),
+              ],
             ),
           ),
         ),
       ),
+      )
     );
+    
   }
 }
+
+
 
 class MatchNumPage extends StatefulWidget {
   const MatchNumPage({Key? key, required this.title}) : super(key: key);
@@ -1365,1032 +1391,240 @@ WebViewController controller = WebViewController()
 class AnalyticsPage extends StatefulWidget {
   const AnalyticsPage({super.key, required this.title});
   final String title;
+
   @override
-  State<AnalyticsPage> createState() => _AnalyticsHomePageState();
+  State<AnalyticsPage> createState() => _AnalyticsPageState();
 }
 
-class _AnalyticsHomePageState extends State<AnalyticsPage> {
+class _AnalyticsPageState extends State<AnalyticsPage> {
+  final _teamNumberController = TextEditingController();
+  List<Map<String, dynamic>> eventStats = [];
+  String errorMessage = '';
+  Map<String, dynamic>? teamDetails;
+
+  Future<void> fetchTeamAnalytics(String teamNumber) async {
+    const apiKey = 'XKgCGALe7EzYqZUeKKONsQ45iGHVUZYlN0F6qQzchKQrLxED5DFWrYi9pcjxIzGY';
+
+    try {
+      final teamResponse = await http.get(
+        Uri.parse('https://www.thebluealliance.com/api/v3/team/frc$teamNumber'),
+        headers: {'X-TBA-Auth-Key': apiKey},
+      );
+
+      if (teamResponse.statusCode == 200) {
+        setState(() {
+          teamDetails = jsonDecode(teamResponse.body);
+        });
+      } else {
+        setState(() {
+          errorMessage = 'Error fetching team details: ${teamResponse.statusCode} - ${teamResponse.reasonPhrase}';
+        });
+      }
+
+      final eventsResponse = await http.get(
+        Uri.parse('https://www.thebluealliance.com/api/v3/team/frc$teamNumber/events/2024'),
+        headers: {'X-TBA-Auth-Key': apiKey},
+      );
+
+      if (eventsResponse.statusCode == 200) {
+        List<dynamic> events = jsonDecode(eventsResponse.body);
+
+        // Sort events by date
+        events.sort((a, b) => DateTime.parse(a['start_date']).compareTo(DateTime.parse(b['start_date'])));
+
+        setState(() {
+          eventStats = [];
+          errorMessage = '';
+        });
+
+        for (var event in events) {
+          var eventKey = event['key'];
+          var eventName = event['name'];
+
+          final rankingsResponse = await http.get(
+            Uri.parse('https://www.thebluealliance.com/api/v3/event/$eventKey/rankings'),
+            headers: {'X-TBA-Auth-Key': apiKey},
+          );
+
+          final matchesResponse = await http.get(
+            Uri.parse('https://www.thebluealliance.com/api/v3/team/frc$teamNumber/event/$eventKey/matches'),
+            headers: {'X-TBA-Auth-Key': apiKey},
+          );
+
+          if (rankingsResponse.statusCode == 200 && matchesResponse.statusCode == 200) {
+            var rankings = jsonDecode(rankingsResponse.body)['rankings'] as List<dynamic>;
+            var teamRank = rankings.firstWhere(
+              (ranking) => ranking['team_key'] == 'frc$teamNumber',
+              orElse: () => {'rank': 'N/A'},
+            )['rank'];
+
+            List<dynamic> matches = jsonDecode(matchesResponse.body);
+
+            int wins = 0;
+            int losses = 0;
+            int totalScore = 0;
+            int matchCount = matches.length;
+
+            for (var match in matches) {
+              if (match['alliances'] != null) {
+                var teamAlliance = match['alliances']['red']['team_keys'].contains('frc$teamNumber')
+                    ? 'red'
+                    : 'blue';
+                totalScore += match['alliances'][teamAlliance]['score'] as int;
+                if (match['winning_alliance'] == teamAlliance) {
+                  wins++;
+                } else {
+                  losses++;
+                }
+              }
+            }
+
+            double averageScore = matchCount > 0 ? totalScore / matchCount : 0.0;
+
+            setState(() {
+              eventStats.add({
+                'eventName': eventName,
+                'rank': teamRank,
+                'wins': wins,
+                'losses': losses,
+                'averageScore': averageScore.toStringAsFixed(2),
+              });
+            });
+          }
+        }
+      } else {
+        setState(() {
+          errorMessage = 'Error fetching events: ${eventsResponse.statusCode} - ${eventsResponse.reasonPhrase}';
+        });
+      }
+    } catch (e) {
+      setState(() {
+        errorMessage = 'An error occurred: $e';
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    TextEditingController robot1 = TextEditingController();
-    TextEditingController robot2 = TextEditingController();
-    TextEditingController robot3 = TextEditingController();
-    print("${v.allBotMatchData2}When Analytics Opens");
     return Scaffold(
-        drawer: const NavBar(),
-        appBar: AppBar(
-          leading: Builder(
-            builder: (BuildContext context) {
-              return IconButton(
-                icon: const Icon(
-                  Icons.menu,
-                  color: Color.fromRGBO(165, 176, 168, 1),
-                  size: 50,
-                ),
-                onPressed: () {
-                  Scaffold.of(context).openDrawer();
-                },
-                tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-              );
-            },
-          ),
-          actions: [
-            Container(
-                child: IconButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    icon: const Icon(
-                      Icons.arrow_back,
-                      color: Color.fromRGBO(165, 176, 168, 1),
-                      size: 50,
-                    )))
-          ],
-          backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
-          title: Image.asset(
-            'assets/images/rohawktics.png',
-            width: 75,
-            height: 75,
-            alignment: Alignment.center,
-          ),
+      backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
+      appBar: AppBar(
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(
+                Icons.menu,
+                color: Color.fromRGBO(165, 176, 168, 1),
+                size: 50,
+              ),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+            );
+          },
         ),
-        body: Center(
-            child: SingleChildScrollView(
-                child: Column(children: <Widget>[
-          GridView.count(
-            crossAxisCount: 4,
-            primary: false,
-            padding: const EdgeInsets.all(5),
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
-            childAspectRatio: 1.50,
-            shrinkWrap: true,
-            children: <Widget>[
-              Container(
-                  child: TextButton(
-                      onPressed: () {
-                        for (String key in v.temprobotJson.keys) {
-                          int counterVar = 0;
-                          dynamic counterJson = [
-                            0.0, //Starting Position
-                            0.0, //autoScoring
-                            0.0, //wingLeave
-                            0.0, // 1
-                            0.0, // 2
-                            0.0, // 3
-                            0.0, // 4
-                            0.0, // 5
-                            0.0, // 6
-                            0.0, // 7
-                            0.0, // 8
-                            0.0, // ampPlace
-                            0.0, // speaker place
-                            0.0, // floor pickup
-                            0.0, // stagePosition
-                            0.0, // feederPickup
-                            0.0, // stageHang
-                            0.0, // stagePlacement
-                            0.0, // microphone placement
-                          ];
-                          if (key == "Robot One") {
-                            print(v.allBotMatchData2);
-                            print(robot1.text);
-                            for (dynamic match in v
-                                .allBotMatchData2[robot1.text]["matches"]
-                                .keys) {
-                                  if (match != "pit"){
-                                  //THIS IS THE START
-                              counterVar += 1;
-                              for (int i = 2;
-                                  i <
-                                      (v.allBotMatchData2[robot1.text]
-                                                  ["matches"][match])
-                                              .length -
-                                          1;
-                                  i++) {
-                                if (v.allBotMatchData2[robot1.text]["matches"]
-                                        [match][i] ==
-                                    "true") {
-                                  counterJson[i - 2] = counterJson[i - 2] + 1;
-                                } else if (v.allBotMatchData2[robot1.text]
-                                        ["matches"][match][i] ==
-                                    "false") {
-                                  counterJson[i - 2] = counterJson[i - 2] + 0;
-                                } else {
-                                  counterJson[i - 2] = counterJson[i - 2] +
-                                      int.parse(v.allBotMatchData2[robot1.text]
-                                          ["matches"][match][i]);
-                                }
-                              }
-                                }
-                              //THIS IS THE End
-                            }
-                            for (int i = 0; i < counterJson.length; i++) {
-                              counterJson[i] = counterJson[i] / counterVar;
-                            }
-                          } else if (key == "Robot Two") {
-                            for (dynamic match in v
-                                .allBotMatchData2[robot2.text]["matches"]
-                                .keys) {
-                                                                    if (match != "pit"){
-                              counterVar += 1;
-                              for (int i = 2;
-                                  i <
-                                      (v.allBotMatchData2[robot2.text]
-                                                  ["matches"][match])
-                                              .length -
-                                          1;
-                                  i++) {
-                                if (v.allBotMatchData2[robot2.text]["matches"]
-                                        [match][i] ==
-                                    "true") {
-                                  counterJson[i - 2] = counterJson[i - 2] + 1;
-                                } else if (v.allBotMatchData2[robot2.text]
-                                        ["matches"][match][i] ==
-                                    "false") {
-                                  counterJson[i - 2] = counterJson[i - 2] + 0;
-                                } else {
-                                  counterJson[i - 2] = counterJson[i - 2] +
-                                      int.parse(v.allBotMatchData2[robot2.text]
-                                          ["matches"][match][i]);
-                                }
-                              }
-                            }
-                          }
-                            for (int i = 0; i < counterJson.length; i++) {
-                              counterJson[i] = counterJson[i] / counterVar;
-                            }
-                          } else if (key == "Robot Three") {
-                            for (dynamic match in v
-                                .allBotMatchData2[robot3.text]["matches"]
-                                .keys) {
-                                                                    if (match != "pit"){
-                              counterVar += 1;
-                              for (int i = 2;
-                                  i <
-                                      (v.allBotMatchData2[robot3.text]
-                                                  ["matches"][match])
-                                              .length -
-                                          1;
-                                  i++) {
-                                if (v.allBotMatchData2[robot3.text]["matches"]
-                                        [match][i] ==
-                                    "true") {
-                                  counterJson[i - 2] = counterJson[i - 2] + 1;
-                                } else if (v.allBotMatchData2[robot3.text]
-                                        ["matches"][match][i] ==
-                                    "false") {
-                                  counterJson[i - 2] = counterJson[i - 2] + 0;
-                                } else {
-                                  counterJson[i - 2] = counterJson[i - 2] +
-                                      int.parse(v.allBotMatchData2[robot3.text]
-                                          ["matches"][match][i]);
-                                }
-                              }
-                            }}
-                            for (int i = 0; i < counterJson.length; i++) {
-                              counterJson[i] = counterJson[i] / counterVar;
-                            }
-                          }
-                          v.temprobotJson[key] = counterJson;
-                        }
-                        setState(() {});
-                      },
-                      child: Text(
-                        "Go!",
-                        style: TextStyle(color: Colors.white, fontSize: 20),
-                      )),
-                  padding: const EdgeInsets.all(10),
-                  color: Colors.red),
-              Container(
-                child: TextField(
-                  controller: robot1,
-                  style: TextStyle(color: Colors.white),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(96, 99, 108, 1),
-              ),
-              Container(
-                child: TextField(
-                  controller: robot2,
-                  style: TextStyle(color: Colors.white),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(96, 99, 108, 1),
-              ),
-              Container(
-                child: TextField(
-                  controller: robot3,
-                  style: TextStyle(color: Colors.white),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(96, 99, 108, 1),
-              ),
-              Container(
-                child: Column(
-                  children: [
-                    Text(
-                      "Position",
-                      style: TextStyle(color: Colors.white, fontSize: 15),
-                    ),
-                    Text(
-                      "(Auto)",
-                      style: TextStyle(color: Colors.white, fontSize: 10),
-                    ),
-                  ],
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(96, 99, 108, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot One"][0].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
+        actions: [
+          Container(
+            child: IconButton(
+              onPressed: () => Navigator.of(context).pop(),
+              icon: const Icon(
+                Icons.arrow_back,
                 color: Color.fromRGBO(165, 176, 168, 1),
+                size: 50,
               ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot Two"][0].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot Three"][0].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Column(
-                  children: [
-                    Text(
-                      "Scoring",
-                      style: TextStyle(color: Colors.white, fontSize: 15),
-                    ),
-                    Text(
-                      "(Auto)",
-                      style: TextStyle(color: Colors.white, fontSize: 10),
-                    ),
-                  ],
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(96, 99, 108, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot One"][1].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot Two"][1].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot Three"][1].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Column(
-                  children: [
-                    Text(
-                      "Leave",
-                      style: TextStyle(color: Colors.white, fontSize: 15),
-                    ),
-                    Text(
-                      "(Auto)",
-                      style: TextStyle(color: Colors.white, fontSize: 10),
-                    ),
-                  ],
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(96, 99, 108, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot One"][2].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot Two"][2].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot Three"][2].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Column(
-                  children: [
-                    Text(
-                      "Floor",
-                      style: TextStyle(color: Colors.white, fontSize: 15),
-                    ),
-                    Text(
-                      "(Note 1)",
-                      style: TextStyle(color: Colors.white, fontSize: 10),
-                    ),
-                  ],
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(96, 99, 108, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot One"][3].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot Two"][3].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot Three"][3].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Column(
-                  children: [
-                    Text(
-                      "Floor",
-                      style: TextStyle(color: Colors.white, fontSize: 15),
-                    ),
-                    Text(
-                      "(Note 2)",
-                      style: TextStyle(color: Colors.white, fontSize: 10),
-                    ),
-                  ],
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(96, 99, 108, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot One"][4].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot Two"][4].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot Three"][4].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Column(
-                  children: [
-                    Text(
-                      "Floor",
-                      style: TextStyle(color: Colors.white, fontSize: 15),
-                    ),
-                    Text(
-                      "(Note 3)",
-                      style: TextStyle(color: Colors.white, fontSize: 10),
-                    ),
-                  ],
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(96, 99, 108, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot One"][5].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot Two"][5].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot Three"][5].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Column(
-                  children: [
-                    Text(
-                      "Floor",
-                      style: TextStyle(color: Colors.white, fontSize: 15),
-                    ),
-                    Text(
-                      "(Note 4)",
-                      style: TextStyle(color: Colors.white, fontSize: 10),
-                    ),
-                  ],
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(96, 99, 108, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot One"][6].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot Two"][6].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot Three"][6].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Column(
-                  children: [
-                    Text(
-                      "Floor",
-                      style: TextStyle(color: Colors.white, fontSize: 15),
-                    ),
-                    Text(
-                      "(Note 5)",
-                      style: TextStyle(color: Colors.white, fontSize: 10),
-                    ),
-                  ],
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(96, 99, 108, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot One"][7].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot Two"][7].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot Three"][7].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Column(
-                  children: [
-                    Text(
-                      "Floor",
-                      style: TextStyle(color: Colors.white, fontSize: 15),
-                    ),
-                    Text(
-                      "(Note 6)",
-                      style: TextStyle(color: Colors.white, fontSize: 10),
-                    ),
-                  ],
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(96, 99, 108, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot One"][8].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot Two"][8].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot Three"][8].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Column(
-                  children: [
-                    Text(
-                      "Note",
-                      style: TextStyle(color: Colors.white, fontSize: 15),
-                    ),
-                    Text(
-                      "(Note 7)",
-                      style: TextStyle(color: Colors.white, fontSize: 10),
-                    ),
-                  ],
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(96, 99, 108, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot One"][9].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot Two"][9].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot Three"][9].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Column(
-                  children: [
-                    Text(
-                      "Floor",
-                      style: TextStyle(color: Colors.white, fontSize: 15),
-                    ),
-                    Text(
-                      "(Note 8)",
-                      style: TextStyle(color: Colors.white, fontSize: 10),
-                    ),
-                  ],
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(96, 99, 108, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot One"][10].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot Two"][10].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot Three"][10].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Column(
-                  children: [
-                    Text(
-                      "Score",
-                      style: TextStyle(color: Colors.white, fontSize: 15),
-                    ),
-                    Text(
-                      "(Amp)",
-                      style: TextStyle(color: Colors.white, fontSize: 10),
-                    ),
-                  ],
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(96, 99, 108, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot One"][11].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot Two"][11].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot Three"][11].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Column(
-                  children: [
-                    Text(
-                      "Score",
-                      style: TextStyle(color: Colors.white, fontSize: 15),
-                    ),
-                    Text(
-                      "(Speaker)",
-                      style: TextStyle(color: Colors.white, fontSize: 10),
-                    ),
-                  ],
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(96, 99, 108, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot One"][12].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot Two"][12].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot Three"][12].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Column(
-                  children: [
-                    Text(
-                      "Pickup",
-                      style: TextStyle(color: Colors.white, fontSize: 15),
-                    ),
-                    Text(
-                      "(Floor)",
-                      style: TextStyle(color: Colors.white, fontSize: 10),
-                    ),
-                  ],
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(96, 99, 108, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot One"][13].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot Two"][13].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot Three"][13].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Column(
-                  children: [
-                    Text(
-                      "Stage",
-                      style: TextStyle(color: Colors.white, fontSize: 15),
-                    ),
-                    Text(
-                      "(Position)",
-                      style: TextStyle(color: Colors.white, fontSize: 10),
-                    ),
-                  ],
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(96, 99, 108, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot One"][14].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot Two"][14].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot Three"][14].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Column(
-                  children: [
-                    Text(
-                      "Pickup",
-                      style: TextStyle(color: Colors.white, fontSize: 15),
-                    ),
-                    Text(
-                      "(Feeder)",
-                      style: TextStyle(color: Colors.white, fontSize: 10),
-                    ),
-                  ],
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(96, 99, 108, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot One"][15].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot Two"][15].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot Three"][15].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Column(
-                  children: [
-                    Text(
-                      "Stage",
-                      style: TextStyle(color: Colors.white, fontSize: 15),
-                    ),
-                    Text(
-                      "(Hang)",
-                      style: TextStyle(color: Colors.white, fontSize: 10),
-                    ),
-                  ],
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(96, 99, 108, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot One"][16].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot Two"][16].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot Three"][16].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Column(
-                  children: [
-                    Text(
-                      "Stage",
-                      style: TextStyle(color: Colors.white, fontSize: 15),
-                    ),
-                    Text(
-                      "(Placement)",
-                      style: TextStyle(color: Colors.white, fontSize: 10),
-                    ),
-                  ],
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(96, 99, 108, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot One"][17].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot Two"][17].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot Three"][17].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Column(
-                  children: [
-                    Text(
-                      "Stage",
-                      style: TextStyle(color: Colors.white, fontSize: 15),
-                    ),
-                    Text(
-                      "(Microphone)",
-                      style: TextStyle(color: Colors.white, fontSize: 10),
-                    ),
-                  ],
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(96, 99, 108, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot One"][18].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot Two"][18].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-              Container(
-                child: Text(
-                  v.temprobotJson["Robot Three"][18].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 30),
-                ),
-                padding: const EdgeInsets.all(10),
-                color: Color.fromRGBO(165, 176, 168, 1),
-              ),
-            ],
-          )
-        ]))));
-  }
-}
-
-void navigateToPitScouting(BuildContext context) {
-  const correctPassword = "A9E5T"; // Example password
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      TextEditingController passwordController = TextEditingController();
-      return AlertDialog(
-        title: Text('Enter Password'),
-        content: TextField(
-          controller: passwordController,
-          obscureText: true, // Hide password input
-          decoration: InputDecoration(hintText: "Password"),
-        ),
-        actions: <Widget>[
-          TextButton(
-            child: Text('Submit'),
-            onPressed: () {
-              if (passwordController.text == correctPassword) {
-                Navigator.of(context).pop(); // Close the dialog
-                Navigator.pushNamed(context, '/pitscouting');
-              } else {
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text('Error'),
-                    content: const Text('Password is incorrect.'),
-                    actions: [
-                      TextButton(
-                        child: const Text('OK'),
-                        onPressed: () => Navigator.pop(context),
-                      )
-                    ],
-                  ),
-                );
-              }
-            },
+            ),
           ),
         ],
-      );
-    },
-  );
+        backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
+        title: Image.asset(
+          'assets/images/rohawktics.png',
+          width: 75,
+          height: 75,
+          alignment: Alignment.center,
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            TextField(
+              controller: _teamNumberController,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: 'Team Number',
+                labelStyle: TextStyle(color: Colors.white),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+              ),
+              style: TextStyle(color: Colors.white),
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () {
+                final teamNumber = _teamNumberController.text;
+                if (teamNumber.isNotEmpty) {
+                  fetchTeamAnalytics(teamNumber);
+                } else {
+                  setState(() {
+                    errorMessage = 'Please enter a valid team number';
+                  });
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.grey,
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                textStyle: TextStyle(color: Colors.white),
+                side: const BorderSide(
+                      width: 3, color: Color.fromRGBO(90, 93, 102, 1)),
+              ),
+              child: const Text('Fetch Analytics',
+              style: TextStyle(color: Colors.white),),
+            ),
+            const SizedBox(height: 20),
+            if (teamDetails != null) ...[
+              const SizedBox(height: 10),
+              Text(
+                'FRC ${teamDetails!['team_number']}: ${teamDetails!['nickname']}',
+                style: const TextStyle(color: Colors.white, fontSize: 20),
+              ),
+              const SizedBox(height: 20),
+            ],
+            if (errorMessage.isNotEmpty) Text(errorMessage, style: TextStyle(color: Colors.red)),
+            if (eventStats.isNotEmpty)
+              Expanded(
+                child: ListView.builder(
+                  itemCount: eventStats.length,
+                  itemBuilder: (context, index) {
+                    final event = eventStats[index];
+                    return Card(
+                      color: Colors.grey,
+                      margin: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: ListTile(
+                        title: Text(event['eventName'], style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Rank: ${event['rank']}', style: TextStyle(color: Colors.white)),
+                            Text('Wins: ${event['wins']}', style: TextStyle(color: Colors.white)),
+                            Text('Losses: ${event['losses']}', style: TextStyle(color: Colors.white)),
+                            Text('Average Score: ${event['averageScore']}', style: TextStyle(color: Colors.white)),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 class PitScoutingPage extends StatefulWidget {
