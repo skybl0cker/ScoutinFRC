@@ -1322,6 +1322,33 @@ class SchedulePage extends StatefulWidget {
 }
 
 class _SchedulePageState extends State<SchedulePage> {
+  final TextEditingController _controller = TextEditingController();
+  List<dynamic> _matches = [];
+
+  Future<void> _fetchSchedule(String eventCode) async {
+    final response = await http.get(
+      Uri.parse('https://www.thebluealliance.com/api/v3/event/$eventCode/matches/simple'),
+      headers: {'X-TBA-Auth-Key': 'XKgCGALe7EzYqZUeKKONsQ45iGHVUZYlN0F6qQzchKQrLxED5DFWrYi9pcjxIzGY'},
+    );
+
+    if (response.statusCode == 200) {
+      List<dynamic> allMatches = jsonDecode(response.body);
+
+      // Filter out playoff matches and sort by match number
+      List<dynamic> qualMatches = allMatches
+          .where((match) => match['comp_level'] == 'qm')
+          .toList()
+          ..sort((a, b) => a['match_number'].compareTo(b['match_number']));
+
+      setState(() {
+        _matches = qualMatches;
+      });
+    } else {
+      // Handle error
+      print('Failed to load schedule');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -1343,14 +1370,14 @@ class _SchedulePageState extends State<SchedulePage> {
           },
         ),
         actions: [
-          Container(
-              child: IconButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  icon: const Icon(
-                    Icons.arrow_back,
-                    color: Color.fromRGBO(165, 176, 168, 1),
-                    size: 50,
-                  )))
+          IconButton(
+            onPressed: () => Navigator.of(context).pop(),
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Color.fromRGBO(165, 176, 168, 1),
+              size: 50,
+            ),
+          ),
         ],
         backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
         title: Image.asset(
@@ -1360,33 +1387,84 @@ class _SchedulePageState extends State<SchedulePage> {
           alignment: Alignment.center,
         ),
       ),
-      body: WebViewWidget(controller: controller),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            TextField(
+              controller: _controller,
+              decoration: const InputDecoration(
+                labelText: 'Enter Event Code',
+              ),
+            ),
+            const SizedBox(height: 16),
+            
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.grey,
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                textStyle: TextStyle(color: Colors.white),
+                side: const BorderSide(width: 3, color: Color.fromRGBO(90, 93, 102, 1)),
+              ),
+              onPressed: () {
+                _fetchSchedule(_controller.text);
+              },
+              child: const Text('Fetch Schedule'),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: _matches.length,
+                itemBuilder: (context, index) {
+                  final match = _matches[index];
+                  return Card(
+                    color: const Color.fromRGBO(90, 93, 102, 1),
+                    margin: const EdgeInsets.symmetric(vertical: 8.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      side: const BorderSide(color: Colors.white24),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Match ${match['match_number']}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Red Alliance: ${match['alliances']['red']['team_keys'].join(', ')}',
+                            style: const TextStyle(
+                              color: Colors.red,
+                              fontSize: 16,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Blue Alliance: ${match['alliances']['blue']['team_keys'].join(', ')}',
+                            style: const TextStyle(
+                              color: Colors.blue,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
-
-WebViewController controller = WebViewController()
-  ..setJavaScriptMode(JavaScriptMode.unrestricted)
-  ..setBackgroundColor(const Color(0x00000000))
-  ..setNavigationDelegate(
-    NavigationDelegate(
-      onProgress: (int progress) {
-        // Update loading bar.
-      },
-      onPageStarted: (String url) {},
-      onPageFinished: (String url) {},
-      onWebResourceError: (WebResourceError error) {},
-      onNavigationRequest: (NavigationRequest request) {
-        if (request.url.startsWith('0.0.0.0')) {
-          return NavigationDecision.prevent;
-        }
-        return NavigationDecision.navigate;
-      },
-    ),
-  )
-  ..loadRequest(Uri.parse(
-      'https://docs.google.com/spreadsheets/d/1ERnR2mWExDcxD3ngiNyzMHH7F7FrF2V_cqeTdyqnD5g/edit?usp=sharing'));
-
 
 class AnalyticsPage extends StatefulWidget {
   const AnalyticsPage({super.key, required this.title});
@@ -1488,6 +1566,8 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                 'wins': wins,
                 'losses': losses,
                 'averageScore': averageScore.toStringAsFixed(2),
+                'eventKey': eventKey,
+                'matches': matches,
               });
             });
           }
@@ -1502,6 +1582,15 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
         errorMessage = 'An error occurred: $e';
       });
     }
+  }
+
+  void openEventDetails(Map<String, dynamic> event) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EventDetailsPage(event: event),
+      ),
+    );
   }
 
   @override
@@ -1579,11 +1668,12 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                 backgroundColor: Colors.grey,
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 textStyle: TextStyle(color: Colors.white),
-                side: const BorderSide(
-                      width: 3, color: Color.fromRGBO(90, 93, 102, 1)),
+                side: const BorderSide(width: 3, color: Color.fromRGBO(90, 93, 102, 1)),
               ),
-              child: const Text('Fetch Analytics',
-              style: TextStyle(color: Colors.white),),
+              child: const Text(
+                'Fetch Analytics',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
             const SizedBox(height: 20),
             if (teamDetails != null) ...[
@@ -1602,8 +1692,12 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                   itemBuilder: (context, index) {
                     final event = eventStats[index];
                     return Card(
-                      color: Colors.grey,
+                      color: const Color.fromRGBO(90, 93, 102, 1),
                       margin: const EdgeInsets.symmetric(vertical: 8.0),
+                      shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      side: BorderSide(color: Colors.white24),
+                      ),
                       child: ListTile(
                         title: Text(event['eventName'], style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                         subtitle: Column(
@@ -1615,12 +1709,81 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                             Text('Average Score: ${event['averageScore']}', style: TextStyle(color: Colors.white)),
                           ],
                         ),
+                        onTap: () => openEventDetails(event),
                       ),
                     );
                   },
                 ),
               ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class EventDetailsPage extends StatelessWidget {
+  final Map<String, dynamic> event;
+
+  const EventDetailsPage({super.key, required this.event});
+
+  @override
+  Widget build(BuildContext context) {
+    final matches = event['matches'] as List<dynamic>;
+
+    // Filter out non-qualification matches and sort remaining matches by match number
+    final qualificationMatches = matches.where((match) => match['comp_level'] == 'qm').toList();
+    qualificationMatches.sort((a, b) => a['match_number'].compareTo(b['match_number']));
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          event['eventName'],
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold), // Set event title text to white
+        ),
+        backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: ListView.builder(
+          itemCount: qualificationMatches.length,
+          itemBuilder: (context, index) {
+            final match = qualificationMatches[index];
+            final redAlliance = match['alliances']['red']['team_keys'] as List<dynamic>;
+            final blueAlliance = match['alliances']['blue']['team_keys'] as List<dynamic>;
+            final redScore = match['alliances']['red']['score'];
+            final blueScore = match['alliances']['blue']['score'];
+
+            // Remove 'FRC' prefix from team numbers
+            final redAllianceFormatted = redAlliance.map((team) => team.replaceAll('frc', '')).join(', ');
+            final blueAllianceFormatted = blueAlliance.map((team) => team.replaceAll('frc', '')).join(', ');
+
+            return Card(
+              color: const Color.fromRGBO(90, 93, 102, 1),
+              margin: const EdgeInsets.symmetric(vertical: 8.0),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+                side: BorderSide(color: Colors.white24),
+              ),
+              child: ListTile(
+                title: Text(
+                  'Qual ${match['match_number']}',
+                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 30),
+                ),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Red Alliance: $redAllianceFormatted Score: $redScore', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 19)),
+                    Text('Blue Alliance: $blueAllianceFormatted Score: $blueScore', style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 19)),
+                  ],
+                ),
+              ),
+            );
+          },
         ),
       ),
     );
