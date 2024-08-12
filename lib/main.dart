@@ -88,7 +88,7 @@ void processMatch(dynamic robotKey, dynamic match, dynamic matchKeyType) {
 // App Entry Point
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await firebaseInit(); //runs the firebaseInit command
+  await firebaseInit(); //runs the firebaseInit, which initalizes Firebase for use.
   runApp(const ScoutingApp()); // runs the app 
 }
 
@@ -104,7 +104,7 @@ class ScoutingApp extends StatelessWidget {
       title: 'Scouting',
       routes: <String, WidgetBuilder>{
         '/home': (context) => const HomePage(title: ''),
-        '/scouting': (context) => const MatchNumPage(title: ''),
+        '/scouting': (context) => const MatchNumPage(title: '', matchData: null,),
         '/auto': (context) => const AutoPage(title: ''),
         '/teleop': (context) => const TeleopPage(title: ''),
         '/endgame': (context) => const EndgamePage(title: ''),
@@ -189,6 +189,18 @@ class _HomePageState extends State<HomePage> {
         child: Center(
           child: Column(
             children: <Widget>[
+              if (v.pageData['matchNum'] != null && v.pageData['robotNum'] != null)
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    'Scouting Match ${v.pageData['matchNum']} - Team ${v.pageData['robotNum']}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
               _buildButton("Scouting", "/scouting", Icons.search, const Color.fromARGB(255, 190, 63, 63), const Color.fromARGB(255, 181, 8, 8)),
               _buildButton("Schedule", "/schedule", Icons.schedule, const Color.fromARGB(255, 0, 72, 255), const Color.fromARGB(255, 8, 11, 181)),
               _buildButton("Analytics", "/analytics", Icons.analytics, const Color.fromARGB(255, 53, 129, 75), const Color.fromARGB(255, 8, 94, 29)),
@@ -208,126 +220,107 @@ class _HomePageState extends State<HomePage> {
         onHover: (_) => setState(() => _scale = 1.05),
         onExit: (_) => setState(() => _scale = 1.0),
         child: GestureDetector(
-          onTap: () => Navigator.pushNamed(context, route),
+          onTap: () {
+            if (label == "Scouting" && v.pageData['robotNum'] != null && v.pageData['matchNum'] != null) {
+              Navigator.pushNamed(context, '/auto'); // Skip MatchNumPage if data is already set
+            } else {
+              Navigator.pushNamed(context, route);
+            }
+          },
           child: Transform.scale(
             scale: _scale,
             child: SizedBox(
-            width: 300,
-            child: Stack(
-              alignment: Alignment.centerLeft,
-              children: [
-                Container(
-                  height: 70,
-                  margin: const EdgeInsets.only(left: 1), // Adjust margin for icon overlay
-                  decoration: BoxDecoration(
-                    color: Colors.white, // White background for text section
-                    borderRadius: BorderRadius.circular(15),
-                    border: Border.all(
-                      color: Colors.grey.shade300, // Lighter gray border for text
-                      width: 4,
+              width: 300,
+              child: Stack(
+                alignment: Alignment.centerLeft,
+                children: [
+                  Container(
+                    height: 70,
+                    margin: const EdgeInsets.only(left: 1), // Adjust margin for icon overlay
+                    decoration: BoxDecoration(
+                      color: Colors.white, // White background for text section
+                      borderRadius: BorderRadius.circular(15),
+                      border: Border.all(
+                        color: Colors.grey.shade300, // Lighter gray border for text
+                        width: 4,
+                      ),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black26,
+                          offset: Offset(0, 4),
+                          blurRadius: 5,
+                          spreadRadius: 1,
+                        )
+                      ],
                     ),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.black26,
-                        offset: Offset(0, 4),
-                        blurRadius: 5,
-                        spreadRadius: 1,
-                      )
-                    ],
-                  ),
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 45), // Align text closer to the icon
-                      child: Text(
-                        label,
-                        style: const TextStyle(
-                          color: Colors.black, // Black text for better contrast
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 45), // Align text closer to the icon
+                        child: Text(
+                          label,
+                          style: const TextStyle(
+                            color: Colors.black, // Black text for better contrast
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                Positioned(
-                  left: 0,
-                  child: Container(
-                    width: 70,
-                    height: 70,
-                    decoration: BoxDecoration(
-                      color: backgroundColor,
-                      borderRadius: BorderRadius.circular(11), // Rounded edges for icon container
-                      border: Border.all(
-                        color: borderColor,
-                        width: 4, // Slightly bigger border for the icon
+                  Positioned(
+                    left: 0,
+                    child: Container(
+                      width: 70,
+                      height: 70,
+                      decoration: BoxDecoration(
+                        color: backgroundColor,
+                        borderRadius: BorderRadius.circular(11), // Rounded edges for icon container
+                        border: Border.all(
+                          color: borderColor,
+                          width: 4, // Slightly bigger border for the icon
+                        ),
+                      ),
+                      child: Icon(
+                        icon,
+                        color: Colors.white,
+                        size: 40,
                       ),
                     ),
-                    child: Icon(
-                      icon,
-                      color: Colors.white,
-                      size: 40,
+                  ),
+                  Positioned(
+                    right: 16,
+                    child: const Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.grey,
                     ),
                   ),
-                ),
-                Positioned(
-                  right: 16,
-                  child: const Icon(
-                    Icons.arrow_forward_ios,
-                    color: Colors.grey,
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
       ),
-      )
     );
-    
   }
 }
 
-
-
 class MatchNumPage extends StatefulWidget {
-  const MatchNumPage({Key? key, required this.title}) : super(key: key);
+  const MatchNumPage({Key? key, required this.title, required this.matchData}) : super(key: key);
 
   final String title;
+  final dynamic matchData;  // Match data from SchedulePage
 
   @override
   State<MatchNumPage> createState() => _MatchNumPageState();
 }
 
 class _MatchNumPageState extends State<MatchNumPage> {
-  final TextEditingController matchNum = TextEditingController();
-  final TextEditingController robotNum = TextEditingController();
-  bool isButtonVisible = false;
-
-  @override
-  void initState() {
-    super.initState();
-    // Initialize text field listeners
-    matchNum.addListener(_updateButtonVisibility);
-    robotNum.addListener(_updateButtonVisibility);
-  }
-
-  @override
-  void dispose() {
-    matchNum.dispose();
-    robotNum.dispose();
-    super.dispose();
-  }
-
-  void _updateButtonVisibility() {
-    final bool fieldsPopulated =
-        matchNum.text.isNotEmpty && robotNum.text.isNotEmpty;
-    setState(() {
-      isButtonVisible = fieldsPopulated;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    final matchData = widget.matchData;
+    final List<String> redAlliance = (matchData['alliances']['red']['team_keys'] as List<dynamic>).map((e) => e.toString()).toList();
+    final List<String> blueAlliance = (matchData['alliances']['blue']['team_keys'] as List<dynamic>).map((e) => e.toString()).toList();
+
     return Scaffold(
       drawer: const NavBar(),
       appBar: AppBar(
@@ -370,70 +363,58 @@ class _MatchNumPageState extends State<MatchNumPage> {
         child: Column(
           children: <Widget>[
             const SizedBox(height: 20),
-            _buildTextField(
-              labelText: 'Team Number',
-              controller: robotNum,
+            const Text(
+              'Select Team to Scout',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 80),
-            _buildTextField(
-              labelText: 'Match Number',
-              controller: matchNum,
-            ),
+            const SizedBox(height: 20),
+            _buildTeamSelection('Red Alliance', redAlliance),
+            const SizedBox(height: 20),
+            _buildTeamSelection('Blue Alliance', blueAlliance),
             const SizedBox(height: 25),
-            if (isButtonVisible) _buildConfirmButton(),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildTextField({
-    required String labelText,
-    required TextEditingController controller,
-  }) {
-    return SizedBox(
-      width: 350,
-      child: TextField(
-        inputFormatters: [
-          FilteringTextInputFormatter.allow(RegExp(r'^[1-9][0-9]{0,4}')),
-        ],
-        controller: controller,
-        style: const TextStyle(fontSize: 20),
-        decoration: InputDecoration(
-          filled: true,
-          fillColor: const Color.fromRGBO(255, 255, 255, 0),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.0),
-            borderSide: const BorderSide(width: 1, color: Colors.white),
+Widget _buildTeamSelection(String alliance, List<String> teamKeys) {
+  return Column(
+    children: teamKeys.map((teamKey) {
+      return Container(
+        margin: const EdgeInsets.symmetric(vertical: 8),  // Space between buttons
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: alliance == 'Red Alliance' ? Colors.red.shade900 : Colors.blue.shade900,  // Darker border color
+            width: 2,
           ),
-          hintText: 'ex: ${labelText == 'Team Number' ? '3824' : '1'}',
-          hintStyle: const TextStyle(color: Colors.white),
-          labelText: labelText,
-          labelStyle: const TextStyle(color: Colors.white, fontSize: 20),
+          borderRadius: BorderRadius.circular(12),  // Rounded corners for the border
         ),
-      ),
-    );
-  }
-
-  Widget _buildConfirmButton() {
-    return ElevatedButton(
-      onPressed: () {
-        v.pageData['robotNum'] = robotNum.text.isEmpty ? 'None' : robotNum.text;
-        v.pageData['matchNum'] = matchNum.text.isEmpty ? 'None' : matchNum.text;
-        Navigator.pushNamed(context, '/auto');
-      },
-      style: ElevatedButton.styleFrom(
-        textStyle: const TextStyle(fontSize: 40),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-        backgroundColor: Colors.blue,
-        side: const BorderSide(width: 3, color: Color.fromRGBO(65, 104, 196, 1)),
-      ),
-      child: const Text(
-        'Confirm',
-        style: TextStyle(color: Colors.white, fontSize: 25),
-      ),
-    );
-  }
+        child: ElevatedButton(
+          onPressed: () {
+            v.pageData['robotNum'] = teamKey.replaceAll('frc', '');
+            v.pageData['matchNum'] = widget.matchData['match_number'].toString();
+            Navigator.pushNamed(context, '/'); // Go back to the home screen
+          },
+          style: ElevatedButton.styleFrom(
+            textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            backgroundColor: alliance == 'Red Alliance' ? Colors.red.shade700 : Colors.blue.shade700,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),  // Matches the border radius
+            ),
+          ),
+          child: Text(
+            'Team ${teamKey.replaceAll('frc', '')}',
+            style: const TextStyle(
+              color: Colors.white,  // White text
+            ),
+          ),
+        ),
+      );
+    }).toList(),
+  );
+}
 }
 
 const List<Widget> autoPosition = <Widget>[
@@ -1416,43 +1397,75 @@ class _SchedulePageState extends State<SchedulePage> {
                 itemCount: _matches.length,
                 itemBuilder: (context, index) {
                   final match = _matches[index];
-                  return Card(
-                    color: const Color.fromRGBO(90, 93, 102, 1),
-                    margin: const EdgeInsets.symmetric(vertical: 8.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      side: const BorderSide(color: Colors.white24),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Match ${match['match_number']}',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
+                  return InkWell(
+                    onTap: () {
+                      // Pass match data to MatchNumPage
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MatchNumPage(
+                            title: 'Match Scouting',
+                            matchData: match,
                           ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'Red Alliance: ${match['alliances']['red']['team_keys'].join(', ')}',
-                            style: const TextStyle(
-                              color: Colors.red,
-                              fontSize: 16,
+                        ),
+                      );
+                    },
+                    child: Card(
+                      color: const Color.fromRGBO(90, 93, 102, 1),
+                      margin: const EdgeInsets.symmetric(vertical: 8.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        side: const BorderSide(color: Colors.white24),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Match ${match['match_number']}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            'Blue Alliance: ${match['alliances']['blue']['team_keys'].join(', ')}',
-                            style: const TextStyle(
-                              color: Colors.blue,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
+                            Container(
+  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+  decoration: BoxDecoration(
+    color: Colors.red.shade700,  // Darker red tint
+    border: Border.all(color: Colors.red.shade900),  // Darker border
+    borderRadius: BorderRadius.circular(8),
+  ),
+  child: Text(
+    'Red Alliance: ${match['alliances']['red']['team_keys'].join(', ')}',
+    style: const TextStyle(
+      color: Colors.white,
+      fontSize: 16,
+      fontWeight: FontWeight.bold,
+    ),
+  ),
+),
+const SizedBox(height: 8),
+Container(
+  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+  decoration: BoxDecoration(
+    color: Colors.blue.shade700,  // Darker blue tint
+    border: Border.all(color: Colors.blue.shade900),  // Darker border
+    borderRadius: BorderRadius.circular(8),
+  ),
+  child: Text(
+    'Blue Alliance: ${match['alliances']['blue']['team_keys'].join(', ')}',
+    style: const TextStyle(
+      color: Colors.white,
+      fontSize: 16,
+      fontWeight: FontWeight.bold,
+    ),
+  ),
+),
+
+                          ],
+                        ),
                       ),
                     ),
                   );
@@ -1465,6 +1478,7 @@ class _SchedulePageState extends State<SchedulePage> {
     );
   }
 }
+
 
 class AnalyticsPage extends StatefulWidget {
   const AnalyticsPage({super.key, required this.title});
@@ -2153,7 +2167,7 @@ class _SScoutingPageState extends State<SScoutingPage> {
 
 void bigAssMatchFirebasePush(Map<dynamic, dynamic> data) async {
   if (data != {} && data.keys.isNotEmpty) {
-    DatabaseReference ref = FirebaseDatabase.instance.ref("RCR2024/robots");
+    DatabaseReference ref = FirebaseDatabase.instance.ref("Offseason2024/robots");
     //void test = bigAssMatchJsonFirebasePrep();
     for (String key in data.keys) {
       ref.child(key).set(data[key]);
@@ -2163,7 +2177,7 @@ void bigAssMatchFirebasePush(Map<dynamic, dynamic> data) async {
 
 void pitFirebasePush(Map<dynamic, dynamic> data) async {
   if (data != {} && data.keys.isNotEmpty) {
-    DatabaseReference ref = FirebaseDatabase.instance.ref("RCR2024/robots/pit");
+    DatabaseReference ref = FirebaseDatabase.instance.ref("Offseason2024/robots/pit");
     //void test = bigAssMatchJsonFirebasePrep();
     for (String key in data.keys) {
       ref.child(key).set(data[key]);
