@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_unnecessary_containers, avoid_print, unused_import, unnecessary_import, prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last, unrelated_type_equality_checks, library_private_types_in_public_api, unused_element, depend_on_referenced_packages, prefer_const_declarations
+// ignore_for_file: avoid_unnecessary_containers, avoid_print, unused_import, unnecessary_import, prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last, unrelated_type_equality_checks, library_private_types_in_public_api, unused_element, depend_on_referenced_packages, prefer_const_declarations, no_leading_underscores_for_local_identifiers
 
 // Imports
 import 'dart:ui';
@@ -144,6 +144,8 @@ class ScoutingApp extends StatelessWidget {
   }
 }
 
+
+
 class HomePage extends StatefulWidget {
   const HomePage({Key? key, required this.title}) : super(key: key);
   final String title;
@@ -154,6 +156,53 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   double _scale = 1.0;
+  final String _correctPassword = "itsnotpassword";
+  String? _nextMatchDetails;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchNextMatch();
+  }
+
+  Future<void> _fetchNextMatch() async {
+    const String eventCode = "2024tnkn"; // Replace with your actual event code
+    const String tbaApiKey = "XKgCGALe7EzYqZUeKKONsQ45iGHVUZYlN0F6qQzchKQrLxED5DFWrYi9pcjxIzGY"; // Replace with your TBA API key
+
+    final url = Uri.parse("https://www.thebluealliance.com/api/v3/event/$eventCode/matches/simple");
+    final response = await http.get(
+      url,
+      headers: {"X-TBA-Auth-Key": tbaApiKey},
+    );
+
+    if (response.statusCode == 200) {
+      final List matches = jsonDecode(response.body);
+      final now = DateTime.now();
+
+      // Find the next upcoming match
+      for (var match in matches) {
+        final matchTime = DateTime.fromMillisecondsSinceEpoch(match['time'] * 1000, isUtc: true);
+        if (matchTime.isAfter(now)) {
+          setState(() {
+            _nextMatchDetails = "Match ${match['match_number']} at ${matchTime.toLocal()}";
+            _isLoading = false;
+          });
+          return;
+        }
+      }
+
+      setState(() {
+        _nextMatchDetails = "No upcoming matches found.";
+        _isLoading = false;
+      });
+    } else {
+      setState(() {
+        _nextMatchDetails = "Failed to load match data.";
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -189,25 +238,35 @@ class _HomePageState extends State<HomePage> {
         child: Center(
           child: Column(
             children: <Widget>[
-              if (v.pageData['matchNum'] != null && v.pageData['robotNum'] != null)
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    'Scouting Match ${v.pageData['matchNum']} - Team ${v.pageData['robotNum']}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              _buildButton("Scouting", "/scouting", Icons.search, const Color.fromARGB(255, 190, 63, 63), const Color.fromARGB(255, 181, 8, 8)),
-              _buildButton("Schedule", "/schedule", Icons.schedule, const Color.fromARGB(255, 0, 72, 255), const Color.fromARGB(255, 8, 11, 181)),
-              _buildButton("Analytics", "/analytics", Icons.analytics, const Color.fromARGB(255, 53, 129, 75), const Color.fromARGB(255, 8, 94, 29)),
-              _buildButton("Pit Scouting", "/pitscouting", Icons.checklist, const Color.fromARGB(255, 240, 141, 61), const Color.fromARGB(255, 255, 115, 0)),
+              const Gap(20),
+              _buildButton("Scouting", "/schedule", Icons.search, const Color.fromARGB(255, 190, 63, 63), const Color.fromARGB(255, 181, 8, 8)),
+              _buildButton("Analytics", "/analytics", Icons.analytics, const Color.fromARGB(255, 0, 72, 255), const Color.fromARGB(255, 8, 11, 181)),
+              _buildButton("Pit Scouting", "/pitscouting", Icons.checklist, Color.fromARGB(255, 85, 152, 56), Color.fromARGB(255, 39, 87, 38)),
+              const SizedBox(height: 20),
+              _buildNextMatchWidget(),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildNextMatchWidget() {
+    if (_isLoading) {
+      return const CircularProgressIndicator(
+        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Text(
+        _nextMatchDetails ?? 'No match data available.',
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 18,
+        ),
+        textAlign: TextAlign.center,
       ),
     );
   }
@@ -221,8 +280,8 @@ class _HomePageState extends State<HomePage> {
         onExit: (_) => setState(() => _scale = 1.0),
         child: GestureDetector(
           onTap: () {
-            if (label == "Scouting" && v.pageData['robotNum'] != null && v.pageData['matchNum'] != null) {
-              Navigator.pushNamed(context, '/auto'); // Skip MatchNumPage if data is already set
+            if (label == "Pit Scouting") {
+              _showPasswordDialog(context, route); // Show password dialog for Pit Scouting
             } else {
               Navigator.pushNamed(context, route);
             }
@@ -287,9 +346,9 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
-                  Positioned(
+                  const Positioned(
                     right: 16,
-                    child: const Icon(
+                    child: Icon(
                       Icons.arrow_forward_ios,
                       color: Colors.grey,
                     ),
@@ -302,7 +361,57 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+  void _showPasswordDialog(BuildContext context, String route) {
+    final TextEditingController _passwordController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.grey[850], // Set background to dark gray
+          title: const Text(
+            "Enter Password",
+            style: TextStyle(color: Colors.white), // White text color for the title
+          ),
+          content: TextField(
+            controller: _passwordController,
+            obscureText: true,
+            style: const TextStyle(color: Colors.white), // White text color for the input
+            decoration: const InputDecoration(
+              hintText: "Password",
+              hintStyle: TextStyle(color: Colors.white70), // Slightly lighter hint color
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text("Cancel", style: TextStyle(color: Colors.white)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text("OK", style: TextStyle(color: Colors.white)),
+              onPressed: () {
+                if (_passwordController.text == _correctPassword) {
+                  Navigator.of(context).pop();
+                  Navigator.pushNamed(context, route);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Incorrect Password"),
+                    ),
+                  );
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
+
 
 class MatchNumPage extends StatefulWidget {
   const MatchNumPage({Key? key, required this.title, required this.matchData}) : super(key: key);
@@ -394,7 +503,7 @@ Widget _buildTeamSelection(String alliance, List<String> teamKeys) {
           onPressed: () {
             v.pageData['robotNum'] = teamKey.replaceAll('frc', '');
             v.pageData['matchNum'] = widget.matchData['match_number'].toString();
-            Navigator.pushNamed(context, '/'); // Go back to the home screen
+            Navigator.pushNamed(context, '/auto'); // Go back to the home screen
           },
           style: ElevatedButton.styleFrom(
             textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),

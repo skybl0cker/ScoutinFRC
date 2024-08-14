@@ -54,31 +54,46 @@ class NavBar extends StatelessWidget {
               showDialog(
   context: context,
   builder: (BuildContext context) {
-    return AlertDialog(
-      title: const Text('Delete your Account?'),
-      content: const Text(
-'''If you select Delete we will delete your account on our server.
+    return Theme(
+  data: Theme.of(context).copyWith(
+    colorScheme: ColorScheme.fromSwatch().copyWith(
+      primary: Colors.white, // Text on buttons
+      secondary: Colors.grey, // Accent color
+      onPrimary: Colors.white, // Text color on primary background
+      onSurface: Colors.white, // Default text color
+    ),
+    textTheme: const TextTheme(
+      bodyLarge: TextStyle(color: Colors.white), // Large body text
+      bodyMedium: TextStyle(color: Colors.white), // Medium body text
+      bodySmall: TextStyle(color: Colors.white), // Small body text
+    ),
+    dialogBackgroundColor: const Color.fromRGBO(65, 68, 73, 1), // Background color for the dialog
+  ),
+  child: AlertDialog(
+    title: const Text('Delete your Account?'),
+    content: const Text(
+      '''If you select Delete we will delete your account on our server.
 
 Your app data will also be deleted and you won't be able to retrieve it.
 
-Since this is a security-sensitive operation, you eventually are asked to login before your account can be deleted.'''),
-      actions: [
-        TextButton(
-          child: const Text('Cancel'),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        TextButton(
-          child: const Text(
-            'Delete',
-          ),
-          onPressed: () async {
-            deleteFirebaseAccount();
-          },
-        ),
-      ],
-    );
+Since this is a security-sensitive operation, you eventually are asked to login before your account can be deleted.''',
+    ),
+    actions: [
+      TextButton(
+        child: const Text('Cancel'),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+      ),
+      TextButton(
+        child: const Text('Delete'),
+        onPressed: () async {
+          deleteFirebaseAccount();
+        },
+      ),
+    ],
+  ),
+);
   },
 );
             },
