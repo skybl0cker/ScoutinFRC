@@ -10,15 +10,15 @@ This is the repo for the HVA RoHAWKtics Scouting App "ScoutinFRC" This app is sp
 
 -A custom built data collection system through Firebase.
 
--A login authenticaiton system with email and Google services.
+-A login authenticaiton system with email, Google, and Apple services.
 
--Compatibility with both iOS and Android.
+-Compatibility with both iOS and Android. (Soon to be on the App Store)
 
--Pit Scouting system
+-Custom Pit Scouting system
 
--Schedule system with data provided by The Blue Alliance (WIP)
+-Schedule system with data provided by The Blue Alliance 
 
--Analytics page to lookup any bot in our system.
+-Analytics page to lookup any bot on The Blue Alliance
 
 ## Our links:
 
