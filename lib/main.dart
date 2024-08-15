@@ -1407,6 +1407,7 @@ class _EndgamePageState extends State<EndgamePage> {
 class SchedulePage extends StatefulWidget {
   const SchedulePage({super.key, required this.title});
   final String title;
+
   @override
   State<SchedulePage> createState() => _SchedulePageState();
 }
@@ -1449,7 +1450,7 @@ class _SchedulePageState extends State<SchedulePage> {
             return IconButton(
               icon: const Icon(
                 Icons.menu,
-                color: Color.fromRGBO(165, 176, 168, 1),
+                color: Colors.white,  // Change menu icon color
                 size: 50,
               ),
               onPressed: () {
@@ -1464,7 +1465,7 @@ class _SchedulePageState extends State<SchedulePage> {
             onPressed: () => Navigator.of(context).pop(),
             icon: const Icon(
               Icons.arrow_back,
-              color: Color.fromRGBO(165, 176, 168, 1),
+              color: Colors.white,  // Change back icon color
               size: 50,
             ),
           ),
@@ -1483,17 +1484,18 @@ class _SchedulePageState extends State<SchedulePage> {
           children: [
             TextField(
               controller: _controller,
+              style: const TextStyle(color: Colors.white),  // Change text color
               decoration: const InputDecoration(
                 labelText: 'Enter Event Code',
+                labelStyle: TextStyle(color: Colors.white),  // Change label color
               ),
             ),
             const SizedBox(height: 16),
-            
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.grey,
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                textStyle: TextStyle(color: Colors.white),
+                textStyle: TextStyle(color: Color.fromARGB(255, 246, 246, 246)),  // Button text color
                 side: const BorderSide(width: 3, color: Color.fromRGBO(90, 93, 102, 1)),
               ),
               onPressed: () {
@@ -1534,45 +1536,44 @@ class _SchedulePageState extends State<SchedulePage> {
                             Text(
                               'Match ${match['match_number']}',
                               style: const TextStyle(
-                                color: Colors.white,
+                                color: Colors.white,  // Match number text color
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             Container(
-  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-  decoration: BoxDecoration(
-    color: Colors.red.shade700,  // Darker red tint
-    border: Border.all(color: Colors.red.shade900),  // Darker border
-    borderRadius: BorderRadius.circular(8),
-  ),
-  child: Text(
-    'Red Alliance: ${match['alliances']['red']['team_keys'].join(', ')}',
-    style: const TextStyle(
-      color: Colors.white,
-      fontSize: 16,
-      fontWeight: FontWeight.bold,
-    ),
-  ),
-),
-const SizedBox(height: 8),
-Container(
-  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-  decoration: BoxDecoration(
-    color: Colors.blue.shade700,  // Darker blue tint
-    border: Border.all(color: Colors.blue.shade900),  // Darker border
-    borderRadius: BorderRadius.circular(8),
-  ),
-  child: Text(
-    'Blue Alliance: ${match['alliances']['blue']['team_keys'].join(', ')}',
-    style: const TextStyle(
-      color: Colors.white,
-      fontSize: 16,
-      fontWeight: FontWeight.bold,
-    ),
-  ),
-),
-
+                              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                              decoration: BoxDecoration(
+                                color: Colors.red.shade700,
+                                border: Border.all(color: Colors.red.shade900),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                'Red Alliance: ${match['alliances']['red']['team_keys'].join(', ')}',
+                                style: const TextStyle(
+                                  color: Colors.white,  // Alliance text color
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Container(
+                              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                              decoration: BoxDecoration(
+                                color: Colors.blue.shade700,
+                                border: Border.all(color: Colors.blue.shade900),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                'Blue Alliance: ${match['alliances']['blue']['team_keys'].join(', ')}',
+                                style: const TextStyle(
+                                  color: Colors.white,  // Alliance text color
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),
