@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
+import 'package:firebase_ui_oauth_apple/firebase_ui_oauth_apple.dart';
 import 'package:flutter/material.dart';
 
 import 'main.dart' as m;
@@ -17,32 +18,33 @@ class AuthGate extends StatelessWidget {
           return Theme(
             data: Theme.of(context).copyWith(
               colorScheme: ColorScheme.fromSwatch().copyWith(
-                primary: Colors.white, // Set primary color
-                secondary: Colors.grey, // Set secondary color
-                onPrimary: Colors.black, // Set color for text on primary-colored widgets
-                onSurface: Colors.white, // Set default text color
+                primary: Colors.white,
+                secondary: Colors.grey,
+                onPrimary: Colors.black,
+                onSurface: Colors.white,
               ),
               inputDecorationTheme: const InputDecorationTheme(
-                labelStyle: TextStyle(color: Colors.white), // Set label text color to white
-                hintStyle: TextStyle(color: Colors.white70), // Set hint text color to white with some transparency
+                labelStyle: TextStyle(color: Colors.white),
+                hintStyle: TextStyle(color: Colors.white70),
                 enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white), // Set enabled underline color to white
+                  borderSide: BorderSide(color: Colors.white),
                 ),
                 focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white), // Set focused underline color to white
+                  borderSide: BorderSide(color: Colors.white),
                 ),
               ),
               textTheme: const TextTheme(
-                bodyLarge: TextStyle(color: Colors.white), // Set large body text to white
-                bodyMedium: TextStyle(color: Colors.white), // Set medium body text to white
-                bodySmall: TextStyle(color: Colors.white), // Set small body text to white
+                bodyLarge: TextStyle(color: Colors.white),
+                bodyMedium: TextStyle(color: Colors.white),
+                bodySmall: TextStyle(color: Colors.white),
               ),
-              scaffoldBackgroundColor: const Color.fromRGBO(65, 68, 73, 1), // Set the background color
+              scaffoldBackgroundColor: const Color.fromRGBO(65, 68, 73, 1),
             ),
             child: SignInScreen(
               providers: [
                 EmailAuthProvider(),
                 GoogleProvider(clientId: "246498824596-93ae95j4i3lr4rmeq0mfu455jcdsjs6v.apps.googleusercontent.com"),
+                AppleProvider(),
               ],
               headerBuilder: (context, constraints, shrinkOffset) {
                 return Padding(
@@ -66,7 +68,6 @@ class AuthGate extends StatelessWidget {
                           style: TextStyle(color: Colors.white),
                       )
                         );
-                
               },
               footerBuilder: (context, action) {
                 return const Padding(

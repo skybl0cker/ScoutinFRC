@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_unnecessary_containers, avoid_print, unused_import, unnecessary_import, prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last, unrelated_type_equality_checks, library_private_types_in_public_api, unused_element, depend_on_referenced_packages, prefer_const_declarations, no_leading_underscores_for_local_identifiers
+// ignore_for_file: avoid_unnecessary_containers, avoid_print, unused_import, unnecessary_import, prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last, unrelated_type_equality_checks, library_private_types_in_public_api, unused_element, depend_on_referenced_packages, prefer_const_declarations, no_leading_underscores_for_local_identifiers, use_build_context_synchronously
 
 // Imports
 import 'dart:ui';
@@ -144,8 +144,6 @@ class ScoutingApp extends StatelessWidget {
   }
 }
 
-
-
 class HomePage extends StatefulWidget {
   const HomePage({Key? key, required this.title}) : super(key: key);
   final String title;
@@ -157,50 +155,35 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   double _scale = 1.0;
   final String _correctPassword = "itsnotpassword";
-  String? _nextMatchDetails;
-  bool _isLoading = true;
+  List<dynamic> rankings = [];
 
   @override
   void initState() {
     super.initState();
-    _fetchNextMatch();
+    fetchRankings();
   }
 
-  Future<void> _fetchNextMatch() async {
-    const String eventCode = "2024tnkn"; // Replace with your actual event code
-    const String tbaApiKey = "XKgCGALe7EzYqZUeKKONsQ45iGHVUZYlN0F6qQzchKQrLxED5DFWrYi9pcjxIzGY"; // Replace with your TBA API key
+  Future<void> fetchRankings() async {
+    const String eventCode = '2024tnkn';
+    const String apiKey = 'XKgCGALe7EzYqZUeKKONsQ45iGHVUZYlN0F6qQzchKQrLxED5DFWrYi9pcjxIzGY';
 
-    final url = Uri.parse("https://www.thebluealliance.com/api/v3/event/$eventCode/matches/simple");
     final response = await http.get(
-      url,
-      headers: {"X-TBA-Auth-Key": tbaApiKey},
+      Uri.parse('https://www.thebluealliance.com/api/v3/event/$eventCode/rankings'),
+      headers: {
+        'X-TBA-Auth-Key': apiKey,
+      },
     );
 
     if (response.statusCode == 200) {
-      final List matches = jsonDecode(response.body);
-      final now = DateTime.now();
-
-      // Find the next upcoming match
-      for (var match in matches) {
-        final matchTime = DateTime.fromMillisecondsSinceEpoch(match['time'] * 1000, isUtc: true);
-        if (matchTime.isAfter(now)) {
-          setState(() {
-            _nextMatchDetails = "Match ${match['match_number']} at ${matchTime.toLocal()}";
-            _isLoading = false;
-          });
-          return;
-        }
-      }
-
       setState(() {
-        _nextMatchDetails = "No upcoming matches found.";
-        _isLoading = false;
+        rankings = json.decode(response.body)['rankings'];
       });
     } else {
-      setState(() {
-        _nextMatchDetails = "Failed to load match data.";
-        _isLoading = false;
-      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Failed to load rankings."),
+        ),
+      );
     }
   }
 
@@ -218,7 +201,6 @@ class _HomePageState extends State<HomePage> {
                 size: 50,
               ),
               onPressed: () {
-                bigAssMatchJsonFirebasePrep();
                 Scaffold.of(context).openDrawer();
               },
               tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
@@ -231,42 +213,67 @@ class _HomePageState extends State<HomePage> {
           width: 75,
           height: 75,
         ),
-        elevation: 0, // Remove shadow
+        elevation: 0,
       ),
       body: Container(
-        color: const Color.fromRGBO(65, 68, 73, 1), // Gray background
-        child: Center(
-          child: Column(
-            children: <Widget>[
-              const Gap(20),
-              _buildButton("Scouting", "/schedule", Icons.search, const Color.fromARGB(255, 190, 63, 63), const Color.fromARGB(255, 181, 8, 8)),
-              _buildButton("Analytics", "/analytics", Icons.analytics, const Color.fromARGB(255, 0, 72, 255), const Color.fromARGB(255, 8, 11, 181)),
-              _buildButton("Pit Scouting", "/pitscouting", Icons.checklist, Color.fromARGB(255, 85, 152, 56), Color.fromARGB(255, 39, 87, 38)),
-              const SizedBox(height: 20),
-              _buildNextMatchWidget(),
-            ],
-          ),
+        color: const Color.fromRGBO(65, 68, 73, 1),
+        child: Column(
+          children: <Widget>[
+            const Gap(20),
+            _buildButton("Scouting", "/schedule", Icons.search, const Color.fromARGB(255, 190, 63, 63), const Color.fromARGB(255, 181, 8, 8)),
+            _buildButton("Analytics", "/analytics", Icons.analytics, const Color.fromARGB(255, 0, 72, 255), const Color.fromARGB(255, 8, 11, 181)),
+            _buildButton("Pit Scouting", "/pitscouting", Icons.checklist, const Color.fromARGB(255, 85, 152, 56), const Color.fromARGB(255, 39, 87, 38)),
+            const SizedBox(height: 20),
+            Expanded(
+              child: rankings.isNotEmpty
+                  ? Center(
+                      child: Container(
+                        width: 350,
+                        height: 500,
+                        decoration: BoxDecoration(
+                          color: const Color.fromRGBO(75, 79, 85, 1),
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(
+                            color: Colors.grey.shade300,
+                            width: 2,
+                          ),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Colors.black26,
+                              offset: Offset(0, 4),
+                              blurRadius: 5,
+                              spreadRadius: 1,
+                            )
+                          ],
+                        ),
+                        child: ListView.builder(
+                          itemCount: rankings.length,
+                          itemBuilder: (context, index) {
+                            final ranking = rankings[index];
+                            return ListTile(
+                              leading: CircleAvatar(
+                                backgroundColor: Colors.grey,
+                                child: Text('${ranking['rank']}'),
+                              ),
+                              title: Text(
+                                'Team ${ranking['team_key'].substring(3)}',
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                              subtitle: Text(
+                                'Wins: ${ranking['record']['wins']} | Losses: ${ranking['record']['losses']}',
+                                style: const TextStyle(color: Colors.white70),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    )
+                  : const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+            ),
+          ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildNextMatchWidget() {
-    if (_isLoading) {
-      return const CircularProgressIndicator(
-        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-      );
-    }
-
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Text(
-        _nextMatchDetails ?? 'No match data available.',
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 18,
-        ),
-        textAlign: TextAlign.center,
       ),
     );
   }
@@ -281,7 +288,7 @@ class _HomePageState extends State<HomePage> {
         child: GestureDetector(
           onTap: () {
             if (label == "Pit Scouting") {
-              _showPasswordDialog(context, route); // Show password dialog for Pit Scouting
+              _showPasswordDialog(context, route);
             } else {
               Navigator.pushNamed(context, route);
             }
@@ -295,12 +302,12 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   Container(
                     height: 70,
-                    margin: const EdgeInsets.only(left: 1), // Adjust margin for icon overlay
+                    margin: const EdgeInsets.only(left: 1),
                     decoration: BoxDecoration(
-                      color: Colors.white, // White background for text section
+                      color: Colors.white,
                       borderRadius: BorderRadius.circular(15),
                       border: Border.all(
-                        color: Colors.grey.shade300, // Lighter gray border for text
+                        color: Colors.grey.shade300,
                         width: 4,
                       ),
                       boxShadow: const [
@@ -314,11 +321,11 @@ class _HomePageState extends State<HomePage> {
                     ),
                     child: Center(
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 45), // Align text closer to the icon
+                        padding: const EdgeInsets.only(left: 45),
                         child: Text(
                           label,
                           style: const TextStyle(
-                            color: Colors.black, // Black text for better contrast
+                            color: Colors.black,
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
                           ),
@@ -333,10 +340,10 @@ class _HomePageState extends State<HomePage> {
                       height: 70,
                       decoration: BoxDecoration(
                         color: backgroundColor,
-                        borderRadius: BorderRadius.circular(11), // Rounded edges for icon container
+                        borderRadius: BorderRadius.circular(11),
                         border: Border.all(
                           color: borderColor,
-                          width: 4, // Slightly bigger border for the icon
+                          width: 4,
                         ),
                       ),
                       child: Icon(
@@ -369,18 +376,18 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: Colors.grey[850], // Set background to dark gray
+          backgroundColor: Colors.grey[850],
           title: const Text(
             "Enter Password",
-            style: TextStyle(color: Colors.white), // White text color for the title
+            style: TextStyle(color: Colors.white),
           ),
           content: TextField(
             controller: _passwordController,
             obscureText: true,
-            style: const TextStyle(color: Colors.white), // White text color for the input
+            style: const TextStyle(color: Colors.white),
             decoration: const InputDecoration(
               hintText: "Password",
-              hintStyle: TextStyle(color: Colors.white70), // Slightly lighter hint color
+              hintStyle: TextStyle(color: Colors.white70),
             ),
           ),
           actions: <Widget>[
@@ -411,6 +418,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
 
 
 class MatchNumPage extends StatefulWidget {
