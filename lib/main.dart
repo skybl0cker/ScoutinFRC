@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_unnecessary_containers, avoid_print, unused_import, unnecessary_import, prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last, unrelated_type_equality_checks, library_private_types_in_public_api, unused_element, depend_on_referenced_packages, prefer_const_declarations, no_leading_underscores_for_local_identifiers, use_build_context_synchronously
+// ignore_for_file: avoid_unnecessary_containers, avoid_print, unused_import, unnecessary_import, prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last, unrelated_type_equality_checks, library_private_types_in_public_api, unused_element, depend_on_referenced_packages, prefer_const_declarations, no_leading_underscores_for_local_identifiers, use_build_context_synchronously, unused_field, unnecessary_this
 
 // Imports
 import 'dart:ui';
@@ -26,6 +26,7 @@ import 'dart:math';
 import 'dart:convert';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 // Firebase Initialization
 Future<void> firebaseInit() async {
@@ -89,6 +90,9 @@ void processMatch(dynamic robotKey, dynamic match, dynamic matchKeyType) {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await firebaseInit(); //runs the firebaseInit, which initalizes Firebase for use.
+  if (const bool.fromEnvironment('USE_EMULATOR', defaultValue: false)) {
+    FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
+  }
   runApp(const ScoutingApp()); // runs the app 
 }
 
@@ -112,6 +116,7 @@ class ScoutingApp extends StatelessWidget {
         '/analytics': (context) => const AnalyticsPage(title: ''),
         '/pitscouting': (context) => const PitScoutingPage(title: ''),
         '/sscouting': (context) => const SScoutingPage(title: ''),
+        '/admin': (context) => const AdminPage(title: '')
       },
       theme: ThemeData(
         primaryColor: Colors.white,
@@ -156,11 +161,14 @@ class _HomePageState extends State<HomePage> {
   double _scale = 1.0;
   final String _correctPassword = "itsnotpassword";
   List<dynamic> rankings = [];
+  String _username = "Loading...";
+  String _role = ""; // Add a variable to store the user's role
 
   @override
   void initState() {
     super.initState();
     fetchRankings();
+    fetchUserDetails();  // Fetch user details when the widget initializes
   }
 
   Future<void> fetchRankings() async {
@@ -187,6 +195,23 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  Future<void> fetchUserDetails() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      try {
+        DocumentSnapshot doc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+        if (doc.exists) {
+          setState(() {
+            _username = doc['username'] ?? "Unknown User";
+            _role = doc['role'] ?? ""; // Update the role
+          });
+        }
+      } catch (e) {
+        print("Error getting user details: $e");
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -208,10 +233,19 @@ class _HomePageState extends State<HomePage> {
           },
         ),
         backgroundColor: const Color.fromRGBO(65, 68, 73, 1),
-        title: Image.asset(
-          'assets/images/rohawktics.png',
-          width: 75,
-          height: 75,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Image.asset(
+              'assets/images/rohawktics.png',
+              width: 75,
+              height: 75,
+            ),
+            Text(
+              _username,
+              style: const TextStyle(color: Colors.white),
+            ),
+          ],
         ),
         elevation: 0,
       ),
@@ -222,7 +256,10 @@ class _HomePageState extends State<HomePage> {
             const Gap(20),
             _buildButton("Scouting", "/schedule", Icons.search, const Color.fromARGB(255, 190, 63, 63), const Color.fromARGB(255, 181, 8, 8)),
             _buildButton("Analytics", "/analytics", Icons.analytics, const Color.fromARGB(255, 0, 72, 255), const Color.fromARGB(255, 8, 11, 181)),
-            _buildButton("Pit Scouting", "/pitscouting", Icons.checklist, const Color.fromARGB(255, 85, 152, 56), const Color.fromARGB(255, 39, 87, 38)),
+            if (_role == 'pitscouter' || _role == 'admin') // Show only if user is a pitscouter or admin
+              _buildButton("Pit Scouting", "/pitscouting", Icons.checklist, const Color.fromARGB(255, 85, 152, 56), const Color.fromARGB(255, 39, 87, 38)),
+            if (_role == 'admin') // Show only if user is an admin
+              _buildButton("Admin", "/admin", Icons.admin_panel_settings, const Color.fromARGB(255, 255, 193, 7), const Color.fromARGB(255, 255, 160, 0)),
             const SizedBox(height: 20),
             Expanded(
               child: rankings.isNotEmpty
@@ -2279,6 +2316,186 @@ class _SScoutingPageState extends State<SScoutingPage> {
             alignment: Alignment.center,
           ),
         ));
+  }
+}
+
+class AdminPage extends StatefulWidget {
+  const AdminPage({Key? key, required String title}) : super(key: key);
+
+  @override
+  _AdminPageState createState() => _AdminPageState();
+}
+
+class _AdminPageState extends State<AdminPage> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  List<Map<String, dynamic>> _users = [];
+  String _selectedRole = 'user'; // Default role
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUsers();
+  }
+
+  Future<void> _fetchUsers() async {
+    try {
+      final QuerySnapshot snapshot = await _firestore.collection('users').get();
+      final List<Map<String, dynamic>> users = snapshot.docs.map((doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        return {
+          'uid': doc.id,
+          'username': data['username'] ?? 'Unknown User',
+          'role': data['role'] ?? 'user',
+        };
+      }).toList();
+      setState(() {
+        _users = users;
+      });
+    } catch (e) {
+      print("Error fetching users: $e");
+    }
+  }
+
+  Future<void> _updateUserRole(String uid, String role) async {
+    try {
+      await _firestore.collection('users').doc(uid).update({'role': role});
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("User role updated successfully."),
+        ),
+      );
+      _fetchUsers(); // Refresh user list
+    } catch (e) {
+      print("Error updating user role: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Failed to update user role."),
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(
+                Icons.menu,
+                color: Color.fromRGBO(165, 176, 168, 1),
+                size: 50,
+              ),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+            );
+          },
+        ),
+        actions: [
+          Container(
+            child: IconButton(
+              onPressed: () => Navigator.of(context).pop(),
+              icon: const Icon(
+                Icons.arrow_back,
+                color: Color.fromRGBO(165, 176, 168, 1),
+                size: 50,
+              ),
+            ),
+          )
+        ],
+        backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
+        title: Image.asset(
+          'assets/images/rohawktics.png',
+          width: 75,
+          height: 75,
+          alignment: Alignment.center,
+        ),
+      ),
+      body: Container(
+        color: const Color.fromRGBO(65, 68, 73, 1),
+        child: Column(
+          children: <Widget>[
+            const SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: DropdownButton<String>(
+                value: _selectedRole,
+                items: <String>['user', 'pitscouter', 'admin']
+                    .map((String role) {
+                  return DropdownMenuItem<String>(
+                    value: role,
+                    child: Text(role.capitalize()),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _selectedRole = newValue!;
+                  });
+                },
+                isExpanded: true,
+                dropdownColor: const Color.fromRGBO(75, 79, 85, 1),
+                style: const TextStyle(color: Colors.white),
+                underline: Container(
+                  height: 2,
+                  color: Colors.grey.shade300,
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Expanded(
+              child: ListView.builder(
+                itemCount: _users.length,
+                itemBuilder: (context, index) {
+                  final user = _users[index];
+                  return ListTile(
+                    tileColor: const Color.fromRGBO(75, 79, 85, 1),
+                    leading: CircleAvatar(
+                      backgroundColor: Colors.grey,
+                      child: Text(user['username'][0]),
+                    ),
+                    title: Text(
+                      user['username'],
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                    subtitle: Text(
+                      'Role: ${user['role']}',
+                      style: const TextStyle(color: Colors.white70),
+                    ),
+                    trailing: DropdownButton<String>(
+                      value: user['role'],
+                      items: <String>['user', 'pitscouter', 'admin']
+                          .map((String role) {
+                        return DropdownMenuItem<String>(
+                          value: role,
+                          child: Text(role.capitalize()),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        if (newValue != null && newValue != user['role']) {
+                          _updateUserRole(user['uid'], newValue);
+                        }
+                      },
+                      dropdownColor: const Color.fromRGBO(75, 79, 85, 1),
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+extension StringCapitalize on String {
+  String capitalize() {
+    return this[0].toUpperCase() + this.substring(1);
   }
 }
 
