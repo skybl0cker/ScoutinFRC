@@ -25,19 +25,6 @@ Future<void> deleteFirebaseAccount() async {
   }
 }
 
-Future<void> testCreateDocument() async {
-  const uid = 'test_user';
-  try {
-    await FirebaseFirestore.instance.collection('users').doc(uid).set({
-      'username': 'test_user',
-    });
-    print('Test document created successfully');
-  } catch (e) {
-    print("Error creating test document: $e");
-  }
-}
-
-
 Future<void> updateUsername(BuildContext context) async {
   final user = FirebaseAuth.instance.currentUser;
   if (user == null) {
@@ -210,10 +197,6 @@ Since this is a security-sensitive operation, you eventually are asked to login 
               frick();
             },
           ),
-          const ListTile(
-            title: Text('test'),
-            onTap: testCreateDocument,
-          )
         ],
       ),
     );

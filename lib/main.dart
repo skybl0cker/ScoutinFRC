@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_unnecessary_containers, avoid_print, unused_import, unnecessary_import, prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last, unrelated_type_equality_checks, library_private_types_in_public_api, unused_element, depend_on_referenced_packages, prefer_const_declarations, no_leading_underscores_for_local_identifiers, use_build_context_synchronously, unused_field, unnecessary_this
+// ignore_for_file: avoid_unnecessary_containers, avoid_print, unused_import, unnecessary_import, prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last, unrelated_type_equality_checks, library_private_types_in_public_api, unused_element, depend_on_referenced_packages, prefer_const_declarations, no_leading_underscores_for_local_identifiers, use_build_context_synchronously, unused_field, unnecessary_this, unused_local_variable
 
 // Imports
 import 'dart:ui';
@@ -27,6 +27,7 @@ import 'dart:convert';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:share_plus/share_plus.dart';
 
 // Firebase Initialization
 Future<void> firebaseInit() async {
@@ -1753,14 +1754,18 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
     }
   }
 
-  void openEventDetails(Map<String, dynamic> event) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => EventDetailsPage(event: event),
+ void openEventDetails(Map<String, dynamic> event) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => EventDetailsPage(
+        event: event,
+        teamNumber: _teamNumberController.text, // Pass the team number
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -1893,15 +1898,23 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
 
 class EventDetailsPage extends StatelessWidget {
   final Map<String, dynamic> event;
+  final String teamNumber; // Add the team number
 
-  const EventDetailsPage({super.key, required this.event});
+  const EventDetailsPage({super.key, required this.event, required this.teamNumber});
 
   @override
   Widget build(BuildContext context) {
     final matches = event['matches'] as List<dynamic>;
 
-    // Filter out non-qualification matches and sort remaining matches by match number
-    final qualificationMatches = matches.where((match) => match['comp_level'] == 'qm').toList();
+    // Filter out non-qualification matches and only include matches with the selected team
+    final qualificationMatches = matches
+        .where((match) =>
+            match['comp_level'] == 'qm' && 
+            (match['alliances']['red']['team_keys'].contains('frc$teamNumber') ||
+            match['alliances']['blue']['team_keys'].contains('frc$teamNumber')))
+        .toList();
+
+    // Sort remaining matches by match number
     qualificationMatches.sort((a, b) => a['match_number'].compareTo(b['match_number']));
 
     return Scaffold(
@@ -1950,9 +1963,193 @@ class EventDetailsPage extends StatelessWidget {
                     Text('Blue Alliance: $blueAllianceFormatted Score: $blueScore', style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 19)),
                   ],
                 ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MatchDetailsPage(match: match),
+                    ),
+                  );
+                },
               ),
             );
           },
+        ),
+      ),
+    );
+  }
+}
+
+class MatchDetailsPage extends StatelessWidget {
+  final Map<String, dynamic> match;
+
+  const MatchDetailsPage({super.key, required this.match});
+
+  @override
+  Widget build(BuildContext context) {
+    final redAlliance = (match['alliances']['red']['team_keys'] as List<dynamic>? ?? [])
+        .map((team) => team.replaceFirst('frc', ''))
+        .toList();
+    final blueAlliance = (match['alliances']['blue']['team_keys'] as List<dynamic>? ?? [])
+        .map((team) => team.replaceFirst('frc', ''))
+        .toList();
+    final redScore = match['alliances']['red']['score'] ?? 0;
+    final blueScore = match['alliances']['blue']['score'] ?? 0;
+
+    final redScoreBreakdown = match['score_breakdown']?['red'] ?? {};
+    final blueScoreBreakdown = match['score_breakdown']?['blue'] ?? {};
+
+    String generateShareText() {
+      return '''
+Match ${match['match_number']} Details:
+
+Red Alliance: ${redAlliance.join(', ')}
+Auto Speaker Points: ${redScoreBreakdown['autoSpeakerNotePoints'] ?? 0}
+Robot 1 Crossed Auto Line: ${redScoreBreakdown['autoLineRobot1'] ?? 'No'}
+Robot 2 Crossed Auto Line: ${redScoreBreakdown['autoLineRobot2'] ?? 'No'}
+Robot 3 Crossed Auto Line: ${redScoreBreakdown['autoLineRobot3'] ?? 'No'}
+Teleop Amp Points: ${redScoreBreakdown['teleopAmpNotePoints'] ?? 0}
+Teleop Speaker Points: ${redScoreBreakdown['teleopSpeakerNotePoints'] ?? 0}
+Endgame Robot 1: ${redScoreBreakdown['endGameRobot1'] ?? 'Not Specified'}
+Endgame Robot 2: ${redScoreBreakdown['endGameRobot2'] ?? 'Not Specified'}
+Endgame Robot 3: ${redScoreBreakdown['endGameRobot3'] ?? 'Not Specified'}
+Foul Count: ${redScoreBreakdown['foulCount'] ?? 0}
+Tech Foul Count: ${redScoreBreakdown['techFoulCount'] ?? 0}
+
+Blue Alliance: ${blueAlliance.join(', ')}
+Auto Speaker Points: ${blueScoreBreakdown['autoSpeakerNotePoints'] ?? 0}
+Robot 1 Crossed Auto Line: ${blueScoreBreakdown['autoLineRobot1'] ?? 'No'}
+Robot 2 Crossed Auto Line: ${blueScoreBreakdown['autoLineRobot2'] ?? 'No'}
+Robot 3 Crossed Auto Line: ${blueScoreBreakdown['autoLineRobot3'] ?? 'No'}
+Teleop Amp Points: ${blueScoreBreakdown['teleopAmpNotePoints'] ?? 0}
+Teleop Speaker Points: ${blueScoreBreakdown['teleopSpeakerNotePoints'] ?? 0}
+Endgame Robot 1: ${blueScoreBreakdown['endGameRobot1'] ?? 'Not Specified'}
+Endgame Robot 2: ${blueScoreBreakdown['endGameRobot2'] ?? 'Not Specified'}
+Endgame Robot 3: ${blueScoreBreakdown['endGameRobot3'] ?? 'Not Specified'}
+Foul Count: ${blueScoreBreakdown['foulCount'] ?? 0}
+Tech Foul Count: ${blueScoreBreakdown['techFoulCount'] ?? 0}
+
+Final Score:
+Red Alliance: $redScore
+Blue Alliance: $blueScore
+''';
+    }
+
+    Widget buildAllianceDetails(String allianceName, List<dynamic> alliance, Map<String, dynamic> scoreBreakdown, Color color) {
+      final autoLineRobot1 = scoreBreakdown['autoLineRobot1'] ?? 'No';
+      final autoLineRobot2 = scoreBreakdown['autoLineRobot2'] ?? 'No';
+      final autoLineRobot3 = scoreBreakdown['autoLineRobot3'] ?? 'No';
+      final autoSpeakerNotePoints = scoreBreakdown['autoSpeakerNotePoints'] ?? 0;
+      final teleopAmpPoints = scoreBreakdown['teleopAmpNotePoints'] ?? 0;
+      final teleopSpeakerPoints = scoreBreakdown['teleopSpeakerNotePoints'] ?? 0;
+      final endgameRobot1 = scoreBreakdown['endGameRobot1'] ?? 'Not Specified';
+      final endgameRobot2 = scoreBreakdown['endGameRobot2'] ?? 'Not Specified';
+      final endgameRobot3 = scoreBreakdown['endGameRobot3'] ?? 'Not Specified';
+      final foulCount = scoreBreakdown['foulCount'] ?? 0;
+      final techFoulCount = scoreBreakdown['techFoulCount'] ?? 0;
+
+      return Container(
+        padding: const EdgeInsets.all(10.0),
+        decoration: BoxDecoration(
+          color: const Color.fromARGB(255, 95, 98, 104), // Dark gray card background
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Color.fromRGBO(42, 43, 44, 1),
+              blurRadius: 5,
+              offset: Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '$allianceName Alliance',
+              style: TextStyle(color: color, fontSize: 22, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              alliance.join(', '),
+              style: TextStyle(color: Colors.white, fontSize: 18),
+            ),
+            SizedBox(height: 10),
+            Text(
+              'Auto Points',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
+            ),
+            Text('Auto Speaker Points: $autoSpeakerNotePoints', style: TextStyle(color: Colors.white, fontSize: 18)),
+            Text('Robot 1 Crossed Auto Line: $autoLineRobot1', style: TextStyle(color: Colors.white, fontSize: 18)),
+            Text('Robot 2 Crossed Auto Line: $autoLineRobot2', style: TextStyle(color: Colors.white, fontSize: 18)),
+            Text('Robot 3 Crossed Auto Line: $autoLineRobot3', style: TextStyle(color: Colors.white, fontSize: 18)),
+            SizedBox(height: 10),
+            Text(
+              'Teleop Points',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
+            ),
+            Text('Teleop Amp Points: $teleopAmpPoints', style: TextStyle(color: Colors.white, fontSize: 18)),
+            Text('Teleop Speaker Points: $teleopSpeakerPoints', style: TextStyle(color: Colors.white, fontSize: 18)),
+            SizedBox(height: 10),
+            Text(
+              'Endgame',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
+            ),
+            Text('Robot 1: $endgameRobot1', style: TextStyle(color: Colors.white, fontSize: 18)),
+            Text('Robot 2: $endgameRobot2', style: TextStyle(color: Colors.white, fontSize: 18)),
+            Text('Robot 3: $endgameRobot3', style: TextStyle(color: Colors.white, fontSize: 18)),
+            SizedBox(height: 10),
+            Text(
+              'Fouls',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
+            ),
+            Text('Foul Count: $foulCount', style: TextStyle(color: Colors.white, fontSize: 18)),
+            Text('Tech Foul Count: $techFoulCount', style: TextStyle(color: Colors.white, fontSize: 18)),
+          ],
+        ),
+      );
+    }
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Match ${match['match_number']} Details',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
+        iconTheme: IconThemeData(color: Colors.white),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.share),
+            onPressed: () {
+              final shareText = generateShareText();
+              Share.share(shareText);
+            },
+            color: Colors.white,
+          ),
+        ],
+      ),
+      body: Container(
+        color: Color.fromRGBO(65, 68, 74, 1), // Page background color
+        padding: const EdgeInsets.all(16.0),
+        child: ListView(
+          children: [
+            buildAllianceDetails('Red', redAlliance, redScoreBreakdown, Colors.red),
+            SizedBox(height: 20),
+            buildAllianceDetails('Blue', blueAlliance, blueScoreBreakdown, Colors.blue),
+            SizedBox(height: 20),
+            Divider(color: Colors.white),
+            Text(
+              'Final Scores',
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24),
+            ),
+            Text(
+              'Red Alliance: $redScore',
+              style: TextStyle(color: Colors.red, fontSize: 20),
+            ),
+            Text(
+              'Blue Alliance: $blueScore',
+              style: TextStyle(color: Colors.blue, fontSize: 20),
+            ),
+          ],
         ),
       ),
     );
@@ -2339,23 +2536,28 @@ class _AdminPageState extends State<AdminPage> {
   }
 
   Future<void> _fetchUsers() async {
-    try {
-      final QuerySnapshot snapshot = await _firestore.collection('users').get();
-      final List<Map<String, dynamic>> users = snapshot.docs.map((doc) {
-        final data = doc.data() as Map<String, dynamic>;
-        return {
-          'uid': doc.id,
-          'username': data['username'] ?? 'Unknown User',
-          'role': data['role'] ?? 'user',
-        };
-      }).toList();
-      setState(() {
-        _users = users;
-      });
-    } catch (e) {
-      print("Error fetching users: $e");
-    }
+  try {
+    final QuerySnapshot snapshot = await _firestore.collection('users').get();
+    final List<Map<String, dynamic>> users = snapshot.docs.map((doc) {
+      final data = doc.data() as Map<String, dynamic>;
+      final role = data['role'] ?? 'user';
+
+      // Ensure the role is one of the valid roles
+      final validRoles = ['user', 'pitscouter', 'admin'];
+      return {
+        'uid': doc.id,
+        'username': data['username'] ?? 'Unknown User',
+        'role': validRoles.contains(role) ? role : 'user',
+      };
+    }).toList();
+    setState(() {
+      _users = users;
+    });
+  } catch (e) {
+    print("Error fetching users: $e");
   }
+}
+
 
   Future<void> _updateUserRole(String uid, String role) async {
     try {

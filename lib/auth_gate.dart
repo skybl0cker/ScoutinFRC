@@ -15,7 +15,7 @@ class AuthGate extends StatelessWidget {
   Future<void> createUserDocument(String uid, {String? role, String? username}) async {
     try {
       await FirebaseFirestore.instance.collection('users').doc(uid).set({
-        'role': role ?? 'default_role',
+        'role': role ?? 'user',  // Set the role to "user" by default
         'username': username ?? 'default_username',
       }, SetOptions(merge: true)); // Merge to avoid overwriting existing fields
       print('User document created/updated successfully');
@@ -33,7 +33,7 @@ class AuthGate extends StatelessWidget {
         if (data != null) {
           // Use `??` to provide default values if fields are missing
           return {
-            'role': data['role'] as String? ?? 'default_role',
+            'role': data['role'] as String? ?? 'user',  // Ensure role is "user" by default
             'username': data['username'] as String? ?? 'default_username',
           };
         } else {
@@ -43,7 +43,7 @@ class AuthGate extends StatelessWidget {
         print("Document does not exist");
         // Create or update the document with default values if it doesn't exist
         await createUserDocument(uid);
-        return {'role': 'default_role', 'username': 'default_username'};
+        return {'role': 'user', 'username': 'default_username'};
       }
     } catch (e) {
       print("Error getting user details: $e");
@@ -55,7 +55,6 @@ class AuthGate extends StatelessWidget {
     try {
       await FirebaseFirestore.instance.collection('users').doc(uid).set({
         'username': username,
-        // You can add other default values here if needed, e.g., 'role': 'regular'
       }, SetOptions(merge: true)); // Use merge to update existing fields without overwriting
     } catch (e) {
       print("Error updating username: $e");
@@ -67,10 +66,7 @@ class AuthGate extends StatelessWidget {
     final username = details['username'];
 
     if (username == null || username.isEmpty) {
-      // Example role assignment (update according to your logic)
-      await createUserDocument(user.uid, role: 'admin', username: 'admin_username');
-      // or
-      await createUserDocument(user.uid, role: 'pitscouter', username: 'pitscouter_username');
+      await createUserDocument(user.uid, role: 'user', username: 'default_username');
     }
   }
 
@@ -108,7 +104,7 @@ class AuthGate extends StatelessWidget {
             child: SignInScreen(
               providers: [
                 EmailAuthProvider(),
-                GoogleProvider(clientId: "YOUR_GOOGLE_CLIENT_ID"),
+                GoogleProvider(clientId: "246498824596-93ae95j4i3lr4rmeq0mfu455jcdsjs6v.apps.googleusercontent.com"),
                 AppleProvider(),
               ],
               headerBuilder: (context, constraints, shrinkOffset) {
