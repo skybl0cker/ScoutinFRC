@@ -1,4 +1,5 @@
-// ignore_for_file: unused_import, avoid_print, use_build_context_synchronously
+// Add all your original imports
+// ignore_for_file: unused_import, depend_on_referenced_packages, use_build_context_synchronously, use_key_in_widget_constructors, library_private_types_in_public_api, prefer_const_constructors
 
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,14 +8,16 @@ import 'package:gap/gap.dart';
 import 'package:scouting2024/auth_gate.dart' as auth;
 import 'package:scouting2024/sp.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:scouting2024/team_comparison.dart' as team;
 
+
+// Function to delete Firebase account
 Future<void> deleteFirebaseAccount() async {
   try {
-    // Get the currently signed-in user
     User? user = FirebaseAuth.instance.currentUser;
-
     if (user != null) {
-      // Delete the user
       await user.delete();
       print('User account deleted successfully');
     } else {
@@ -25,6 +28,7 @@ Future<void> deleteFirebaseAccount() async {
   }
 }
 
+// Function to update username in Firestore
 Future<void> updateUsername(BuildContext context) async {
   final user = FirebaseAuth.instance.currentUser;
   if (user == null) {
@@ -39,17 +43,17 @@ Future<void> updateUsername(BuildContext context) async {
       return Theme(
         data: Theme.of(context).copyWith(
           colorScheme: ColorScheme.fromSwatch().copyWith(
-            primary: Colors.white, // Text on buttons
-            secondary: Colors.grey, // Accent color
-            onPrimary: Colors.white, // Text color on primary background
-            onSurface: Colors.white, // Default text color
+            primary: Colors.white,
+            secondary: Colors.grey,
+            onPrimary: Colors.white,
+            onSurface: Colors.white,
           ),
           textTheme: const TextTheme(
-            bodyLarge: TextStyle(color: Colors.white), // Large body text
-            bodyMedium: TextStyle(color: Colors.white), // Medium body text
-            bodySmall: TextStyle(color: Colors.white), // Small body text
+            bodyLarge: TextStyle(color: Colors.white),
+            bodyMedium: TextStyle(color: Colors.white),
+            bodySmall: TextStyle(color: Colors.white),
           ),
-          dialogBackgroundColor: const Color.fromRGBO(65, 68, 73, 1), // Background color for the dialog
+          dialogBackgroundColor: const Color.fromRGBO(65, 68, 73, 1),
         ),
         child: AlertDialog(
           title: const Text('Change Username'),
@@ -104,15 +108,14 @@ Future<void> updateUsername(BuildContext context) async {
   );
 }
 
-class NavBar extends StatelessWidget {
-  const NavBar({super.key});
 
+// The NavBar, as its own entity, used within a Scaffold.
+class NavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
       backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
       child: ListView(
-        // Remove padding
         padding: EdgeInsets.zero,
         children: [
           const Gap(120),
@@ -146,17 +149,17 @@ class NavBar extends StatelessWidget {
                   return Theme(
                     data: Theme.of(context).copyWith(
                       colorScheme: ColorScheme.fromSwatch().copyWith(
-                        primary: Colors.white, // Text on buttons
-                        secondary: Colors.grey, // Accent color
-                        onPrimary: Colors.white, // Text color on primary background
-                        onSurface: Colors.white, // Default text color
+                        primary: Colors.white,
+                        secondary: Colors.grey,
+                        onPrimary: Colors.white,
+                        onSurface: Colors.white,
                       ),
                       textTheme: const TextTheme(
-                        bodyLarge: TextStyle(color: Colors.white), // Large body text
-                        bodyMedium: TextStyle(color: Colors.white), // Medium body text
-                        bodySmall: TextStyle(color: Colors.white), // Small body text
+                        bodyLarge: TextStyle(color: Colors.white),
+                        bodyMedium: TextStyle(color: Colors.white),
+                        bodySmall: TextStyle(color: Colors.white),
                       ),
-                      dialogBackgroundColor: const Color.fromRGBO(65, 68, 73, 1), // Background color for the dialog
+                      dialogBackgroundColor: const Color.fromRGBO(65, 68, 73, 1),
                     ),
                     child: AlertDialog(
                       title: const Text('Delete your Account?'),
@@ -197,6 +200,18 @@ Since this is a security-sensitive operation, you eventually are asked to login 
               frick();
             },
           ),
+          ListTile(
+            leading: const Icon(Icons.compare_arrows),
+            iconColor: Colors.white,
+            title: const Text('Team Comparison'),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => team.TeamComparisonScreen(),
+                ),
+              );
+            },
+          )
         ],
       ),
     );

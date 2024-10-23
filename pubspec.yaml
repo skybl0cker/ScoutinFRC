@@ -56,6 +56,8 @@ dependencies:
   firebase_ui_oauth_apple: ^1.2.18
   cloud_firestore: ^4.17.5
   share_plus: ^10.0.0
+  fl_chart: ^0.69.0
+  cached_network_image: ^3.4.0
   
 
 dev_dependencies:

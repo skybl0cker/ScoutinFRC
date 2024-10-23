@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_unnecessary_containers, avoid_print, unused_import, unnecessary_import, prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last, unrelated_type_equality_checks, library_private_types_in_public_api, unused_element, depend_on_referenced_packages, prefer_const_declarations, no_leading_underscores_for_local_identifiers, use_build_context_synchronously, unused_field, unnecessary_this, unused_local_variable
+// ignore_for_file: avoid_unnecessary_containers, avoid_print, unused_import, unnecessary_import, prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last, unrelated_type_equality_checks, library_private_types_in_public_api, unused_element, depend_on_referenced_packages, prefer_const_declarations, no_leading_underscores_for_local_identifiers, use_build_context_synchronously, unused_field, unnecessary_this, unused_local_variable, unnecessary_null_comparison
 
 // Imports
 import 'dart:ui';
@@ -116,7 +116,6 @@ class ScoutingApp extends StatelessWidget {
         '/schedule': (context) => SchedulePage(title: ''),
         '/analytics': (context) => const AnalyticsPage(title: ''),
         '/pitscouting': (context) => const PitScoutingPage(title: ''),
-        '/sscouting': (context) => const SScoutingPage(title: ''),
         '/admin': (context) => const AdminPage(title: '')
       },
       theme: ThemeData(
@@ -216,7 +215,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const NavBar(),
+      drawer: NavBar(),
       appBar: AppBar(
         leading: Builder(
           builder: (BuildContext context) {
@@ -477,7 +476,7 @@ class _MatchNumPageState extends State<MatchNumPage> {
     final List<String> blueAlliance = (matchData['alliances']['blue']['team_keys'] as List<dynamic>).map((e) => e.toString()).toList();
 
     return Scaffold(
-      drawer: const NavBar(),
+      drawer: NavBar(),
       appBar: AppBar(
         leading: Builder(
           builder: (BuildContext context) {
@@ -603,7 +602,7 @@ class _AutoPageState extends State<AutoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const NavBar(),
+      drawer: NavBar(),
       appBar: AppBar(
         leading: Builder(
           builder: (BuildContext context) {
@@ -886,7 +885,7 @@ class _TeleopPageState extends State<TeleopPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        drawer: const NavBar(),
+        drawer: NavBar(),
         appBar: AppBar(
           leading: Builder(
             builder: (BuildContext context) {
@@ -1218,7 +1217,7 @@ class _EndgamePageState extends State<EndgamePage> {
   Widget build(BuildContext context) {
     TextEditingController matchNotes = TextEditingController();
     return Scaffold(
-        drawer: const NavBar(),
+        drawer: NavBar(),
         appBar: AppBar(
           leading: Builder(
             builder: (BuildContext context) {
@@ -1489,7 +1488,7 @@ class _SchedulePageState extends State<SchedulePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const NavBar(),
+      drawer: NavBar(),
       appBar: AppBar(
         leading: Builder(
           builder: (BuildContext context) {
@@ -1670,7 +1669,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
       }
 
       final eventsResponse = await http.get(
-        Uri.parse('https://www.thebluealliance.com/api/v3/team/frc$teamNumber/events/2024'),
+        Uri.parse('https://www.thebluealliance.com/api/v3/team/frc$teamNumber/events/2025'),
         headers: {'X-TBA-Auth-Key': apiKey},
       );
 
@@ -1699,48 +1698,69 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
             headers: {'X-TBA-Auth-Key': apiKey},
           );
 
-          if (rankingsResponse.statusCode == 200 && matchesResponse.statusCode == 200) {
-            var rankings = jsonDecode(rankingsResponse.body)['rankings'] as List<dynamic>;
-            var teamRank = rankings.firstWhere(
-              (ranking) => ranking['team_key'] == 'frc$teamNumber',
-              orElse: () => {'rank': 'N/A'},
-            )['rank'];
+          if (rankingsResponse.statusCode == 200 || rankingsResponse.statusCode == 404) {
+  List<dynamic> rankings = [];
 
-            List<dynamic> matches = jsonDecode(matchesResponse.body);
+  // Safely parse the rankings data only if the response body is not null and has valid content
+  if (rankingsResponse.body != null && rankingsResponse.body.isNotEmpty) {
+    var decodedBody = jsonDecode(rankingsResponse.body);
 
-            int wins = 0;
-            int losses = 0;
-            int totalScore = 0;
-            int matchCount = matches.length;
+    // Check if 'rankings' key exists and is not null
+    if (decodedBody != null && decodedBody.containsKey('rankings')) {
+      rankings = decodedBody['rankings'] as List<dynamic>;
+    }
+  }
 
-            for (var match in matches) {
-              if (match['alliances'] != null) {
-                var teamAlliance = match['alliances']['red']['team_keys'].contains('frc$teamNumber')
-                    ? 'red'
-                    : 'blue';
-                totalScore += match['alliances'][teamAlliance]['score'] as int;
-                if (match['winning_alliance'] == teamAlliance) {
-                  wins++;
-                } else {
-                  losses++;
-                }
-              }
-            }
+  // Assign 'N/A' if no rankings found
+  var teamRank = rankings.isNotEmpty
+      ? rankings.firstWhere(
+          (ranking) => ranking['team_key'] == 'frc$teamNumber',
+          orElse: () => {'rank': 'N/A'},
+        )['rank']
+      : 'N/A';
 
-            double averageScore = matchCount > 0 ? totalScore / matchCount : 0.0;
+  final matchesResponse = await http.get(
+    Uri.parse('https://www.thebluealliance.com/api/v3/team/frc$teamNumber/event/$eventKey/matches'),
+    headers: {'X-TBA-Auth-Key': apiKey},
+  );
 
-            setState(() {
-              eventStats.add({
-                'eventName': eventName,
-                'rank': teamRank,
-                'wins': wins,
-                'losses': losses,
-                'averageScore': averageScore.toStringAsFixed(2),
-                'eventKey': eventKey,
-                'matches': matches,
-              });
-            });
-          }
+  if (matchesResponse.statusCode == 200) {
+    List<dynamic> matches = jsonDecode(matchesResponse.body);
+
+    int wins = 0;
+    int losses = 0;
+    int totalScore = 0;
+    int matchCount = matches.length;
+
+    for (var match in matches) {
+      if (match['alliances'] != null) {
+        var teamAlliance = match['alliances']['red']['team_keys'].contains('frc$teamNumber')
+            ? 'red'
+            : 'blue';
+        totalScore += match['alliances'][teamAlliance]['score'] as int;
+        if (match['winning_alliance'] == teamAlliance) {
+          wins++;
+        } else {
+          losses++;
+        }
+      }
+    }
+
+    double averageScore = matchCount > 0 ? totalScore / matchCount : 0.0;
+
+    setState(() {
+      eventStats.add({
+        'eventName': eventName,
+        'rank': teamRank,
+        'wins': wins,
+        'losses': losses,
+        'averageScore': averageScore.toStringAsFixed(2),
+        'eventKey': eventKey,
+        'matches': matches,
+      });
+    });
+  }
+}
         }
       } else {
         setState(() {
@@ -2177,7 +2197,7 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
     TextEditingController stagescoreText = TextEditingController();
     TextEditingController feederfloorText = TextEditingController();
     return Scaffold(
-        drawer: const NavBar(),
+        drawer: NavBar(),
         appBar: AppBar(
           leading: Builder(
             builder: (BuildContext context) {
@@ -2467,54 +2487,7 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
   }
 }
 
-class SScoutingPage extends StatefulWidget {
-  const SScoutingPage({super.key, required this.title});
-  final String title;
-  @override
-  State<SScoutingPage> createState() => _SScoutingPageState();
-}
 
-class _SScoutingPageState extends State<SScoutingPage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        drawer: const NavBar(),
-        appBar: AppBar(
-          leading: Builder(
-            builder: (BuildContext context) {
-              return IconButton(
-                icon: const Icon(
-                  Icons.menu,
-                  color: Color.fromRGBO(165, 176, 168, 1),
-                  size: 50,
-                ),
-                onPressed: () {
-                  Scaffold.of(context).openDrawer();
-                },
-                tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-              );
-            },
-          ),
-          actions: [
-            Container(
-                child: IconButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    icon: const Icon(
-                      Icons.arrow_back,
-                      color: Color.fromRGBO(165, 176, 168, 1),
-                      size: 50,
-                    )))
-          ],
-          backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
-          title: Image.asset(
-            'assets/images/rohawktics.png',
-            width: 75,
-            height: 75,
-            alignment: Alignment.center,
-          ),
-        ));
-  }
-}
 
 class AdminPage extends StatefulWidget {
   const AdminPage({Key? key, required String title}) : super(key: key);
