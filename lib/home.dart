@@ -1,14 +1,11 @@
-// ignore_for_file: avoid_unnecessary_containers, avoid_print, unnecessary_import, prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last, unrelated_type_equality_checks, library_private_types_in_public_api, unused_element, depend_on_referenced_packages, prefer_const_declarations, no_leading_underscores_for_local_identifiers, use_build_context_synchronously, unused_field, unnecessary_this, unused_local_variable, unnecessary_null_comparison, non_constant_identifier_names
+
+// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
 
 // Imports
-import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
-import 'package:flutter/animation.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'navbar.dart';
 import 'variables.dart' as v;
@@ -96,7 +93,7 @@ class ScoutingApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: auth.AuthGate(actions: []),
+      home: const auth.AuthGate(actions: []),
       debugShowCheckedModeBanner: false,
       title: 'Scouting',
       routes: <String, WidgetBuilder>{
@@ -108,9 +105,9 @@ class ScoutingApp extends StatelessWidget {
       },
       theme: ThemeData(
         primaryColor: Colors.white,
-        primaryTextTheme: TextTheme(),
+        primaryTextTheme: const TextTheme(),
         colorScheme: Theme.of(context).colorScheme.copyWith(),
-        textTheme: TextTheme(
+        textTheme: const TextTheme(
           bodyLarge: TextStyle(),
           bodyMedium: TextStyle(),
           bodySmall: TextStyle(),
@@ -395,7 +392,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _showPasswordDialog(BuildContext context, String route) {
-    final TextEditingController _passwordController = TextEditingController();
+    final TextEditingController passwordController = TextEditingController();
 
     showDialog(
       context: context,
@@ -407,7 +404,7 @@ class _HomePageState extends State<HomePage> {
             style: TextStyle(color: Colors.white),
           ),
           content: TextField(
-            controller: _passwordController,
+            controller: passwordController,
             obscureText: true,
             style: const TextStyle(color: Colors.white),
             decoration: const InputDecoration(
@@ -425,7 +422,7 @@ class _HomePageState extends State<HomePage> {
             TextButton(
               child: const Text("OK", style: TextStyle(color: Colors.white)),
               onPressed: () {
-                if (_passwordController.text == _correctPassword) {
+                if (passwordController.text == _correctPassword) {
                   Navigator.of(context).pop();
                   Navigator.pushNamed(context, route);
                 } else {
