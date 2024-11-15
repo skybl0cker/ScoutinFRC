@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print, unused_import
+// ignore_for_file: avoid_print, unused_import, non_constant_identifier_names
 import 'package:flutter/material.dart';
 import 'variables.dart' as v;
 import 'navbar.dart';
@@ -93,7 +93,7 @@ void frick() async {
   pagePref.clear();
 }
 
-void bigAssMatchJsonFirebasePrep() async {
+void MatchJsonFirebasePrep() async {
   // Obtain shared preferences.
   final SharedPreferences pagePref = await SharedPreferences.getInstance();
   Set<String> keys = pagePref.getKeys();
