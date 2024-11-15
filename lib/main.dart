@@ -17,6 +17,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'scouting.dart' as scouting;
 import 'pitscout.dart' as pitscout;
 import 'admin.dart' as admin;
+import 'analytics.dart' as analytics;
 
 // Firebase Initialization
 Future<void> firebaseInit() async {
@@ -100,7 +101,11 @@ class ScoutingApp extends StatelessWidget {
         '/home': (context) => const HomePage(title: ''),
         '/pitscouting': (context) => const pitscout.PitScoutingPage(title: ''),
         '/admin': (context) => const admin.AdminPage(title: ''),
-        '/scouting' : (context) => const scouting.MatchNumPage(title: '', matchData: {},),
+        '/scouting' : (context) => const scouting.SchedulePage(title: '',),
+        '/auto' : (context) => const scouting.AutoPage(title: ''),
+        '/teleop': (context) => const scouting.TeleopPage(title: ''),
+        '/endgame': (context) => const scouting.EndgamePage(title: ''),
+        '/analytics': (context) => const analytics.AnalyticsPage(title: '')
         
       },
       theme: ThemeData(

@@ -293,7 +293,7 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
               v.pitData["stagescore"] = stagescoreText.text;
               v.pitData["feederfloor"] = feederfloorText.text;
               setpitPref(v.pitData["robotNum"], v.pitData);
-              bigAssMatchJsonFirebasePrep();
+              MatchJsonFirebasePrep();
                   Future.delayed(const Duration(milliseconds: 500), () {
                     MatchFirebasePush(v.allBotMatchData);
                   });

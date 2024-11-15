@@ -1,11 +1,14 @@
 // ignore_for_file: non_constant_identifier_names, avoid_unnecessary_containers
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'navbar.dart';
 import 'sp.dart';
 import 'variables.dart' as v;
+import 'package:http/http.dart' as http;
 
 void MatchFirebasePush(Map<dynamic, dynamic> data) async {
   if (data != {} && data.keys.isNotEmpty) {
@@ -17,6 +20,190 @@ void MatchFirebasePush(Map<dynamic, dynamic> data) async {
   }
 }
 
+class SchedulePage extends StatefulWidget {
+  const SchedulePage({super.key, required this.title});
+  final String title;
+
+  @override
+  State<SchedulePage> createState() => _SchedulePageState();
+}
+
+class _SchedulePageState extends State<SchedulePage> {
+  final TextEditingController _controller = TextEditingController();
+  List<dynamic> _matches = [];
+
+  Future<void> _fetchSchedule(String eventCode) async {
+    final response = await http.get(
+      Uri.parse('https://www.thebluealliance.com/api/v3/event/$eventCode/matches/simple'),
+      headers: {'X-TBA-Auth-Key': 'XKgCGALe7EzYqZUeKKONsQ45iGHVUZYlN0F6qQzchKQrLxED5DFWrYi9pcjxIzGY'},
+    );
+
+    if (response.statusCode == 200) {
+      List<dynamic> allMatches = jsonDecode(response.body);
+
+      // Filter out playoff matches and sort by match number
+      List<dynamic> qualMatches = allMatches
+          .where((match) => match['comp_level'] == 'qm')
+          .toList()
+          ..sort((a, b) => a['match_number'].compareTo(b['match_number']));
+
+      setState(() {
+        _matches = qualMatches;
+      });
+    } else {
+      // Handle error
+      print('Failed to load schedule');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      drawer: NavBar(),
+      appBar: AppBar(
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(
+                Icons.menu,
+                color: Colors.white,  // Change menu icon color
+                size: 50,
+              ),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+            );
+          },
+        ),
+        actions: [
+          IconButton(
+            onPressed: () => Navigator.of(context).pop(),
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.white,  // Change back icon color
+              size: 50,
+            ),
+          ),
+        ],
+        backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
+        title: Image.asset(
+          'assets/images/rohawktics.png',
+          width: 75,
+          height: 75,
+          alignment: Alignment.center,
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            TextField(
+              controller: _controller,
+              style: const TextStyle(color: Colors.white),  // Change text color
+              decoration: const InputDecoration(
+                labelText: 'Enter Event Code',
+                labelStyle: TextStyle(color: Colors.white),  // Change label color
+              ),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.grey,
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                textStyle: const TextStyle(color: Color.fromARGB(255, 246, 246, 246)),  // Button text color
+                side: const BorderSide(width: 3, color: Color.fromRGBO(90, 93, 102, 1)),
+              ),
+              onPressed: () {
+                _fetchSchedule(_controller.text);
+              },
+              child: const Text('Fetch Schedule'),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: _matches.length,
+                itemBuilder: (context, index) {
+                  final match = _matches[index];
+                  return InkWell(
+                    onTap: () {
+                      // Pass match data to MatchNumPage
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MatchNumPage(
+                            title: 'Match Scouting',
+                            matchData: match,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Card(
+                      color: const Color.fromRGBO(90, 93, 102, 1),
+                      margin: const EdgeInsets.symmetric(vertical: 8.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        side: const BorderSide(color: Colors.white24),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Match ${match['match_number']}',
+                              style: const TextStyle(
+                                color: Colors.white,  // Match number text color
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                              decoration: BoxDecoration(
+                                color: Colors.red.shade700,
+                                border: Border.all(color: Colors.red.shade900),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                'Red Alliance: ${match['alliances']['red']['team_keys'].join(', ')}',
+                                style: const TextStyle(
+                                  color: Colors.white,  // Alliance text color
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Container(
+                              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                              decoration: BoxDecoration(
+                                color: Colors.blue.shade700,
+                                border: Border.all(color: Colors.blue.shade900),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                'Blue Alliance: ${match['alliances']['blue']['team_keys'].join(', ')}',
+                                style: const TextStyle(
+                                  color: Colors.white,  // Alliance text color
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 class MatchNumPage extends StatefulWidget {
   const MatchNumPage({Key? key, required this.title, required this.matchData}) : super(key: key);
@@ -984,7 +1171,7 @@ class _EndgamePageState extends State<EndgamePage> {
                   v.pageData["matchNotes"] = matchNotes.text;
                   setPref(v.pageData["robotNum"], v.pageData["matchNum"],
                       v.pageData);
-                  bigAssMatchJsonFirebasePrep();
+                  MatchJsonFirebasePrep();
                   Future.delayed(const Duration(milliseconds: 500), () {
                     MatchFirebasePush(v.allBotMatchData);
                   });
