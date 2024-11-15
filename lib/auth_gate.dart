@@ -7,7 +7,7 @@ import 'package:firebase_ui_oauth_apple/firebase_ui_oauth_apple.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'main.dart' as m;
+import 'home.dart' as m;
 
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key, required List<SignedOutAction> actions});
