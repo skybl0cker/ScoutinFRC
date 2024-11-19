@@ -38,7 +38,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
       }
 
       final eventsResponse = await http.get(
-        Uri.parse('https://www.thebluealliance.com/api/v3/team/frc$teamNumber/events/2025'),
+        Uri.parse('https://www.thebluealliance.com/api/v3/team/frc$teamNumber/events/2024'),
         headers: {'X-TBA-Auth-Key': apiKey},
       );
 
@@ -387,6 +387,20 @@ class MatchDetailsPage extends StatelessWidget {
     final redScoreBreakdown = match['score_breakdown']?['red'] ?? {};
     final blueScoreBreakdown = match['score_breakdown']?['blue'] ?? {};
 
+    final String matchVideoUrl = match['video_url'] ?? '';
+
+    // Method to inject an iframe on web platform
+    Widget buildWebView() {
+      if (matchVideoUrl.isNotEmpty) {
+        // Use an iframe for web
+
+        // This will inject the iframe into the Flutter widget tree
+        return const HtmlElementView(viewType: 'iframeElement');
+      } else {
+        return const SizedBox.shrink();  // Return an empty widget if no video URL
+      }
+    }
+
     String generateShareText() {
       return '''
 Match ${match['match_number']} Details:
@@ -520,6 +534,8 @@ Blue Alliance: $blueScore
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
+            buildWebView(),  // Call the method to build iframe on the web
+            const SizedBox(height: 20),
             buildAllianceDetails('Red', redAlliance, redScoreBreakdown, Colors.red),
             const SizedBox(height: 20),
             buildAllianceDetails('Blue', blueAlliance, blueScoreBreakdown, Colors.blue),

@@ -1,7 +1,6 @@
 // ignore_for_file: non_constant_identifier_names, avoid_unnecessary_containers
 
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -20,15 +19,15 @@ void MatchFirebasePush(Map<dynamic, dynamic> data) async {
   }
 }
 
-class SchedulePage extends StatefulWidget {
-  const SchedulePage({super.key, required this.title});
+class ScoutingPage extends StatefulWidget {
+  const ScoutingPage({super.key, required this.title});
   final String title;
 
   @override
-  State<SchedulePage> createState() => _SchedulePageState();
+  State<ScoutingPage> createState() => _ScoutingPageState();
 }
 
-class _SchedulePageState extends State<SchedulePage> {
+class _ScoutingPageState extends State<ScoutingPage> {
   final TextEditingController _controller = TextEditingController();
   List<dynamic> _matches = [];
 

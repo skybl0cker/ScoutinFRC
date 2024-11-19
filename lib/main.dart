@@ -101,7 +101,7 @@ class ScoutingApp extends StatelessWidget {
         '/home': (context) => const HomePage(title: ''),
         '/pitscouting': (context) => const pitscout.PitScoutingPage(title: ''),
         '/admin': (context) => const admin.AdminPage(title: ''),
-        '/scouting' : (context) => const scouting.SchedulePage(title: '',),
+        '/scouting' : (context) => const scouting.ScoutingPage(title: '',),
         '/auto' : (context) => const scouting.AutoPage(title: ''),
         '/teleop': (context) => const scouting.TeleopPage(title: ''),
         '/endgame': (context) => const scouting.EndgamePage(title: ''),
