@@ -299,7 +299,7 @@ Widget _buildTeamSection(
       // Display the first available media (e.g., imgur image) if available
       if (teamMedia != null && teamMedia.isNotEmpty)
         CachedNetworkImage(
-          imageUrl: 'https://i.imgur.com/${teamMedia.firstWhere(
+          imageUrl: '${teamMedia.firstWhere(
             (media) => media['type'] == 'imgur', 
             orElse: () => null
           )?['direct_url'] ?? ''}.png',
