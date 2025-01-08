@@ -11,6 +11,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:scouting2024/team_comparison.dart' as team;
+import 'package:scouting2024/credits.dart' as credits;
 
 
 // Function to delete Firebase account
@@ -204,11 +205,23 @@ Since this is a security-sensitive operation, you eventually are asked to login 
             leading: const Icon(Icons.compare_arrows),
             iconColor: Colors.white,
             title: const Text('Team Comparison'),
+            textColor: Colors.white,
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => team.TeamComparisonScreen(),
+                builder: (context) => team.TeamComparisonScreen(),
                 ),
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.info),
+            iconColor: Colors.white,
+            title: const Text("Credits"),
+            textColor: Colors.white,
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => credits.SponsorshipPage())
               );
             },
           )

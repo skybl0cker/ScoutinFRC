@@ -157,11 +157,11 @@ void _compareTeams() async {
       var team1Data = await _getTeamData(team1Key);
       var team2Data = await _getTeamData(team2Key);
 
-      var team1Events = await _getTeamEvents(team1Key, DateTime.now().year);
-      var team2Events = await _getTeamEvents(team2Key, DateTime.now().year);
+      var team1Events = await _getTeamEvents(team1Key, 2024);
+      var team2Events = await _getTeamEvents(team2Key, 2024);
 
-      var team1Media = await _getTeamMedia(team1Key, DateTime.now().year);  // List<dynamic>
-      var team2Media = await _getTeamMedia(team2Key, DateTime.now().year);  // List<dynamic>
+      var team1Media = await _getTeamMedia(team1Key, 2024);  // List<dynamic>
+      var team2Media = await _getTeamMedia(team2Key, 2024);  // List<dynamic>
 
       // Assign the media lists correctly
       setState(() {
