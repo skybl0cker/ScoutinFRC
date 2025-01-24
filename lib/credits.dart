@@ -92,7 +92,7 @@ class SponsorshipPage extends StatelessWidget {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 4.0), // Reduced height for closer spacing
+                  const SizedBox(height: 4.0), 
                   Image.asset(
                     'assets/images/tba_logo.png',
                     width: 100,

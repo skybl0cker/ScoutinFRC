@@ -3,6 +3,7 @@
 
 // Imports
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -105,7 +106,8 @@ class ScoutingApp extends StatelessWidget {
         '/auto' : (context) => const scouting.AutoPage(title: ''),
         '/teleop': (context) => const scouting.TeleopPage(title: ''),
         '/endgame': (context) => const scouting.EndgamePage(title: ''),
-        '/analytics': (context) => const analytics.AnalyticsPage(title: '')
+        '/analytics': (context) => const analytics.AnalyticsPage(title: ''),
+        '/autostart': (context) => const scouting.AutoStartPage(title: '')
         
       },
       theme: ThemeData(
@@ -157,6 +159,10 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     fetchRankings();
     fetchUserDetails();  // Fetch user details when the widget initializes
   }

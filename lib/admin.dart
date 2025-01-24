@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously, duplicate_ignore
+// ignore_for_file: use_build_context_synchronously, duplicate_ignore, library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,14 +7,13 @@ class AdminPage extends StatefulWidget {
   const AdminPage({Key? key, required String title}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
   _AdminPageState createState() => _AdminPageState();
 }
 
 class _AdminPageState extends State<AdminPage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   List<Map<String, dynamic>> _users = [];
-  String _selectedRole = 'user'; // Default role
+  String _selectedRole = 'user'; 
 
   @override
   void initState() {
@@ -28,8 +27,6 @@ class _AdminPageState extends State<AdminPage> {
     final List<Map<String, dynamic>> users = snapshot.docs.map((doc) {
       final data = doc.data() as Map<String, dynamic>;
       final role = data['role'] ?? 'user';
-
-      // Ensure the role is one of the valid roles
       final validRoles = ['user', 'pitscouter', 'admin'];
       return {
         'uid': doc.id,
@@ -49,13 +46,12 @@ class _AdminPageState extends State<AdminPage> {
   Future<void> _updateUserRole(String uid, String role) async {
     try {
       await _firestore.collection('users').doc(uid).update({'role': role});
-      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("User role updated successfully."),
         ),
       );
-      _fetchUsers(); // Refresh user list
+      _fetchUsers();
     } catch (e) {
       print("Error updating user role: $e");
       ScaffoldMessenger.of(context).showSnackBar(

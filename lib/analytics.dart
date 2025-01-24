@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -45,7 +47,6 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
       if (eventsResponse.statusCode == 200) {
         List<dynamic> events = jsonDecode(eventsResponse.body);
 
-        // Sort events by date
         events.sort((a, b) => DateTime.parse(a['start_date']).compareTo(DateTime.parse(b['start_date'])));
 
         setState(() {
@@ -62,7 +63,6 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
             headers: {'X-TBA-Auth-Key': apiKey},
           );
 
-          // ignore: unused_local_variable
           final matchesResponse = await http.get(
             Uri.parse('https://www.thebluealliance.com/api/v3/team/frc$teamNumber/event/$eventKey/matches'),
             headers: {'X-TBA-Auth-Key': apiKey},
@@ -71,17 +71,14 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
           if (rankingsResponse.statusCode == 200 || rankingsResponse.statusCode == 404) {
   List<dynamic> rankings = [];
 
-  // Safely parse the rankings data only if the response body is not null and has valid content
   if (rankingsResponse.body.isNotEmpty) {
     var decodedBody = jsonDecode(rankingsResponse.body);
 
-    // Check if 'rankings' key exists and is not null
     if (decodedBody != null && decodedBody.containsKey('rankings')) {
       rankings = decodedBody['rankings'] as List<dynamic>;
     }
   }
 
-  // Assign 'N/A' if no rankings found
   var teamRank = rankings.isNotEmpty
       ? rankings.firstWhere(
           (ranking) => ranking['team_key'] == 'frc$teamNumber',
@@ -150,7 +147,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
     MaterialPageRoute(
       builder: (context) => EventDetailsPage(
         event: event,
-        teamNumber: _teamNumberController.text, // Pass the team number
+        teamNumber: _teamNumberController.text, 
       ),
     ),
   );
@@ -286,7 +283,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
 
 class EventDetailsPage extends StatelessWidget {
   final Map<String, dynamic> event;
-  final String teamNumber; // Add the team number
+  final String teamNumber; 
 
   const EventDetailsPage({super.key, required this.event, required this.teamNumber});
 
@@ -294,7 +291,6 @@ class EventDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final matches = event['matches'] as List<dynamic>;
 
-    // Filter out non-qualification matches and only include matches with the selected team
     final qualificationMatches = matches
         .where((match) =>
             match['comp_level'] == 'qm' && 
@@ -302,14 +298,14 @@ class EventDetailsPage extends StatelessWidget {
             match['alliances']['blue']['team_keys'].contains('frc$teamNumber')))
         .toList();
 
-    // Sort remaining matches by match number
+
     qualificationMatches.sort((a, b) => a['match_number'].compareTo(b['match_number']));
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
           event['eventName'],
-          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold), // Set event title text to white
+          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold), 
         ),
         backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
         leading: IconButton(
@@ -328,7 +324,6 @@ class EventDetailsPage extends StatelessWidget {
             final redScore = match['alliances']['red']['score'];
             final blueScore = match['alliances']['blue']['score'];
 
-            // Remove 'FRC' prefix from team numbers
             final redAllianceFormatted = redAlliance.map((team) => team.replaceAll('frc', '')).join(', ');
             final blueAllianceFormatted = blueAlliance.map((team) => team.replaceAll('frc', '')).join(', ');
 
@@ -389,15 +384,11 @@ class MatchDetailsPage extends StatelessWidget {
 
     final String matchVideoUrl = match['video_url'] ?? '';
 
-    // Method to inject an iframe on web platform
     Widget buildWebView() {
       if (matchVideoUrl.isNotEmpty) {
-        // Use an iframe for web
-
-        // This will inject the iframe into the Flutter widget tree
         return const HtmlElementView(viewType: 'iframeElement');
       } else {
-        return const SizedBox.shrink();  // Return an empty widget if no video URL
+        return const SizedBox.shrink(); 
       }
     }
 
@@ -453,7 +444,7 @@ Blue Alliance: $blueScore
       return Container(
         padding: const EdgeInsets.all(10.0),
         decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 95, 98, 104), // Dark gray card background
+          color: const Color.fromARGB(255, 95, 98, 104), 
           borderRadius: BorderRadius.circular(10),
           boxShadow: const [
             BoxShadow(
@@ -530,11 +521,11 @@ Blue Alliance: $blueScore
         ],
       ),
       body: Container(
-        color: const Color.fromRGBO(65, 68, 74, 1), // Page background color
+        color: const Color.fromRGBO(65, 68, 74, 1), 
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
-            buildWebView(),  // Call the method to build iframe on the web
+            buildWebView(),  
             const SizedBox(height: 20),
             buildAllianceDetails('Red', redAlliance, redScoreBreakdown, Colors.red),
             const SizedBox(height: 20),

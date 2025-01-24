@@ -109,8 +109,6 @@ Future<void> updateUsername(BuildContext context) async {
   );
 }
 
-
-// The NavBar, as its own entity, used within a Scaffold.
 class NavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

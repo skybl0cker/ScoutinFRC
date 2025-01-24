@@ -321,7 +321,6 @@ class _PitScoutingPageState extends State<PitScoutingPage> {
 void MatchFirebasePush(Map<dynamic, dynamic> data) async {
   if (data != {} && data.keys.isNotEmpty) {
     DatabaseReference ref = FirebaseDatabase.instance.ref("Offseason2024/robots");
-    //void test = bigAssMatchJsonFirebasePrep();
     for (String key in data.keys) {
       ref.child(key).set(data[key]);
     }

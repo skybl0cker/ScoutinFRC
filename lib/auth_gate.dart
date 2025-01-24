@@ -15,9 +15,9 @@ class AuthGate extends StatelessWidget {
   Future<void> createUserDocument(String uid, {String? role, String? username}) async {
     try {
       await FirebaseFirestore.instance.collection('users').doc(uid).set({
-        'role': role ?? 'user',  // Set the role to "user" by default
+        'role': role ?? 'user', 
         'username': username ?? 'default_username',
-      }, SetOptions(merge: true)); // Merge to avoid overwriting existing fields
+      }, SetOptions(merge: true)); 
       print('User document created/updated successfully');
     } catch (e) {
       print("Error creating/updating user document: $e");
@@ -31,9 +31,8 @@ class AuthGate extends StatelessWidget {
         final data = doc.data() as Map<String, dynamic>?;
 
         if (data != null) {
-          // Use `??` to provide default values if fields are missing
           return {
-            'role': data['role'] as String? ?? 'user',  // Ensure role is "user" by default
+            'role': data['role'] as String? ?? 'user',  
             'username': data['username'] as String? ?? 'default_username',
           };
         } else {
@@ -41,7 +40,6 @@ class AuthGate extends StatelessWidget {
         }
       } else {
         print("Document does not exist");
-        // Create or update the document with default values if it doesn't exist
         await createUserDocument(uid);
         return {'role': 'user', 'username': 'default_username'};
       }
@@ -55,7 +53,7 @@ class AuthGate extends StatelessWidget {
     try {
       await FirebaseFirestore.instance.collection('users').doc(uid).set({
         'username': username,
-      }, SetOptions(merge: true)); // Use merge to update existing fields without overwriting
+      }, SetOptions(merge: true)); 
     } catch (e) {
       print("Error updating username: $e");
     }
@@ -143,9 +141,8 @@ class AuthGate extends StatelessWidget {
           );
         }
 
-        // User is signed in
+    
         final user = snapshot.data!;
-        // Call the asynchronous role assignment function
         _assignRolesIfNeeded(user);
 
         return FutureBuilder<Map<String, String?>>(
@@ -225,7 +222,6 @@ class AuthGate extends StatelessWidget {
               );
             }
 
-            // Redirect to HomePage for all roles
             return const m.HomePage(title: "");
           },
         );
