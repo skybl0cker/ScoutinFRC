@@ -1,113 +1,183 @@
-// // import 'dart:js_interop_unsafe';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-dynamic pageData = {
-  "robotNum": "",
-  "matchNum": "",
-  "startingPosition": "",
-  "autoScoring": "",
-  "wingLeave": "",
-  "1": false, //0 not picked up, 1 picked up
-  "2": false, //0 not picked up, 1 picked up
-  "3": false, //0 not picked up, 1 picked up
-  "4": false, //0 not picked up, 1 picked up
-  "5": false, //0 not picked up, 1 picked up
-  "6": false, //0 not picked up, 1 picked up
-  "7": false, //0 not picked up, 1 picked up
-  "8": false,
-  "ampPlacement": 0,
-  "speakerPlacement": 0,
-  "feederPickup": 0,
-  "floorPickup": 0,
-  "stagePosition": 0,
-  "stageHang": 0, //0 = no hang,1 hang on one closest to field,2 hang on one closest to amp,3 hang on other one
-  "stagePlacement": 0,
-  "microphonePlacement": 0,
-  "matchNotes": "",
+// variables.dart
+Map<String, dynamic> pageData = {
+  'robotNum': '',
+  'matchNum': '',
+  'startPosition': '',
+  'submittedBy': '', // Add email field
+  'auto': {
+    'coral': {
+      'L4': {'score': 0, 'miss': 0},
+      'L3': {'score': 0, 'miss': 0},
+      'L2': {'score': 0, 'miss': 0},
+      'L1': {'score': 0, 'miss': 0},
+    },
+    'algae': {
+      'score': 0,
+      'miss': 0,
+    },
+    'floorStation': {
+      'floor': 0,
+      'station': 0,
+      'miss': 0,
+    },
+  },
+  'teleop': {
+    'coral': {
+      'L4': {'score': 0, 'miss': 0},
+      'L3': {'score': 0, 'miss': 0},
+      'L2': {'score': 0, 'miss': 0},
+      'L1': {'score': 0, 'miss': 0},
+    },
+    'algae': {
+      'score': 0,
+      'miss': 0,
+    },
+    'floorStation': {
+      'floor': 0,
+      'station': 0,
+      'miss': 0,
+    },
+  },
+  'endgame': {
+    'cageParkStatus': 'None',
+    'failed': false,
+    'disabled': false,
+    'playingDefense': false,
+    'comments': '',
+  }
 };
 
-Map<dynamic, dynamic> allBotMatchData = {};
+// Add this function to submit data to Firebase
+Future<void> submitMatchData() async {
+  final DatabaseReference dbRef = FirebaseDatabase.instance.ref();
+  final User? currentUser = FirebaseAuth.instance.currentUser;
+  
+  if (currentUser == null) {
+    throw Exception('No user signed in');
+  }
 
-Map<dynamic, dynamic> allBotMatchData2 = {};
+  // Add the current user's email to the pageData
+  pageData['submittedBy'] = currentUser.email ?? 'Unknown';
 
-dynamic pitData = {
-  "robotNum": "",
-  "driveTrain": "",
-  "dimensions": "",
-  "weight": "",
-  "mechanism": "",
-  "score": "",
-  "chain": "",
-  "harmony": "",
-  "stagescore": "",
-  "feederfloor": "",
+  final String matchPath = 'RCR2025/matches/${pageData['matchNum']}/${pageData['robotNum']}';
+  
+  try {
+    await dbRef.child(matchPath).set(pageData);
+    // Clear the data after successful submission
+    pageData = {
+      'robotNum': '',
+      'matchNum': '',
+      'startPosition': '',
+      'submittedBy': '', // Reset submittedBy
+      'auto': {
+        'coral': {
+          'L4': {'score': 0, 'miss': 0},
+          'L3': {'score': 0, 'miss': 0},
+          'L2': {'score': 0, 'miss': 0},
+          'L1': {'score': 0, 'miss': 0},
+        },
+        'algae': {
+          'score': 0,
+          'miss': 0,
+        },
+        'floorStation': {
+          'floor': 0,
+          'station': 0,
+          'miss': 0,
+        },
+      },
+      'teleop': {
+        'coral': {
+          'L4': {'score': 0, 'miss': 0},
+          'L3': {'score': 0, 'miss': 0},
+          'L2': {'score': 0, 'miss': 0},
+          'L1': {'score': 0, 'miss': 0},
+        },
+        'algae': {
+          'score': 0,
+          'miss': 0,
+        },
+        'floorStation': {
+          'floor': 0,
+          'station': 0,
+          'miss': 0,
+        },
+      },
+      'endgame': {
+        'cageParkStatus': 'None',
+        'failed': false,
+        'disabled': false,
+        'playingDefense': false,
+        'comments': '',
+      }
+    };
+  } catch (e) {
+    print('Error submitting data: $e');
+    rethrow;
+  }
+}
+
+// variables.dart for Pit Scouting
+Map<String, dynamic> pitScoutingData = {
+  'robotNum': '',
+  'submittedBy': '', // Add email field
+  'weight': '',
+  'size': '',
+  'scoringLevels': {
+    'L4': false,
+    'L3': false, 
+    'L2': false,
+    'L1': false,
+  },
+  'bargeScoring': false,
+  'climbing': {
+    'ability': 'no',
+    'cageType': null, // 'Shallow' or 'Deep' if climbing is 'yes'
+  },
+  'additionalNotes': '',
 };
 
-dynamic temprobotJson = {
-  'Robot One': [
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-  ],
-  'Robot Two': [
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-  ],
-  'Robot Three': [
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-  ],
-};
+// Function to submit pit scouting data to Firebase
+Future<void> submitPitScoutingData() async {
+  final DatabaseReference dbRef = FirebaseDatabase.instance.ref();
+  final User? currentUser = FirebaseAuth.instance.currentUser;
+  
+  if (currentUser == null) {
+    throw Exception('No user signed in');
+  }
 
-dynamic reorganizePD(dynamic data) {
-  return pageData;
+  // Add the current user's email to the pitScoutingData
+  pitScoutingData['submittedBy'] = currentUser.email ?? 'Unknown';
+
+  final String pitScoutingPath = 'RCR2025/pitScouting/${pitScoutingData['robotNum']}';
+  
+  try {
+    await dbRef.child(pitScoutingPath).set(pitScoutingData);
+    
+    // Reset pit scouting data after successful submission
+    pitScoutingData = {
+      'robotNum': '',
+      'submittedBy': '', // Reset submittedBy
+      'weight': '',
+      'size': '',
+      'scoringLevels': {
+        'L4': false,
+        'L3': false, 
+        'L2': false,
+        'L1': false,
+      },
+      'bargeScoring': false,
+      'climbing': {
+        'ability': 'no',
+        'cageType': null,
+      },
+      'additionalNotes': '',
+    };
+  } catch (e) {
+    print('Error submitting pit scouting data: $e');
+    rethrow;
+  }
 }

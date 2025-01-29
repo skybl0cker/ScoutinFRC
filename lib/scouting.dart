@@ -1,12 +1,12 @@
-// ignore_for_file: non_constant_identifier_names, avoid_unnecessary_containers, unused_import, unused_field
+// ignore_for_file: non_constant_identifier_names, avoid_unnecessary_containers, unused_import, unused_field, deprecated_member_use, use_build_context_synchronously
 
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'navbar.dart';
-import 'sp.dart';
 import 'variables.dart' as v;
 import 'package:http/http.dart' as http;
 import 'dart:math';
@@ -334,6 +334,7 @@ class _AutoStartPageState extends State<AutoStartPage> {
       DeviceOrientation.landscapeRight,
     ]);
   }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -401,6 +402,7 @@ class _AutoStartPageState extends State<AutoStartPage> {
                       } else {
                         _selectedStartPosition = 'BottomExtreme';
                       }
+                      v.pageData['startPosition'] = _selectedStartPosition;
                     });
                   },
                   child: Stack(
@@ -606,8 +608,6 @@ class _AutoStartPageState extends State<AutoStartPage> {
   }
 }
 
-
-
 class AutoPage extends StatefulWidget {
   const AutoPage({super.key, required this.title});
   final String title;
@@ -626,14 +626,100 @@ class _AutoPageState extends State<AutoPage> {
 
   int _algaeScore = 0;
   int _algaeMiss = 0;
+  int _floorCount = 0;
+  int _stationCount = 0;
+  int _floorStationMiss = 0;
+
+  Timer? _decrementDelayTimer;
+  Timer? _decrementRepeatTimer;
+  bool _isDecrementing = false;
+
+@override
+void initState() {
+  super.initState();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
+  ]);
+
+  // Load existing data if available
+  if (v.pageData['auto']['coral'] != null) {
+    _coralCounters[0]['score'] = v.pageData['auto']['coral']['L4']['score'] ?? 0;
+    _coralCounters[0]['miss'] = v.pageData['auto']['coral']['L4']['miss'] ?? 0;
+    _coralCounters[1]['score'] = v.pageData['auto']['coral']['L3']['score'] ?? 0;
+    _coralCounters[1]['miss'] = v.pageData['auto']['coral']['L3']['miss'] ?? 0;
+    _coralCounters[2]['score'] = v.pageData['auto']['coral']['L2']['score'] ?? 0;
+    _coralCounters[2]['miss'] = v.pageData['auto']['coral']['L2']['miss'] ?? 0;
+    _coralCounters[3]['score'] = v.pageData['auto']['coral']['L1']['score'] ?? 0;
+    _coralCounters[3]['miss'] = v.pageData['auto']['coral']['L1']['miss'] ?? 0;
+  }
+
+  _algaeScore = v.pageData['auto']['algae']['score'] ?? 0;
+  _algaeMiss = v.pageData['auto']['algae']['miss'] ?? 0;
+
+  _floorCount = v.pageData['auto']['floorStation']['floor'] ?? 0;
+  _stationCount = v.pageData['auto']['floorStation']['station'] ?? 0;
+  _floorStationMiss = v.pageData['auto']['floorStation']['miss'] ?? 0;
+
+  WidgetsBinding.instance.addPostFrameCallback((_) => _updatePageData());
+}
+
+void _updatePageData() {
+  v.pageData['auto']['coral'] = {
+    'L4': {
+      'score': _coralCounters[0]['score'],
+      'miss': _coralCounters[0]['miss'],
+    },
+    'L3': {
+      'score': _coralCounters[1]['score'],
+      'miss': _coralCounters[1]['miss'],
+    },
+    'L2': {
+      'score': _coralCounters[2]['score'],
+      'miss': _coralCounters[2]['miss'],
+    },
+    'L1': {
+      'score': _coralCounters[3]['score'],
+      'miss': _coralCounters[3]['miss'],
+    },
+  };
+  
+  v.pageData['auto']['algae'] = {
+    'score': _algaeScore,
+    'miss': _algaeMiss,
+  };
+
+  v.pageData['auto']['floorStation'] = {
+    'floor': _floorCount,
+    'station': _stationCount,
+    'miss': _floorStationMiss,
+  };
+}
 
   @override
-  void initState() {
-    super.initState();
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.landscapeRight,
-    ]);
+  void dispose() {
+    _decrementDelayTimer?.cancel();
+    _decrementRepeatTimer?.cancel();
+    super.dispose();
+  }
+
+  void _handleTapDown(VoidCallback decrementCallback) {
+    _isDecrementing = false;
+    _decrementDelayTimer = Timer(const Duration(milliseconds: 250), () {
+      _isDecrementing = true;
+      _decrementRepeatTimer = Timer.periodic(const Duration(milliseconds: 1000), (timer) {
+        decrementCallback();
+      });
+    });
+  }
+
+  void _handleTapUpOrCancel(VoidCallback incrementCallback) {
+    _decrementDelayTimer?.cancel();
+    _decrementRepeatTimer?.cancel();
+    if (!_isDecrementing) {
+      incrementCallback();
+    }
+    _isDecrementing = false;
   }
 
   @override
@@ -643,175 +729,135 @@ class _AutoPageState extends State<AutoPage> {
         title: Text(widget.title),
         backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          color: const Color.fromRGBO(65, 68, 74, 1),
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          child: Column(
-            children: [
-              const SizedBox(height: 10),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.42,
-                    height: MediaQuery.of(context).size.width * 0.35,
-                    decoration: BoxDecoration(
-                      color: const Color.fromRGBO(65, 68, 74, 1),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: Colors.white, width: 2),
-                      image: const DecorationImage(
-                        image: AssetImage('assets/images/r.png'),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    margin: const EdgeInsets.only(left: 55), 
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: _coralCounters
-                            .map((counter) => _buildCounterRow(counter))
-                            .toList(),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      alignment: Alignment.topCenter,
-                      padding: const EdgeInsets.all(8),
-                      child: Column(
-                        children: [
-                          const SizedBox(height: 90), 
-                          const Text(
-                            'Auto',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 48,
-                              fontWeight: FontWeight.bold,
-                            ),
+      body: Container(
+        color: const Color.fromRGBO(65, 68, 74, 1),
+        child: Column(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 4,
+                      child: Container(
+                        margin: const EdgeInsets.only(left: 8),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: Colors.white, width: 1),
+                          image: const DecorationImage(
+                            image: AssetImage('assets/images/r.png'),
+                            fit: BoxFit.cover,
                           ),
-                          const SizedBox(height: 10),
-                          _buildAlgaeSection(),
-                        ],
+                        ),
+                        child: ListView.builder(
+                          padding: EdgeInsets.zero,
+                          itemCount: _coralCounters.length,
+                          itemBuilder: (context, index) => _buildCounterRow(_coralCounters[index]),
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                    Expanded(
+                      flex: 6,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 8, left: 4, right: 4),
+                        child: Column(
+                          children: [
+                            const Text(
+                              'Auto',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Expanded(child: _buildFloorStationSection()),
+                            Expanded(child: _buildAlgaeSection()),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              const SizedBox(height: 20),
-              _buildNavigationButtons(),
-              const SizedBox(height: 16),
-            ],
-          ),
+            ),
+            _buildNavigationButtons(),
+            const SizedBox(height: 4),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildCounterRow(Map<String, dynamic> counter) {
+  Widget _buildFloorStationSection() {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 4),
-      padding: const EdgeInsets.all(6),
+      padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
         color: Colors.black.withOpacity(0.5),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: Colors.white, width: 1),
       ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
+      child: Column(
         children: [
-          Text(
-            counter['label'],
-            style: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
-          const SizedBox(width: 8),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    counter['score']++;
-                  });
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey.withOpacity(0.7),
-                  minimumSize: const Size(25, 25),
-                  padding: const EdgeInsets.all(0),
-                ),
-                child: const Text(
-                  '+',
-                  style: TextStyle(fontSize: 10, color: Colors.white),
-                ),
-              ),
-              const SizedBox(width: 6),
-              Text(
-                'Score: ${counter['score']}',
-                style: const TextStyle(color: Colors.white, fontSize: 10),
-              ),
-              const SizedBox(width: 6),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    if (counter['score'] > 0) counter['score']--;
-                  });
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey.withOpacity(0.7),
-                  minimumSize: const Size(25, 25),
-                  padding: const EdgeInsets.all(0),
-                ),
-                child: const Text(
-                  '-',
-                  style: TextStyle(fontSize: 10, color: Colors.white),
-                ),
-              ),
+              _buildPlacementButton(
+  icon: Icons.view_comfy_outlined,
+  label: 'Floor',
+  onIncrement: () => setState(() {
+    _floorCount++;
+    _updatePageData();
+  }),
+  onDecrement: () => setState(() {
+    _floorCount = _floorCount > 0 ? _floorCount - 1 : 0;
+    _updatePageData();
+  }),
+),
+// Repeat for Station and Miss buttons
+              _buildPlacementButton(
+  icon: Icons.currency_exchange,
+  label: 'Station',
+  onIncrement: () => setState(() {
+    _stationCount++;
+    _updatePageData();
+  }),
+  onDecrement: () => setState(() {
+    _stationCount = _stationCount > 0 ? _stationCount - 1 : 0;
+    _updatePageData();
+  }),
+),
+// Repeat for Station and Miss buttons
+              _buildPlacementButton(
+  icon: Icons.close,
+  label: 'Miss',
+  onIncrement: () => setState(() {
+    _floorStationMiss++;
+    _updatePageData();
+  }),
+  onDecrement: () => setState(() {
+    _floorStationMiss = _floorStationMiss > 0 ? _floorStationMiss - 1 : 0;
+    _updatePageData();
+  }),
+),
+// Repeat for Station and Miss buttons
             ],
           ),
-          const SizedBox(width: 16),
+          const SizedBox(height: 4),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    counter['miss']++;
-                  });
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey.withOpacity(0.7),
-                  minimumSize: const Size(25, 25),
-                  padding: const EdgeInsets.all(0),
-                ),
-                child: const Text(
-                  '+',
-                  style: TextStyle(fontSize: 10, color: Colors.white),
-                ),
-              ),
-              const SizedBox(width: 6),
               Text(
-                'Miss: ${counter['miss']}',
+                'Floor: $_floorCount',
                 style: const TextStyle(color: Colors.white, fontSize: 10),
               ),
-              const SizedBox(width: 6),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    if (counter['miss'] > 0) counter['miss']--;
-                  });
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey.withOpacity(0.7),
-                  minimumSize: const Size(25, 25),
-                  padding: const EdgeInsets.all(0),
-                ),
-                child: const Text(
-                  '-',
-                  style: TextStyle(fontSize: 10, color: Colors.white),
-                ),
+              Text(
+                'Station: $_stationCount',
+                style: const TextStyle(color: Colors.white, fontSize: 10),
+              ),
+              Text(
+                'Miss: $_floorStationMiss',
+                style: const TextStyle(color: Colors.white, fontSize: 10),
               ),
             ],
           ),
@@ -820,171 +866,255 @@ class _AutoPageState extends State<AutoPage> {
     );
   }
 
-Widget _buildAlgaeSection() {
-  return Container(
-    padding: const EdgeInsets.all(10),
-    decoration: BoxDecoration(
-      color: Colors.black.withOpacity(0.5),
-      borderRadius: BorderRadius.circular(8),
-      border: Border.all(color: Colors.white, width: 1),
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    _algaeScore++;
-                  });
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey.withOpacity(0.7),
-                  minimumSize: const Size(90, 90),  
-                ),
-                child: const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.sports_basketball,
-                      size: 40,  
-                      color: Colors.white,
-                    ),
-                    SizedBox(height: 8), 
-                    Text(
-                      'Net',
-                      style: TextStyle(
-                        fontSize: 14,  
-                        fontWeight: FontWeight.bold,  
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+Widget _buildPlacementButton({
+  required IconData icon,
+  required String label,
+  required VoidCallback onIncrement,
+  required VoidCallback onDecrement,
+}) {
+  return GestureDetector(
+    onTapDown: (details) => _handleTapDown(onDecrement),
+    onTapUp: (details) => _handleTapUpOrCancel(onIncrement),
+    onTapCancel: () => _handleTapUpOrCancel(onIncrement),
+    child: Container(
+      width: 54,
+      height: 54,
+      decoration: BoxDecoration(
+        color: Colors.grey.withOpacity(0.7),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, size: 24, color: Colors.white),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
-            const SizedBox(width: 6),
-            Expanded(
-              child: ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    _algaeScore++;
-                  });
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey.withOpacity(0.7),
-                  minimumSize: const Size(90, 90),  
-                ),
-                child: const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.memory,
-                      size: 40,  
-                      color: Colors.white,
-                    ),
-                    SizedBox(height: 8), 
-                    Text(
-                      'Processor',
-                      style: TextStyle(
-                        fontSize: 14,  
-                        fontWeight: FontWeight.bold, 
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(width: 6),
-            Expanded(
-              child: ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    _algaeMiss++;
-                  });
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey.withOpacity(0.7),
-                  minimumSize: const Size(90, 90),  
-                ),
-                child: const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.close,
-                      size: 40,  
-                      color: Colors.white,
-                    ),
-                    SizedBox(height: 8), 
-                    Text(
-                      'Missed',
-                      style: TextStyle(
-                        fontSize: 14,  
-                        fontWeight: FontWeight.bold,  
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Scored: $_algaeScore',
-              style: const TextStyle(color: Colors.white, fontSize: 12),
-            ),
-            const SizedBox(width: 16),
-            Text(
-              'Missed: $_algaeMiss',
-              style: const TextStyle(color: Colors.white, fontSize: 12),
-            ),
-          ],
-        ),
-      ],
+          ),
+        ],
+      ),
     ),
   );
 }
 
+  Widget _buildAlgaeSection() {
+    return Container(
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: Colors.black.withOpacity(0.5),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.white, width: 1),
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _buildAlgaeButton(
+  icon: Icons.sports_basketball,
+  label: 'Net',
+  onIncrement: () => setState(() {
+    _algaeScore++;
+    _updatePageData();
+  }),
+  onDecrement: () => setState(() {
+    _algaeScore = _algaeScore > 0 ? _algaeScore - 1 : 0;
+    _updatePageData();
+  }),
+),
+// Repeat for other algae buttons
+              _buildAlgaeButton(
+  icon: Icons.memory,
+  label: 'Processor',
+  onIncrement: () => setState(() {
+    _algaeScore++;
+    _updatePageData();
+  }),
+  onDecrement: () => setState(() {
+    _algaeScore = _algaeScore > 0 ? _algaeScore - 1 : 0;
+    _updatePageData();
+  }),
+),
+// Repeat for other algae buttons
+              _buildAlgaeButton(
+  icon: Icons.close,
+  label: 'Miss',
+  onIncrement: () => setState(() {
+    _algaeMiss++;
+    _updatePageData();
+  }),
+  onDecrement: () => setState(() {
+    _algaeMiss = _algaeMiss > 0 ? _algaeMiss - 1 : 0;
+    _updatePageData();
+  }),
+),
+// Repeat for other algae buttons
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Scored: $_algaeScore',
+                style: const TextStyle(color: Colors.white, fontSize: 10),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                'Missed: $_algaeMiss',
+                style: const TextStyle(color: Colors.white, fontSize: 10),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+Widget _buildAlgaeButton({
+  required IconData icon,
+  required String label,
+  required VoidCallback onIncrement,
+  required VoidCallback onDecrement,
+}) {
+  return GestureDetector(
+    onTapDown: (details) => _handleTapDown(onDecrement),
+    onTapUp: (details) => _handleTapUpOrCancel(onIncrement),
+    onTapCancel: () => _handleTapUpOrCancel(onIncrement),
+    child: Container(
+      width: 60,
+      height: 60,
+      decoration: BoxDecoration(
+        color: Colors.grey.withOpacity(0.7),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, size: 24, color: Colors.white),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+  Widget _buildCounterRow(Map<String, dynamic> counter) {
+    return Container(
+      height: 40,
+      margin: const EdgeInsets.symmetric(vertical: 2),
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: Colors.black.withOpacity(0.5),
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(color: Colors.white, width: 1),
+      ),
+      child: Row(
+        children: [
+          Text(
+            counter['label'],
+            style: const TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+          const Spacer(),
+          Row(
+            children: [
+              _buildSmallButton(
+                '+',
+                () => setState(() => counter['score']++),
+              ),
+              const SizedBox(width: 4),
+              Text(
+                'Score: ${counter['score']}',
+                style: const TextStyle(color: Colors.white, fontSize: 10),
+              ),
+              const SizedBox(width: 4),
+              _buildSmallButton(
+                '-',
+                () => setState(() => counter['score'] = counter['score'] > 0 ? counter['score'] - 1 : 0),
+              ),
+            ],
+          ),
+          const SizedBox(width: 8),
+          Row(
+            children: [
+              _buildSmallButton(
+                '+',
+                () => setState(() => counter['miss']++),
+              ),
+              const SizedBox(width: 4),
+              Text(
+                'Miss: ${counter['miss']}',
+                style: const TextStyle(color: Colors.white, fontSize: 10),
+              ),
+              const SizedBox(width: 4),
+              _buildSmallButton(
+                '-',
+                () => setState(() => counter['miss'] = counter['miss'] > 0 ? counter['miss'] - 1 : 0),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+Widget _buildSmallButton(String text, VoidCallback onPressed) {
+  return SizedBox(
+    width: 20,
+    height: 20,
+    child: ElevatedButton(
+      onPressed: () {
+        onPressed();
+        _updatePageData();
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.grey.withOpacity(0.7),
+        padding: EdgeInsets.zero,
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(fontSize: 10, color: Colors.white),
+      ),
+    ),
+  );
+}
 
   Widget _buildNavigationButtons() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        ElevatedButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.grey[700],
-            minimumSize: const Size(100, 40),
-          ),
-          child: const Text(
-            'Back',
-            style: TextStyle(color: Colors.white, fontSize: 16),
-          ),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            Navigator.pushNamed(context, '/teleop');
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.grey[700],
-            minimumSize: const Size(100, 40),
-          ),
-          child: const Text(
-            'Proceed',
-            style: TextStyle(color: Colors.white, fontSize: 16),
-          ),
-        ),
+        _buildNavButton('Back', () => Navigator.pop(context)),
+        _buildNavButton('Proceed', () => Navigator.pushNamed(context, '/teleop')),
       ],
+    );
+  }
+
+  Widget _buildNavButton(String text, VoidCallback onPressed) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.grey[700],
+        minimumSize: const Size(80, 30),
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(color: Colors.white, fontSize: 12),
+      ),
     );
   }
 }
@@ -1006,14 +1136,104 @@ class _TeleopPageState extends State<TeleopPage> {
     {'label': 'L1', 'score': 0, 'miss': 0},
   ];
 
-  @override
-  void initState() {
-    super.initState();
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.landscapeRight,
-    ]);
+  int _algaeScore = 0;
+  int _algaeMiss = 0;
+  int _floorCount = 0;
+  int _stationCount = 0;
+  int _floorStationMiss = 0;
+
+  Timer? _decrementDelayTimer;
+  Timer? _decrementRepeatTimer;
+  bool _isDecrementing = false;
+
+@override
+void initState() {
+  super.initState();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
+  ]);
+
+  // Load existing data if available
+  if (v.pageData['teleop']['coral'] != null) {
+    _coralCounters[0]['score'] = v.pageData['teleop']['coral']['L4']['score'] ?? 0;
+    _coralCounters[0]['miss'] = v.pageData['teleop']['coral']['L4']['miss'] ?? 0;
+    _coralCounters[1]['score'] = v.pageData['teleop']['coral']['L3']['score'] ?? 0;
+    _coralCounters[1]['miss'] = v.pageData['teleop']['coral']['L3']['miss'] ?? 0;
+    _coralCounters[2]['score'] = v.pageData['teleop']['coral']['L2']['score'] ?? 0;
+    _coralCounters[2]['miss'] = v.pageData['teleop']['coral']['L2']['miss'] ?? 0;
+    _coralCounters[3]['score'] = v.pageData['teleop']['coral']['L1']['score'] ?? 0;
+    _coralCounters[3]['miss'] = v.pageData['teleop']['coral']['L1']['miss'] ?? 0;
   }
+
+  _algaeScore = v.pageData['teleop']['algae']['score'] ?? 0;
+  _algaeMiss = v.pageData['teleop']['algae']['miss'] ?? 0;
+
+  _floorCount = v.pageData['teleop']['floorStation']['floor'] ?? 0;
+  _stationCount = v.pageData['teleop']['floorStation']['station'] ?? 0;
+  _floorStationMiss = v.pageData['teleop']['floorStation']['miss'] ?? 0;
+
+  WidgetsBinding.instance.addPostFrameCallback((_) => _updatePageData());
+}
+
+void _updatePageData() {
+  v.pageData['teleop']['coral'] = {
+    'L4': {
+      'score': _coralCounters[0]['score'],
+      'miss': _coralCounters[0]['miss'],
+    },
+    'L3': {
+      'score': _coralCounters[1]['score'],
+      'miss': _coralCounters[1]['miss'],
+    },
+    'L2': {
+      'score': _coralCounters[2]['score'],
+      'miss': _coralCounters[2]['miss'],
+    },
+    'L1': {
+      'score': _coralCounters[3]['score'],
+      'miss': _coralCounters[3]['miss'],
+    },
+  };
+  
+  v.pageData['teleop']['algae'] = {
+    'score': _algaeScore,
+    'miss': _algaeMiss,
+  };
+
+  v.pageData['teleop']['floorStation'] = {
+    'floor': _floorCount,
+    'station': _stationCount,
+    'miss': _floorStationMiss,
+  };
+}
+
+  @override
+  void dispose() {
+    _decrementDelayTimer?.cancel();
+    _decrementRepeatTimer?.cancel();
+    super.dispose();
+  }
+
+  void _handleTapDown(VoidCallback decrementCallback) {
+    _isDecrementing = false;
+    _decrementDelayTimer = Timer(const Duration(milliseconds: 250), () {
+      _isDecrementing = true;
+      _decrementRepeatTimer = Timer.periodic(const Duration(milliseconds: 1000), (timer) {
+        decrementCallback();
+      });
+    });
+  }
+
+  void _handleTapUpOrCancel(VoidCallback incrementCallback) {
+    _decrementDelayTimer?.cancel();
+    _decrementRepeatTimer?.cancel();
+    if (!_isDecrementing) {
+      incrementCallback();
+    }
+    _isDecrementing = false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -1021,206 +1241,390 @@ class _TeleopPageState extends State<TeleopPage> {
         title: Text(widget.title),
         backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          color: const Color.fromRGBO(65, 68, 74, 1),
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          child: Column(
-            children: [
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.42, 
-                    height: MediaQuery.of(context).size.width * 0.35, 
-                    decoration: BoxDecoration(
-                      color: const Color.fromRGBO(65, 68, 74, 1),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: Colors.white, width: 2),
-                      image: const DecorationImage(
-                        image: AssetImage('assets/images/r.png'),
-                        fit: BoxFit.cover, 
+      body: Container(
+        color: const Color.fromRGBO(65, 68, 74, 1),
+        child: Column(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 4,
+                      child: Container(
+                        margin: const EdgeInsets.only(left: 8),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: Colors.white, width: 1),
+                          image: const DecorationImage(
+                            image: AssetImage('assets/images/r.png'),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        child: ListView.builder(
+                          padding: EdgeInsets.zero,
+                          itemCount: _coralCounters.length,
+                          itemBuilder: (context, index) => _buildCounterRow(_coralCounters[index]),
+                        ),
                       ),
                     ),
-                    margin: const EdgeInsets.only(left: 55),  
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: _coralCounters
-                            .map((counter) => _buildCounterRow(counter))
-                            
-                            .toList(),
+                    Expanded(
+                      flex: 6,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 8, left: 4, right: 4),
+                        child: Column(
+                          children: [
+                            const Text(
+                              'Teleop',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Expanded(child: _buildFloorStationSection()),
+                            Expanded(child: _buildAlgaeSection()),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      alignment: Alignment.topCenter,
-                      padding: const EdgeInsets.all(8),
-                      child: const Text(
-                        'Driver Controlled',
-                        style: TextStyle(color: Colors.white, fontSize: 16),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-              const SizedBox(height: 20),
-              _buildNavigationButtons(),
-              const SizedBox(height: 16),
-            ],
-          ),
+            ),
+            _buildNavigationButtons(),
+            const SizedBox(height: 4),
+          ],
         ),
       ),
     );
   }
 
-Widget _buildCounterRow(Map<String, dynamic> counter) {
-  return Container(
-    margin: const EdgeInsets.symmetric(vertical: 4),
-    padding: const EdgeInsets.all(6),
-    decoration: BoxDecoration(
-      color: Colors.black.withOpacity(0.5), 
-      borderRadius: BorderRadius.circular(8),
-      border: Border.all(color: Colors.white, width: 1),
-    ),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          counter['label'],
-          style: const TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
+  Widget _buildFloorStationSection() {
+    return Container(
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: Colors.black.withOpacity(0.5),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.white, width: 1),
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _buildPlacementButton(
+  icon: Icons.view_comfy_outlined,
+  label: 'Floor',
+  onIncrement: () => setState(() {
+    _floorCount++;
+    _updatePageData();
+  }),
+  onDecrement: () => setState(() {
+    _floorCount = _floorCount > 0 ? _floorCount - 1 : 0;
+    _updatePageData();
+  }),
+),
+// Repeat for Station and Miss buttons
+              _buildPlacementButton(
+  icon: Icons.currency_exchange,
+  label: 'Station',
+  onIncrement: () => setState(() {
+    _stationCount++;
+    _updatePageData();
+  }),
+  onDecrement: () => setState(() {
+    _stationCount = _stationCount > 0 ? _stationCount - 1 : 0;
+    _updatePageData();
+  }),
+),
+// Repeat for Station and Miss buttons
+              _buildPlacementButton(
+  icon: Icons.close,
+  label: 'Miss',
+  onIncrement: () => setState(() {
+    _floorStationMiss++;
+    _updatePageData();
+  }),
+  onDecrement: () => setState(() {
+    _floorStationMiss = _floorStationMiss > 0 ? _floorStationMiss - 1 : 0;
+    _updatePageData();
+  }),
+),
+            ],
           ),
-        ),
-        const SizedBox(width: 8), 
-        Row(
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  counter['score']++;
-                });
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.grey.withOpacity(0.7),
-                minimumSize: const Size(25, 25),
-                padding: const EdgeInsets.all(0),
+          const SizedBox(height: 4),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Text(
+                'Floor: $_floorCount',
+                style: const TextStyle(color: Colors.white, fontSize: 10),
               ),
-              child: const Text(
-                '+',
-                style: TextStyle(fontSize: 10, color: Colors.white),
+              Text(
+                'Station: $_stationCount',
+                style: const TextStyle(color: Colors.white, fontSize: 10),
               ),
+              Text(
+                'Miss: $_floorStationMiss',
+                style: const TextStyle(color: Colors.white, fontSize: 10),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+Widget _buildPlacementButton({
+  required IconData icon,
+  required String label,
+  required VoidCallback onIncrement,
+  required VoidCallback onDecrement,
+}) {
+  return GestureDetector(
+    onTapDown: (details) => _handleTapDown(onDecrement),
+    onTapUp: (details) => _handleTapUpOrCancel(onIncrement),
+    onTapCancel: () => _handleTapUpOrCancel(onIncrement),
+    child: Container(
+      width: 54,
+      height: 54,
+      decoration: BoxDecoration(
+        color: Colors.grey.withOpacity(0.7),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, size: 24, color: Colors.white),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
-            const SizedBox(width: 6),
-            Text(
-              'Score: ${counter['score']}',
-              style: const TextStyle(color: Colors.white, fontSize: 10),
-            ),
-            const SizedBox(width: 6),
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  if (counter['score'] > 0) counter['score']--;
-                });
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.grey.withOpacity(0.7),
-                minimumSize: const Size(25, 25),
-                padding: const EdgeInsets.all(0),
-              ),
-              child: const Text(
-                '-',
-                style: TextStyle(fontSize: 10, color: Colors.white),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(width: 16),
-        Row(
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  counter['miss']++;
-                });
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.grey.withOpacity(0.7),
-                minimumSize: const Size(25, 25),
-                padding: const EdgeInsets.all(0),
-              ),
-              child: const Text(
-                '+',
-                style: TextStyle(fontSize: 10, color: Colors.white),
-              ),
-            ),
-            const SizedBox(width: 6),
-            Text(
-              'Miss: ${counter['miss']}',
-              style: const TextStyle(color: Colors.white, fontSize: 10),
-            ),
-            const SizedBox(width: 6),
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  if (counter['miss'] > 0) counter['miss']--;
-                });
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.grey.withOpacity(0.7),
-                minimumSize: const Size(25, 25),
-                padding: const EdgeInsets.all(0),
-              ),
-              child: const Text(
-                '-',
-                style: TextStyle(fontSize: 10, color: Colors.white),
-              ),
-            ),
-          ],
-        ),
-      ],
+          ),
+        ],
+      ),
     ),
   );
 }
 
+  Widget _buildAlgaeSection() {
+    return Container(
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: Colors.black.withOpacity(0.5),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.white, width: 1),
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _buildAlgaeButton(
+  icon: Icons.sports_basketball,
+  label: 'Net',
+  onIncrement: () => setState(() {
+    _algaeScore++;
+    _updatePageData();
+  }),
+  onDecrement: () => setState(() {
+    _algaeScore = _algaeScore > 0 ? _algaeScore - 1 : 0;
+    _updatePageData();
+  }),
+),
+// Repeat for other algae buttons
+              _buildAlgaeButton(
+  icon: Icons.memory,
+  label: 'Processor',
+  onIncrement: () => setState(() {
+    _algaeScore++;
+    _updatePageData();
+  }),
+  onDecrement: () => setState(() {
+    _algaeScore = _algaeScore > 0 ? _algaeScore - 1 : 0;
+    _updatePageData();
+  }),
+),
+// Repeat for other algae buttons
+              _buildAlgaeButton(
+  icon: Icons.close,
+  label: 'Miss',
+  onIncrement: () => setState(() {
+    _algaeMiss++;
+    _updatePageData();
+  }),
+  onDecrement: () => setState(() {
+    _algaeMiss = _algaeMiss > 0 ? _algaeMiss - 1 : 0;
+    _updatePageData();
+  }),
+),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Scored: $_algaeScore',
+                style: const TextStyle(color: Colors.white, fontSize: 10),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                'Missed: $_algaeMiss',
+                style: const TextStyle(color: Colors.white, fontSize: 10),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+Widget _buildAlgaeButton({
+  required IconData icon,
+  required String label,
+  required VoidCallback onIncrement,
+  required VoidCallback onDecrement,
+}) {
+  return GestureDetector(
+    onTapDown: (details) => _handleTapDown(onDecrement),
+    onTapUp: (details) => _handleTapUpOrCancel(onIncrement),
+    onTapCancel: () => _handleTapUpOrCancel(onIncrement),
+    child: Container(
+      width: 60,
+      height: 60,
+      decoration: BoxDecoration(
+        color: Colors.grey.withOpacity(0.7),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, size: 24, color: Colors.white),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+  Widget _buildCounterRow(Map<String, dynamic> counter) {
+    return Container(
+      height: 40,
+      margin: const EdgeInsets.symmetric(vertical: 2),
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: Colors.black.withOpacity(0.5),
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(color: Colors.white, width: 1),
+      ),
+      child: Row(
+        children: [
+          Text(
+            counter['label'],
+            style: const TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+          const Spacer(),
+          Row(
+            children: [
+              _buildSmallButton(
+                '+',
+                () => setState(() => counter['score']++),
+              ),
+              const SizedBox(width: 4),
+              Text(
+                'Score: ${counter['score']}',
+                style: const TextStyle(color: Colors.white, fontSize: 10),
+              ),
+              const SizedBox(width: 4),
+              _buildSmallButton(
+                '-',
+                () => setState(() => counter['score'] = counter['score'] > 0 ? counter['score'] - 1 : 0),
+              ),
+            ],
+          ),
+          const SizedBox(width: 8),
+          Row(
+            children: [
+              _buildSmallButton(
+                '+',
+                () => setState(() => counter['miss']++),
+              ),
+              const SizedBox(width: 4),
+              Text(
+                'Miss: ${counter['miss']}',
+                style: const TextStyle(color: Colors.white, fontSize: 10),
+              ),
+              const SizedBox(width: 4),
+              _buildSmallButton(
+                '-',
+                () => setState(() => counter['miss'] = counter['miss'] > 0 ? counter['miss'] - 1 : 0),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+Widget _buildSmallButton(String text, VoidCallback onPressed) {
+  return SizedBox(
+    width: 20,
+    height: 20,
+    child: ElevatedButton(
+      onPressed: () {
+        onPressed();
+        _updatePageData();
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.grey.withOpacity(0.7),
+        padding: EdgeInsets.zero,
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(fontSize: 10, color: Colors.white),
+      ),
+    ),
+  );
+}
 
   Widget _buildNavigationButtons() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        ElevatedButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.grey[700],
-            minimumSize: const Size(100, 40),
-          ),
-          child: const Text(
-            'Back',
-            style: TextStyle(color: Colors.white, fontSize: 16),
-          ),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            Navigator.pushNamed(context, '/endgame');
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.grey[700],
-            minimumSize: const Size(100, 40),
-          ),
-          child: const Text(
-            'Proceed',
-            style: TextStyle(color: Colors.white, fontSize: 16),
-          ),
-        ),
+        _buildNavButton('Back', () => Navigator.pop(context)),
+        _buildNavButton('Proceed', () => Navigator.pushNamed(context, '/endgame')),
       ],
+    );
+  }
+
+  Widget _buildNavButton(String text, VoidCallback onPressed) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.grey[700],
+        minimumSize: const Size(80, 30),
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(color: Colors.white, fontSize: 12),
+      ),
     );
   }
 }
@@ -1236,13 +1640,17 @@ class _EndgamePageState extends State<EndgamePage> {
   String _cageParkStatus = 'None';
   bool _isFailed = false;
   String _comments = '';
+  final List<bool> _toggleStates = [false, false]; // [Disabled, Playing Defense]
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
+        foregroundColor: Colors.white,
       ),
+      backgroundColor: const Color.fromRGBO(65, 68, 74, 1),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -1250,36 +1658,86 @@ class _EndgamePageState extends State<EndgamePage> {
             Row(
               children: [
                 Expanded(
-                  child: DropdownButtonFormField<String>(
-                    value: _cageParkStatus,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        _cageParkStatus = newValue!;
-                      });
-                    },
-                    items: <String>['None', 'Parked', 'Caged']
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: DropdownButtonFormField<String>(
+                      dropdownColor: Colors.grey[800],
+                      style: const TextStyle(color: Colors.white),
+                      value: _cageParkStatus,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _cageParkStatus = newValue!;
+                        });
+                      },
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                      ),
+                      items: <String>['None', 'Park', 'Shallow Cage', 'Deep Cage']
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    ),
                   ),
                 ),
                 const SizedBox(width: 20),
-                Checkbox(
-                  value: _isFailed,
-                  onChanged: (bool? value) {
-                    setState(() {
-                      _isFailed = value!;
-                    });
-                  },
+                Row(
+                  children: [
+                    Checkbox(
+                      value: _isFailed,
+                      checkColor: Colors.white,
+                      activeColor: Colors.blue,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          _isFailed = value!;
+                        });
+                      },
+                    ),
+                    const Text('Failed?', style: TextStyle(color: Colors.white)),
+                  ],
                 ),
-                const Text('Failed?'),
               ],
             ),
             const SizedBox(height: 20),
+            ToggleButtons(
+            color: Colors.white, // Unselected text color
+          selectedColor: Colors.white, // Selected text color
+  renderBorder: false,
+  onPressed: (int index) {
+    setState(() {
+      _toggleStates[index] = !_toggleStates[index];
+    });
+  },
+  isSelected: _toggleStates,
+  children: [
+    Container(
+      decoration: BoxDecoration(
+        color: _toggleStates[0] ? Colors.red : Colors.grey[800],
+        borderRadius: BorderRadius.circular(4),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: const Text('Disabled', style: TextStyle(color: Colors.white)),
+    ),
+    Container(
+      decoration: BoxDecoration(
+        color: _toggleStates[1] ? Colors.green : Colors.grey[800],
+        borderRadius: BorderRadius.circular(4),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: const Text('Playing Defense', style: TextStyle(color: Colors.white)),
+    ),
+  ],
+),
+            const SizedBox(height: 20),
             TextField(
+              style: const TextStyle(color: Colors.white),
+              cursorColor: Colors.white,
               onChanged: (value) {
                 setState(() {
                   _comments = value;
@@ -1287,6 +1745,13 @@ class _EndgamePageState extends State<EndgamePage> {
               },
               decoration: const InputDecoration(
                 labelText: 'Comments',
+                labelStyle: TextStyle(color: Colors.grey),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
               ),
             ),
             const SizedBox(height: 20),
@@ -1294,16 +1759,51 @@ class _EndgamePageState extends State<EndgamePage> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.grey[800],
+                  ),
                   onPressed: () {
                     Navigator.pop(context);
                   },
                   child: const Text('Back'),
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                  },
-                  child: const Text('Submit'),
-                ),
+  style: ElevatedButton.styleFrom(
+    foregroundColor: Colors.white,
+    backgroundColor: Colors.blue,
+  ),
+  onPressed: () async {
+    
+    v.pageData['endgame'] = {
+      'cageParkStatus': _cageParkStatus,
+      'failed': _isFailed,
+      'disabled': _toggleStates[0],
+      'playingDefense': _toggleStates[1],
+      'comments': _comments,
+    };
+print("Updated data: ${v.pageData}");
+
+    try {
+      await v.submitMatchData();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Match data submitted successfully!'),
+          backgroundColor: Colors.green,
+        ),
+      );
+      Navigator.pushNamedAndRemoveUntil(context, "/", (route) => false);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error submitting data: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  },
+  child: const Text('Submit'),
+),
               ],
             ),
           ],
@@ -1312,3 +1812,4 @@ class _EndgamePageState extends State<EndgamePage> {
     );
   }
 }
+

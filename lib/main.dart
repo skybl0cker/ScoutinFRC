@@ -1,5 +1,5 @@
 
-// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
+// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously, unused_import
 
 // Imports
 import 'package:flutter/material.dart';
@@ -27,30 +27,7 @@ Future<void> firebaseInit() async {
   );
 }
 
-// Firebase Data Pull
-void firebasePull() async {
-  final ref = FirebaseDatabase.instance.ref();
-  final snapshot = await ref.child("SMR2024/robots").get();
-  if (snapshot.exists) {
-    dynamic temp = snapshot.value;
-    print("${temp}This is what snapshot looks like Firebase");
-    temp.forEach((robotKey, robotValue) {
-      print("${robotKey}For each");
-      // Ensure robotValue is treated as a list even if it's not
-      List<dynamic> matches = robotValue is List ? robotValue : [robotValue];
-      print(matches);
-      for (var match in matches) {
-        print("$match");
-        // for (dynamic key in match.keys) {
-        //   processMatch(robotKey, match, key); // Adjusted to pass robotKey and match
-        // }
-      }
-    });
-    print("${v.allBotMatchData2}");
-  } else {
-    print('No data available.');
-  }
-}
+
 
 // void processMatch(dynamic robotKey, dynamic match, dynamic matchKeyType) {
 //   print("${robotKey}process match robot");
@@ -100,14 +77,14 @@ class ScoutingApp extends StatelessWidget {
       title: 'Scouting',
       routes: <String, WidgetBuilder>{
         '/home': (context) => const HomePage(title: ''),
-        '/pitscouting': (context) => const pitscout.PitScoutingPage(title: ''),
         '/admin': (context) => const admin.AdminPage(title: ''),
         '/scouting' : (context) => const scouting.ScoutingPage(title: '',),
         '/auto' : (context) => const scouting.AutoPage(title: ''),
         '/teleop': (context) => const scouting.TeleopPage(title: ''),
         '/endgame': (context) => const scouting.EndgamePage(title: ''),
         '/analytics': (context) => const analytics.AnalyticsPage(title: ''),
-        '/autostart': (context) => const scouting.AutoStartPage(title: '')
+        '/autostart': (context) => const scouting.AutoStartPage(title: ''),
+        '/pitscouting': (context) => const pitscout.PitScoutingPage(title: ''),
         
       },
       theme: ThemeData(
@@ -320,7 +297,7 @@ class _HomePageState extends State<HomePage> {
         onExit: (_) => setState(() => _scale = 1.0),
         child: GestureDetector(
           onTap: () {
-            if (label == "Pit Scouting") {
+            if (label == "Pit Scoutin") {
               _showPasswordDialog(context, route);
             } else {
               Navigator.pushNamed(context, route);

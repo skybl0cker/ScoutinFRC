@@ -6,7 +6,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:scouting2024/auth_gate.dart' as auth;
-import 'package:scouting2024/sp.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -196,7 +195,6 @@ Since this is a security-sensitive operation, you eventually are asked to login 
             title: const Text('Clear Data'),
             textColor: Colors.white,
             onTap: () {
-              frick();
             },
           ),
           ListTile(
