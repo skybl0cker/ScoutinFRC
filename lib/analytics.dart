@@ -167,94 +167,96 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
   }
 
   int _calculateTotalScore(Map<Object?, Object?> match) {
-    try {
-      final auto = match['auto'] as Map<Object?, Object?>?;
-      final teleop = match['teleop'] as Map<Object?, Object?>?;
-      final endgame = match['endgame'] as Map<Object?, Object?>?;
+  try {
+    final auto = match['auto'] as Map<Object?, Object?>?;
+    final teleop = match['teleop'] as Map<Object?, Object?>?;
+    final endgame = match['endgame'] as Map<Object?, Object?>?;
 
-      if (auto == null || teleop == null || endgame == null) {
-        return 0;
-      }
-
-      int autoCoral = 0;
-      if (auto['coral'] is Map) {
-        final coralData = auto['coral'] as Map<Object?, Object?>;
-        final autoCoralPoints = {
-          'L4': 7,  
-          'L3': 6,  
-          'L2': 5,
-          'L1': 4
-        };
-        for (var level in ['L1', 'L2', 'L3', 'L4']) {
-          if (coralData[level] is Map) {
-            final levelData = coralData[level] as Map<Object?, Object?>;
-            final score = int.tryParse(levelData['score']?.toString() ?? '0') ?? 0;
-            autoCoral += score * (autoCoralPoints[level] ?? 0);
-          }
-        }
-      }
-
-      int teleopCoral = 0;
-      if (teleop['coral'] is Map) {
-        final coralData = teleop['coral'] as Map<Object?, Object?>;
-        final teleopCoralPoints = {
-          'L4': 5,  
-          'L3': 4,  
-          'L2': 3,
-          'L1': 2
-        };
-        for (var level in ['L1', 'L2', 'L3', 'L4']) {
-          if (coralData[level] is Map) {
-            final levelData = coralData[level] as Map<Object?, Object?>;
-            final score = int.tryParse(levelData['score']?.toString() ?? '0') ?? 0;
-            teleopCoral += score * (teleopCoralPoints[level] ?? 0);
-          }
-        }
-      }
-
-      int algae = 0;
-      if (auto['algae'] is Map) {
-        final algaeData = auto['algae'] as Map<Object?, Object?>;
-        final isProcessor = algaeData['isProcessor']?.toString().toLowerCase() == 'true';
-        final score = int.tryParse(algaeData['score']?.toString() ?? '0') ?? 0;
-        algae += score * (isProcessor ? 6 : 4); 
-      }
-      if (teleop['algae'] is Map) {
-        final algaeData = teleop['algae'] as Map<Object?, Object?>;
-        final isProcessor = algaeData['isProcessor']?.toString().toLowerCase() == 'true';
-        final score = int.tryParse(algaeData['score']?.toString() ?? '0') ?? 0;
-        algae += score * (isProcessor ? 6 : 4); 
-      }
-
-      int floorStation = 0;
-      if (auto['floorStation'] is Map) {
-        final fsData = auto['floorStation'] as Map<Object?, Object?>;
-        final floor = int.tryParse(fsData['floor']?.toString() ?? '0') ?? 0;
-        final station = int.tryParse(fsData['station']?.toString() ?? '0') ?? 0;
-        floorStation += floor * 2;
-        floorStation += station * 3;
-      }
-      if (teleop['floorStation'] is Map) {
-        final fsData = teleop['floorStation'] as Map<Object?, Object?>;
-        final floor = int.tryParse(fsData['floor']?.toString() ?? '0') ?? 0;
-        final station = int.tryParse(fsData['station']?.toString() ?? '0') ?? 0;
-        floorStation += floor;
-        floorStation += station * 2;
-      }
-
-      int climbPoints = 0;
-      final climbStatus = endgame['cageParkStatus']?.toString().toLowerCase() ?? '';
-      switch (climbStatus) {
-        case 'park': climbPoints = 2; break;     
-        case 'shallow': climbPoints = 6; break;   
-        case 'deep': climbPoints = 12; break;     
-      }
-
-      return autoCoral + teleopCoral + algae + floorStation + climbPoints;
-    } catch (e, stackTrace) {
-      developer.log('Error calculating score', error: e, stackTrace: stackTrace);
+    if (auto == null || teleop == null || endgame == null) {
       return 0;
     }
+
+    int autoCoral = 0;
+    if (auto['coral'] is Map) {
+      final coralData = auto['coral'] as Map<Object?, Object?>;
+      final autoCoralPoints = {
+        'L4': 7,  
+        'L3': 6,  
+        'L2': 5,
+        'L1': 4
+      };
+      for (var level in ['L1', 'L2', 'L3', 'L4']) {
+        if (coralData[level] is Map) {
+          final levelData = coralData[level] as Map<Object?, Object?>;
+          final score = int.tryParse(levelData['score']?.toString() ?? '0') ?? 0;
+          autoCoral += score * (autoCoralPoints[level] ?? 0);
+        }
+      }
+    }
+
+    int teleopCoral = 0;
+    if (teleop['coral'] is Map) {
+      final coralData = teleop['coral'] as Map<Object?, Object?>;
+      final teleopCoralPoints = {
+        'L4': 5,  
+        'L3': 4,  
+        'L2': 3,
+        'L1': 2
+      };
+      for (var level in ['L1', 'L2', 'L3', 'L4']) {
+        if (coralData[level] is Map) {
+          final levelData = coralData[level] as Map<Object?, Object?>;
+          final score = int.tryParse(levelData['score']?.toString() ?? '0') ?? 0;
+          teleopCoral += score * (teleopCoralPoints[level] ?? 0);
+        }
+      }
+    }
+
+    int algae = 0;
+    if (auto['algae'] is Map) {
+      final algaeData = auto['algae'] as Map<Object?, Object?>;
+      final isProcessor = algaeData['isProcessor']?.toString().toLowerCase() == 'true';
+      final score = int.tryParse(algaeData['score']?.toString() ?? '0') ?? 0;
+      algae += score * (isProcessor ? 6 : 4); 
+    }
+    if (teleop['algae'] is Map) {
+      final algaeData = teleop['algae'] as Map<Object?, Object?>;
+      final isProcessor = algaeData['isProcessor']?.toString().toLowerCase() == 'true';
+      final score = int.tryParse(algaeData['score']?.toString() ?? '0') ?? 0;
+      algae += score * (isProcessor ? 6 : 4); 
+    }
+
+    int floorStation = 0;
+    if (auto['floorStation'] is Map) {
+      final fsData = auto['floorStation'] as Map<Object?, Object?>;
+      final floor = int.tryParse(fsData['floor']?.toString() ?? '0') ?? 0;
+      final station = int.tryParse(fsData['station']?.toString() ?? '0') ?? 0;
+      floorStation += floor * 2;
+      floorStation += station * 3;
+    }
+    if (teleop['floorStation'] is Map) {
+      final fsData = teleop['floorStation'] as Map<Object?, Object?>;
+      final floor = int.tryParse(fsData['floor']?.toString() ?? '0') ?? 0;
+      final station = int.tryParse(fsData['station']?.toString() ?? '0') ?? 0;
+      floorStation += floor;
+      floorStation += station * 2;
+    }
+
+    int climbPoints = 0;
+    final climbStatus = endgame['cageParkStatus']?.toString().toLowerCase() ?? '';
+    if (climbStatus.contains('park')) {
+      climbPoints = 2;
+    } else if (climbStatus.contains('shallow')) {
+      climbPoints = 6;
+    } else if (climbStatus.contains('deep')) {
+      climbPoints = 12;
+    }
+
+    return autoCoral + teleopCoral + algae + floorStation + climbPoints;
+  } catch (e, stackTrace) {
+    developer.log('Error calculating score', error: e, stackTrace: stackTrace);
+    return 0;
+  }
 }
 
   @override
@@ -402,96 +404,113 @@ class _StatsCharts extends StatelessWidget {
   const _StatsCharts({required this.matches});
 
   Map<String, dynamic> calculateAverages() {
-    if (matches.isEmpty) return {};
-    
-    Map<String, double> autoCoralSums = {'L1': 0, 'L2': 0, 'L3': 0, 'L4': 0};
-    Map<String, double> teleopCoralSums = {'L1': 0, 'L2': 0, 'L3': 0, 'L4': 0};
-    double autoAlgaeScoreSum = 0;
-    double autoAlgaeMissSum = 0;
-    double teleop;
-    double teleopAlgaeScoreSum = 0;
-    double teleopAlgaeMissSum = 0;
-    Map<String, int> climbCounts = {
-      'park': 0,
-      'shallow': 0,
-      'deep': 0,
-      'failed': 0,
-      'none': 0
-    };
+  if (matches.isEmpty) return {};
+  
+  Map<String, double> autoCoralSums = {'L1': 0, 'L2': 0, 'L3': 0, 'L4': 0};
+  Map<String, double> teleopCoralSums = {'L1': 0, 'L2': 0, 'L3': 0, 'L4': 0};
+  Map<String, double> autoCoralMisses = {'L1': 0, 'L2': 0, 'L3': 0, 'L4': 0};
+  Map<String, double> teleopCoralMisses = {'L1': 0, 'L2': 0, 'L3': 0, 'L4': 0};
+  double autoAlgaeScoreSum = 0;
+  double autoAlgaeMissSum = 0;
+  double teleopAlgaeScoreSum = 0;
+  double teleopAlgaeMissSum = 0;
+  Map<String, int> climbCounts = {
+    'park': 0,
+    'shallow': 0,
+    'deep': 0,
+    'failed': 0,
+    'none': 0
+  };
 
-    for (var match in matches) {
-      final auto = match['auto'] as Map<Object?, Object?>?;
-      final teleop = match['teleop'] as Map<Object?, Object?>?;
-      final endgame = match['endgame'] as Map<Object?, Object?>?;
+  for (var match in matches) {
+    final auto = match['auto'] as Map<Object?, Object?>?;
+    final teleop = match['teleop'] as Map<Object?, Object?>?;
+    final endgame = match['endgame'] as Map<Object?, Object?>?;
 
-      if (auto != null) {
-        if (auto['coral'] is Map) {
-          final coral = auto['coral'] as Map<Object?, Object?>;
-          for (var level in ['L1', 'L2', 'L3', 'L4']) {
-            if (coral[level] is Map) {
-              final levelData = coral[level] as Map<Object?, Object?>;
-              autoCoralSums[level] = autoCoralSums[level]! +
-                  (double.tryParse(levelData['score']?.toString() ?? '0') ?? 0);
-            }
+    if (auto != null) {
+      if (auto['coral'] is Map) {
+        final coral = auto['coral'] as Map<Object?, Object?>;
+        for (var level in ['L1', 'L2', 'L3', 'L4']) {
+          if (coral[level] is Map) {
+            final levelData = coral[level] as Map<Object?, Object?>;
+            autoCoralSums[level] = autoCoralSums[level]! +
+                (double.tryParse(levelData['score']?.toString() ?? '0') ?? 0);
+            autoCoralMisses[level] = autoCoralMisses[level]! +
+                (double.tryParse(levelData['miss']?.toString() ?? '0') ?? 0);
           }
         }
-        if (auto['algae'] is Map) {
-          final algae = auto['algae'] as Map<Object?, Object?>;
-          autoAlgaeScoreSum += double.tryParse(algae['score']?.toString() ?? '0') ?? 0;
-          autoAlgaeMissSum += double.tryParse(algae['miss']?.toString() ?? '0') ?? 0;
-        }
       }
-
-      if (teleop != null) {
-        if (teleop['coral'] is Map) {
-          final coral = teleop['coral'] as Map<Object?, Object?>;
-          for (var level in ['L1', 'L2', 'L3', 'L4']) {
-            if (coral[level] is Map) {
-              final levelData = coral[level] as Map<Object?, Object?>;
-              teleopCoralSums[level] = teleopCoralSums[level]! +
-                  (double.tryParse(levelData['score']?.toString() ?? '0') ?? 0);
-            }
-          }
-        }
-        if (teleop['algae'] is Map) {
-          final algae = teleop['algae'] as Map<Object?, Object?>;
-          teleopAlgaeScoreSum += double.tryParse(algae['score']?.toString() ?? '0') ?? 0;
-          teleopAlgaeMissSum += double.tryParse(algae['miss']?.toString() ?? '0') ?? 0;
-        }
-      }
-
-      if (endgame != null) {
-        final climbStatus = endgame['cageParkStatus']?.toString().toLowerCase() ?? 'none';
-        if (endgame['failed'] == true) {
-          climbCounts['failed'] = climbCounts['failed']! + 1;
-        } else {
-          climbCounts[climbStatus] = (climbCounts[climbStatus] ?? 0) + 1;
-        }
+      if (auto['algae'] is Map) {
+        final algae = auto['algae'] as Map<Object?, Object?>;
+        autoAlgaeScoreSum += double.tryParse(algae['score']?.toString() ?? '0') ?? 0;
+        autoAlgaeMissSum += double.tryParse(algae['miss']?.toString() ?? '0') ?? 0;
       }
     }
 
-    final count = matches.length.toDouble();
-    
-    return {
-      'autoCoralAvg': Map.fromEntries(
-        autoCoralSums.entries.map((e) => MapEntry(e.key, e.value / count))
-      ),
-      'teleopCoralAvg': Map.fromEntries(
-        teleopCoralSums.entries.map((e) => MapEntry(e.key, e.value / count))
-      ),
-      'autoAlgae': {
-        'scoreAvg': autoAlgaeScoreSum / count,
-        'missAvg': autoAlgaeMissSum / count,
-      },
-      'teleopAlgae': {
-        'scoreAvg': teleopAlgaeScoreSum / count,
-        'missAvg': teleopAlgaeMissSum / count,
-      },
-      'climbPercentages': Map.fromEntries(
-        climbCounts.entries.map((e) => MapEntry(e.key, (e.value / count) * 100))
-      ),
-    };
+    if (teleop != null) {
+      if (teleop['coral'] is Map) {
+        final coral = teleop['coral'] as Map<Object?, Object?>;
+        for (var level in ['L1', 'L2', 'L3', 'L4']) {
+          if (coral[level] is Map) {
+            final levelData = coral[level] as Map<Object?, Object?>;
+            teleopCoralSums[level] = teleopCoralSums[level]! +
+                (double.tryParse(levelData['score']?.toString() ?? '0') ?? 0);
+            teleopCoralMisses[level] = teleopCoralMisses[level]! +
+                (double.tryParse(levelData['miss']?.toString() ?? '0') ?? 0);
+          }
+        }
+      }
+      if (teleop['algae'] is Map) {
+        final algae = teleop['algae'] as Map<Object?, Object?>;
+        teleopAlgaeScoreSum += double.tryParse(algae['score']?.toString() ?? '0') ?? 0;
+        teleopAlgaeMissSum += double.tryParse(algae['miss']?.toString() ?? '0') ?? 0;
+      }
+    }
+
+    if (endgame != null) {
+      final climbStatus = endgame['cageParkStatus']?.toString().toLowerCase() ?? 'none';
+      if (endgame['failed'] == true) {
+        climbCounts['failed'] = climbCounts['failed']! + 1;
+      } else if (climbStatus.contains('deep')) {
+        climbCounts['deep'] = (climbCounts['deep'] ?? 0) + 1;
+      } else if (climbStatus.contains('shallow')) {
+        climbCounts['shallow'] = (climbCounts['shallow'] ?? 0) + 1;
+      } else if (climbStatus.contains('park')) {
+        climbCounts['park'] = (climbCounts['park'] ?? 0) + 1;
+      } else {
+        climbCounts['none'] = (climbCounts['none'] ?? 0) + 1;
+      }
+    }
   }
+
+  final count = matches.length.toDouble();
+  
+  return {
+    'autoCoralAvg': Map.fromEntries(
+      autoCoralSums.entries.map((e) => MapEntry(e.key, e.value / count))
+    ),
+    'teleopCoralAvg': Map.fromEntries(
+      teleopCoralSums.entries.map((e) => MapEntry(e.key, e.value / count))
+    ),
+    'autoCoralMissAvg': Map.fromEntries(
+      autoCoralMisses.entries.map((e) => MapEntry(e.key, e.value / count))
+    ),
+    'teleopCoralMissAvg': Map.fromEntries(
+      teleopCoralMisses.entries.map((e) => MapEntry(e.key, e.value / count))
+    ),
+    'autoAlgae': {
+      'scoreAvg': autoAlgaeScoreSum / count,
+      'missAvg': autoAlgaeMissSum / count,
+    },
+    'teleopAlgae': {
+      'scoreAvg': teleopAlgaeScoreSum / count,
+      'missAvg': teleopAlgaeMissSum / count,
+    },
+    'climbPercentages': Map.fromEntries(
+      climbCounts.entries.map((e) => MapEntry(e.key, (e.value / count) * 100))
+    ),
+  };
+}
 
   @override
   Widget build(BuildContext context) {
@@ -501,9 +520,11 @@ class _StatsCharts extends StatelessWidget {
     return Column(
       children: [
         _buildCoralChart(
-          averages['autoCoralAvg'] as Map<String, double>,
-          averages['teleopCoralAvg'] as Map<String, double>,
-        ),
+  averages['autoCoralAvg'] as Map<String, double>,
+  averages['teleopCoralAvg'] as Map<String, double>,
+  averages['autoCoralMissAvg'] as Map<String, double>,
+  averages['teleopCoralMissAvg'] as Map<String, double>,
+),
         const SizedBox(height: 16),
         _buildAlgaeChart(
           averages['autoAlgae'] as Map<String, double>,
@@ -515,241 +536,290 @@ class _StatsCharts extends StatelessWidget {
     );
   }
 
-  Widget _buildCoralChart(Map<String, double> autoAvg, Map<String, double> teleopAvg) {
-    return Card(
-      color: Colors.black45,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Average Coral Scores by Level',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+  Widget _buildCoralChart(
+    Map<String, double> autoAvg, 
+    Map<String, double> teleopAvg,
+    Map<String, double> autoMissAvg,
+    Map<String, double> teleopMissAvg) {
+  return Card(
+    color: Colors.black45,
+    child: Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Average Coral Scores by Level',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
             ),
-            const SizedBox(height: 8),
-            SizedBox(
-              height: 200,
-              child: BarChart(
-                BarChartData(
-                  alignment: BarChartAlignment.spaceAround,
-                  groupsSpace: 20,
-                  barGroups: [
-                    for (var level in ['L1', 'L2', 'L3', 'L4'])
-                      BarChartGroupData(
-                        x: autoAvg.keys.toList().indexOf(level),
-                        barRods: [
-                          BarChartRodData(
-                            toY: autoAvg[level] ?? 0,
-                            color: Colors.blue,
-                            width: 12,
-                          ),
-                          BarChartRodData(
-                            toY: teleopAvg[level] ?? 0,
-                            color: Colors.green,
-                            width: 12,
-                          ),
-                        ],
-                      ),
-                  ],
-                  titlesData: FlTitlesData(
-                    show: true,
-                    leftTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        getTitlesWidget: (value, meta) => Text(
-                          value.toStringAsFixed(1),
-                          style: const TextStyle(color: Colors.white70, fontSize: 10),
+          ),
+          const SizedBox(height: 8),
+          SizedBox(
+            height: 200,
+            child: BarChart(
+              BarChartData(
+                alignment: BarChartAlignment.spaceAround,
+                groupsSpace: 20,
+                barGroups: [
+                  for (var level in ['L1', 'L2', 'L3', 'L4'])
+                    BarChartGroupData(
+                      x: autoAvg.keys.toList().indexOf(level),
+                      barRods: [
+                        BarChartRodData(
+                          toY: autoAvg[level] ?? 0,
+                          color: Colors.blue,
+                          width: 12,
                         ),
-                      ),
-                    ),
-                    bottomTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        getTitlesWidget: (value, meta) => Text(
-                          ['L1', 'L2', 'L3', 'L4'][value.toInt()],
-                          style: const TextStyle(color: Colors.white70),
+                        BarChartRodData(
+                          toY: teleopAvg[level] ?? 0,
+                          color: Colors.green,
+                          width: 12,
                         ),
+                        BarChartRodData(
+                          toY: (autoMissAvg[level] ?? 0) + (teleopMissAvg[level] ?? 0),
+                          color: Colors.red,
+                          width: 12,
+                        ),
+                      ],
+                    ),
+                ],
+                titlesData: FlTitlesData(
+                  show: true,
+                  leftTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      getTitlesWidget: (value, meta) => Text(
+                        value.toStringAsFixed(1),
+                        style: const TextStyle(color: Colors.white70, fontSize: 10),
                       ),
-                    ),
-                    rightTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
-                    ),
-                    topTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
                     ),
                   ),
-                  gridData: FlGridData(show: true),
-                  borderData: FlBorderData(
-                    show: true,
-                    border: Border.all(color: Colors.white24),
+                  bottomTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      getTitlesWidget: (value, meta) => Text(
+                        ['L1', 'L2', 'L3', 'L4'][value.toInt()],
+                        style: const TextStyle(color: Colors.white70),
+                      ),
+                    ),
                   ),
+                  rightTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  topTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                ),
+                gridData: const FlGridData(show: true),
+                borderData: FlBorderData(
+                  show: true,
+                  border: Border.all(color: Colors.white24),
                 ),
               ),
             ),
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 12,
-                      height: 12,
-                      color: Colors.blue,
-                    ),
-                    const SizedBox(width: 4),
-                    const Text('Auto', style: TextStyle(color: Colors.white70)),
-                  ],
-                ),
-                const SizedBox(width: 16),
-                Row(
-                  children: [
-                    Container(
-                      width: 12,
-                      height: 12,
-                      color: Colors.green,
-                    ),
-                    const SizedBox(width: 4),
-                    const Text('Teleop', style: TextStyle(color: Colors.white70)),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
+          ),
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 12,
+                    height: 12,
+                    color: Colors.blue,
+                  ),
+                  const SizedBox(width: 4),
+                  const Text('Auto', style: TextStyle(color: Colors.white70)),
+                ],
+              ),
+              const SizedBox(width: 16),
+              Row(
+                children: [
+                  Container(
+                    width: 12,
+                    height: 12,
+                    color: Colors.green,
+                  ),
+                  const SizedBox(width: 4),
+                  const Text('Teleop', style: TextStyle(color: Colors.white70)),
+                ],
+              ),
+              const SizedBox(width: 16),
+              Row(
+                children: [
+                  Container(
+                    width: 12,
+                    height: 12,
+                    color: Colors.red,
+                  ),
+                  const SizedBox(width: 4),
+                  const Text('Missed', style: TextStyle(color: Colors.white70)),
+                ],
+              ),
+            ],
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildAlgaeChart(Map<String, double> autoStats, Map<String, double> teleopStats) {
-    return Card(
-      color: Colors.black45,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Average Algae Performance',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+  return Card(
+    color: Colors.black45,
+    child: Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Average Algae Performance',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
             ),
-            const SizedBox(height: 8),
-            SizedBox(
-              height: 200,
-              child: BarChart(
-                BarChartData(
-                  alignment: BarChartAlignment.spaceAround,
-                  groupsSpace: 20,
-                  barGroups: [
-                    BarChartGroupData(
-                      x: 0,
-                      barRods: [
-                        BarChartRodData(
-                          toY: autoStats['scoreAvg'] ?? 0,
-                          color: Colors.blue,
-                          width: 12,
-                        ),
-                        BarChartRodData(
-                          toY: autoStats['missAvg'] ?? 0,
-                          color: Colors.red,
-                          width: 12,
-                        ),
-                      ],
-                    ),
-                    BarChartGroupData(
-                      x: 1,
-                      barRods: [
-                        BarChartRodData(
-                          toY: teleopStats['scoreAvg'] ?? 0,
-                          color: Colors.blue,
-                          width: 12,
-                        ),
-                        BarChartRodData(
-                          toY: teleopStats['missAvg'] ?? 0,
-                          color: Colors.red,
-                          width: 12,
-                        ),
-                      ],
-                    ),
-                  ],
-                  titlesData: FlTitlesData(
-                    show: true,
-                    leftTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        getTitlesWidget: (value, meta) => Text(
-                          value.toStringAsFixed(1),
-                          style: const TextStyle(color: Colors.white70, fontSize: 10),
-                        ),
+          ),
+          const SizedBox(height: 8),
+          SizedBox(
+            height: 200,
+            child: BarChart(
+              BarChartData(
+                alignment: BarChartAlignment.spaceAround,
+                maxY: _calculateMaxY(autoStats, teleopStats),
+                groupsSpace: 12,
+                barGroups: [
+                  // Auto Scored
+                  BarChartGroupData(
+                    x: 0,
+                    barRods: [
+                      BarChartRodData(
+                        toY: autoStats['scoreAvg'] ?? 0,
+                        color: Colors.blue,
+                        width: 12,
+                      ),
+                    ],
+                  ),
+                  // Auto Missed
+                  BarChartGroupData(
+                    x: 1,
+                    barRods: [
+                      BarChartRodData(
+                        toY: autoStats['missAvg'] ?? 0,
+                        color: Colors.red,
+                        width: 12,
+                      ),
+                    ],
+                  ),
+                  // Small spacer
+                  BarChartGroupData(
+                    x: 2,
+                    barRods: [
+                      BarChartRodData(
+                        toY: 0,
+                        color: Colors.transparent,
+                        width: 12,
+                      ),
+                    ],
+                  ),
+                  // Teleop Scored
+                  BarChartGroupData(
+                    x: 3,
+                    barRods: [
+                      BarChartRodData(
+                        toY: teleopStats['scoreAvg'] ?? 0,
+                        color: Colors.green,
+                        width: 12,
+                      ),
+                    ],
+                  ),
+                  // Teleop Missed
+                  BarChartGroupData(
+                    x: 4,
+                    barRods: [
+                      BarChartRodData(
+                        toY: teleopStats['missAvg'] ?? 0,
+                        color: Colors.red,
+                        width: 12,
+                      ),
+                    ],
+                  ),
+                ],
+                titlesData: FlTitlesData(
+                  show: true,
+                  leftTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      getTitlesWidget: (value, meta) => Text(
+                        value.toStringAsFixed(1),
+                        style: const TextStyle(color: Colors.white70, fontSize: 10),
                       ),
                     ),
-                    bottomTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        getTitlesWidget: (value, meta) => Text(
-                          ['Auto', 'Teleop'][value.toInt()],
-                          style: const TextStyle(color: Colors.white70),
-                        ),
-                      ),
-                    ),
-                    rightTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
-                    ),
-                    topTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
-                    ),
                   ),
-                  gridData: FlGridData(show: true),
-                  borderData: FlBorderData(
-                    show: true,
-                    border: Border.all(color: Colors.white24),
+                  bottomTitles: const AxisTitles(
                   ),
+                  rightTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  topTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                ),
+                gridData: const FlGridData(show: true),
+                borderData: FlBorderData(
+                  show: true,
+                  border: Border.all(color: Colors.white24),
                 ),
               ),
             ),
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 12,
-                      height: 12,
-                      color: Colors.blue,
-                    ),
-                    const SizedBox(width: 4),
-                    const Text('Scored', style: TextStyle(color: Colors.white70)),
-                  ],
-                ),
-                const SizedBox(width: 16),
-                Row(
-                  children: [
-                    Container(
-                      width: 12,
-                      height: 12,
-                      color: Colors.red,
-                    ),
-                    const SizedBox(width: 4),
-                    const Text('Missed', style: TextStyle(color: Colors.white70)),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
+          ),
+          const SizedBox(height: 8),
+          Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(width: 12, height: 12, color: Colors.blue),
+                  const SizedBox(width: 4),
+                  const Text('Auto Scored', style: TextStyle(color: Colors.white70)),
+                  const SizedBox(width: 16),
+                  Container(width: 12, height: 12, color: Colors.green),
+                  const SizedBox(width: 4),
+                  const Text('Teleop Scored', style: TextStyle(color: Colors.white70)),
+                ],
+              ),
+              const SizedBox(height: 4),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(width: 12, height: 12, color: Colors.red),
+                  const SizedBox(width: 4),
+                  const Text('Missed', style: TextStyle(color: Colors.white70)),
+                ],
+              ),
+            ],
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
+
+
+
+double _calculateMaxY(Map<String, double> autoStats, Map<String, double> teleopStats) {
+  final values = [
+    autoStats['scoreAvg'] ?? 0,
+    autoStats['missAvg'] ?? 0,
+    teleopStats['scoreAvg'] ?? 0,
+    teleopStats['missAvg'] ?? 0,
+  ];
+  return values.reduce((curr, next) => curr > next ? curr : next) * 1.2;
+}
 
   Widget _buildClimbChart(Map<String, double> percentages) {
     final data = ['park', 'shallow', 'deep', 'failed', 'none']
