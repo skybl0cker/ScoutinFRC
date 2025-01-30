@@ -6,7 +6,7 @@ Map<String, dynamic> pageData = {
   'robotNum': '',
   'matchNum': '',
   'startPosition': '',
-  'submittedBy': '', // Add email field
+  'submittedBy': '', 
   'auto': {
     'coral': {
       'L4': {'score': 0, 'miss': 0},
@@ -71,7 +71,7 @@ Future<void> submitMatchData() async {
       'robotNum': '',
       'matchNum': '',
       'startPosition': '',
-      'submittedBy': '', // Reset submittedBy
+      'submittedBy': '', 
       'auto': {
         'coral': {
           'L4': {'score': 0, 'miss': 0},
@@ -123,7 +123,7 @@ Future<void> submitMatchData() async {
 // variables.dart for Pit Scouting
 Map<String, dynamic> pitScoutingData = {
   'robotNum': '',
-  'submittedBy': '', // Add email field
+  'submittedBy': '', 
   'weight': '',
   'size': '',
   'scoringLevels': {
@@ -160,7 +160,7 @@ Future<void> submitPitScoutingData() async {
     // Reset pit scouting data after successful submission
     pitScoutingData = {
       'robotNum': '',
-      'submittedBy': '', // Reset submittedBy
+      'submittedBy': '', 
       'weight': '',
       'size': '',
       'scoringLevels': {
