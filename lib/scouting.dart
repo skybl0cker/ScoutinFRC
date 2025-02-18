@@ -10,15 +10,7 @@ import 'navbar.dart';
 import 'variables.dart' as v;
 import 'package:http/http.dart' as http;
 import 'dart:math';
-
-void MatchFirebasePush(Map<dynamic, dynamic> data) async {
-  if (data != {} && data.keys.isNotEmpty) {
-    DatabaseReference ref = FirebaseDatabase.instance.ref("Offseason2024/robots");
-    for (String key in data.keys) {
-      ref.child(key).set(data[key]);
-    }
-  }
-}
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ScoutingPage extends StatefulWidget {
   const ScoutingPage({super.key, required this.title});
@@ -33,25 +25,30 @@ class _ScoutingPageState extends State<ScoutingPage> {
   List<dynamic> _matches = [];
 
   Future<void> _fetchSchedule(String eventCode) async {
-    final response = await http.get(
-      Uri.parse('https://www.thebluealliance.com/api/v3/event/$eventCode/matches/simple'),
-      headers: {'X-TBA-Auth-Key': 'XKgCGALe7EzYqZUeKKONsQ45iGHVUZYlN0F6qQzchKQrLxED5DFWrYi9pcjxIzGY'},
-    );
+  final response = await http.get(
+    Uri.parse('https://www.thebluealliance.com/api/v3/event/$eventCode/matches/simple'),
+    headers: {'X-TBA-Auth-Key': 'XKgCGALe7EzYqZUeKKONsQ45iGHVUZYlN0F6qQzchKQrLxED5DFWrYi9pcjxIzGY'},
+  );
 
-    if (response.statusCode == 200) {
-      List<dynamic> allMatches = jsonDecode(response.body);
-      List<dynamic> qualMatches = allMatches
-          .where((match) => match['comp_level'] == 'qm')
-          .toList()
-          ..sort((a, b) => a['match_number'].compareTo(b['match_number']));
+  if (response.statusCode == 200) {
+    List<dynamic> allMatches = jsonDecode(response.body);
+    List<dynamic> qualMatches = allMatches
+        .where((match) => match['comp_level'] == 'qm')
+        .toList()
+        ..sort((a, b) => a['match_number'].compareTo(b['match_number']));
 
-      setState(() {
-        _matches = qualMatches;
-      });
-    } else {
-      print('Failed to load schedule');
-    }
+    // Store the event code in pageData
+    v.pageData['eventKey'] = eventCode;
+    // Also store it in pitScoutingData
+    v.pitScoutingData['eventKey'] = eventCode;
+
+    setState(() {
+      _matches = qualMatches;
+    });
+  } else {
+    print('Failed to load schedule');
   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -205,18 +202,59 @@ class MatchNumPage extends StatefulWidget {
   const MatchNumPage({Key? key, required this.title, required this.matchData}) : super(key: key);
 
   final String title;
-  final dynamic matchData; 
+  final dynamic matchData;
 
   @override
   State<MatchNumPage> createState() => _MatchNumPageState();
 }
 
 class _MatchNumPageState extends State<MatchNumPage> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  Map<String, String> _scouterAssignments = {};
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchAssignments();
+  }
+
+  Future<void> _fetchAssignments() async {
+    try {
+      final String matchNumber = widget.matchData['match_number'].toString();
+      
+      QuerySnapshot snapshot = await _firestore
+          .collection('scouting_assignments')
+          .where('matchNumber', isEqualTo: matchNumber)
+          .get();
+
+      Map<String, String> assignments = {};
+      for (var doc in snapshot.docs) {
+        final data = doc.data() as Map<String, dynamic>;
+        assignments[data['robotNumber']] = data['scouterName'];
+      }
+
+      setState(() {
+        _scouterAssignments = assignments;
+        _isLoading = false;
+      });
+    } catch (e) {
+      print('Error fetching assignments: $e');
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final matchData = widget.matchData;
-    final List<String> redAlliance = (matchData['alliances']['red']['team_keys'] as List<dynamic>).map((e) => e.toString()).toList();
-    final List<String> blueAlliance = (matchData['alliances']['blue']['team_keys'] as List<dynamic>).map((e) => e.toString()).toList();
+    final List<String> redAlliance = (matchData['alliances']['red']['team_keys'] as List<dynamic>)
+        .map((e) => e.toString().replaceAll('frc', ''))
+        .toList();
+    final List<String> blueAlliance = (matchData['alliances']['blue']['team_keys'] as List<dynamic>)
+        .map((e) => e.toString().replaceAll('frc', ''))
+        .toList();
 
     return Scaffold(
       drawer: NavBar(),
@@ -237,14 +275,12 @@ class _MatchNumPageState extends State<MatchNumPage> {
           },
         ),
         actions: [
-          Container(
-            child: IconButton(
-              onPressed: () => Navigator.of(context).pop(),
-              icon: const Icon(
-                Icons.arrow_back,
-                color: Color.fromRGBO(165, 176, 168, 1),
-                size: 50,
-              ),
+          IconButton(
+            onPressed: () => Navigator.of(context).pop(),
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Color.fromRGBO(165, 176, 168, 1),
+              size: 50,
             ),
           )
         ],
@@ -256,62 +292,80 @@ class _MatchNumPageState extends State<MatchNumPage> {
           alignment: Alignment.center,
         ),
       ),
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            const SizedBox(height: 20),
-            const Text(
-              'Select Team to Scout',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : Center(
+              child: Column(
+                children: <Widget>[
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Select Team to Scout',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 20),
+                  _buildTeamSelection('Red Alliance', redAlliance),
+                  const SizedBox(height: 20),
+                  _buildTeamSelection('Blue Alliance', blueAlliance),
+                  const SizedBox(height: 25),
+                ],
+              ),
             ),
-            const SizedBox(height: 20),
-            _buildTeamSelection('Red Alliance', redAlliance),
-            const SizedBox(height: 20),
-            _buildTeamSelection('Blue Alliance', blueAlliance),
-            const SizedBox(height: 25),
-          ],
-        ),
-      ),
     );
   }
 
-Widget _buildTeamSelection(String alliance, List<String> teamKeys) {
-  return Column(
-    children: teamKeys.map((teamKey) {
-      return Container(
-        margin: const EdgeInsets.symmetric(vertical: 8), 
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: alliance == 'Red Alliance' ? Colors.red.shade900 : Colors.blue.shade900,  
-            width: 2,
+  Widget _buildTeamSelection(String alliance, List<String> teamNumbers) {
+    return Column(
+      children: teamNumbers.map((teamNumber) {
+        final assignedScouter = _scouterAssignments[teamNumber] ?? 'Unassigned';
+        
+        return Container(
+          margin: const EdgeInsets.symmetric(vertical: 8),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: alliance == 'Red Alliance' ? Colors.red.shade900 : Colors.blue.shade900,
+              width: 2,
+            ),
+            borderRadius: BorderRadius.circular(12),
           ),
-          borderRadius: BorderRadius.circular(12),  
-        ),
-        child: ElevatedButton(
-          onPressed: () {
-            v.pageData['robotNum'] = teamKey.replaceAll('frc', '');
-            v.pageData['matchNum'] = widget.matchData['match_number'].toString();
-            Navigator.pushNamed(context, '/autostart'); 
-          },
-          style: ElevatedButton.styleFrom(
-            textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-            backgroundColor: alliance == 'Red Alliance' ? Colors.red.shade700 : Colors.blue.shade700,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),  
+          child: ElevatedButton(
+            onPressed: () {
+              v.pageData['robotNum'] = teamNumber;
+              v.pageData['matchNum'] = widget.matchData['match_number'].toString();
+              Navigator.pushNamed(context, '/autostart');
+            },
+            style: ElevatedButton.styleFrom(
+              textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              backgroundColor: alliance == 'Red Alliance' ? Colors.red.shade700 : Colors.blue.shade700,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Team $teamNumber',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Scouter: $assignedScouter',
+                  style: const TextStyle(
+                    color: Colors.white70,
+                    fontSize: 16,
+                  ),
+                ),
+              ],
             ),
           ),
-          child: Text(
-            'Team ${teamKey.replaceAll('frc', '')}',
-            style: const TextStyle(
-              color: Colors.white,  
-            ),
-          ),
-        ),
-      );
-    }).toList(),
-  );
-}
+        );
+      }).toList(),
+    );
+  }
 }
 
 
@@ -1011,7 +1065,7 @@ Widget _buildAlgaeButton({
 
   Widget _buildCounterRow(Map<String, dynamic> counter) {
     return Container(
-      height: 40,
+      height: 70,
       margin: const EdgeInsets.symmetric(vertical: 2),
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
@@ -1024,7 +1078,7 @@ Widget _buildAlgaeButton({
           Text(
             counter['label'],
             style: const TextStyle(
-              fontSize: 10,
+              fontSize: 20,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
@@ -1039,7 +1093,7 @@ Widget _buildAlgaeButton({
               const SizedBox(width: 4),
               Text(
                 'Score: ${counter['score']}',
-                style: const TextStyle(color: Colors.white, fontSize: 10),
+                style: const TextStyle(color: Colors.white, fontSize: 20),
               ),
               const SizedBox(width: 4),
               _buildSmallButton(
@@ -1058,7 +1112,7 @@ Widget _buildAlgaeButton({
               const SizedBox(width: 4),
               Text(
                 'Miss: ${counter['miss']}',
-                style: const TextStyle(color: Colors.white, fontSize: 10),
+                style: const TextStyle(color: Colors.white, fontSize: 20),
               ),
               const SizedBox(width: 4),
               _buildSmallButton(
@@ -1074,8 +1128,8 @@ Widget _buildAlgaeButton({
 
 Widget _buildSmallButton(String text, VoidCallback onPressed) {
   return SizedBox(
-    width: 20,
-    height: 20,
+    width: 30,
+    height: 30,
     child: ElevatedButton(
       onPressed: () {
         onPressed();
@@ -1521,7 +1575,7 @@ Widget _buildAlgaeButton({
 
   Widget _buildCounterRow(Map<String, dynamic> counter) {
     return Container(
-      height: 40,
+      height: 70,
       margin: const EdgeInsets.symmetric(vertical: 2),
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
@@ -1534,7 +1588,7 @@ Widget _buildAlgaeButton({
           Text(
             counter['label'],
             style: const TextStyle(
-              fontSize: 10,
+              fontSize: 20,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
@@ -1549,7 +1603,7 @@ Widget _buildAlgaeButton({
               const SizedBox(width: 4),
               Text(
                 'Score: ${counter['score']}',
-                style: const TextStyle(color: Colors.white, fontSize: 10),
+                style: const TextStyle(color: Colors.white, fontSize: 20),
               ),
               const SizedBox(width: 4),
               _buildSmallButton(
@@ -1568,7 +1622,7 @@ Widget _buildAlgaeButton({
               const SizedBox(width: 4),
               Text(
                 'Miss: ${counter['miss']}',
-                style: const TextStyle(color: Colors.white, fontSize: 10),
+                style: const TextStyle(color: Colors.white, fontSize: 20),
               ),
               const SizedBox(width: 4),
               _buildSmallButton(
@@ -1584,8 +1638,8 @@ Widget _buildAlgaeButton({
 
 Widget _buildSmallButton(String text, VoidCallback onPressed) {
   return SizedBox(
-    width: 20,
-    height: 20,
+    width: 30,
+    height: 30,
     child: ElevatedButton(
       onPressed: () {
         onPressed();

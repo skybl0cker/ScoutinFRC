@@ -1,4 +1,3 @@
-
 // ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously, unused_import
 
 // Imports
@@ -19,6 +18,7 @@ import 'scouting.dart' as scouting;
 import 'pitscout.dart' as pitscout;
 import 'admin.dart' as admin;
 import 'analytics.dart' as analytics;
+import 'schedule.dart' as schedule;
 
 // Firebase Initialization
 Future<void> firebaseInit() async {
@@ -27,42 +27,14 @@ Future<void> firebaseInit() async {
   );
 }
 
-
-
-// void processMatch(dynamic robotKey, dynamic match, dynamic matchKeyType) {
-//   print("${robotKey}process match robot");
-//   print("$match process match match");
-//   // Processing each match
-//   if (match != null) {
-//     var matchId = matchKeyType; // Assuming the first item is the match ID
-//     print("${matchId}This is the match id");
-//     var matchData = match; // Assuming 'match' contains the data you need
-//     // Create a MapEntry from the match data
-//     var newEntry = MapEntry(matchKeyType, matchData[matchKeyType]);
-//     // Check if the robot already has recorded match data
-//     if (v.allBotMatchData2[robotKey] != null) {
-//       // If so, update the existing data by converting the map to a list of MapEntry and then adding the new entry
-//       v.allBotMatchData2[robotKey]["matches"] = Map.fromEntries(
-//           v.allBotMatchData2[robotKey]["matches"].entries.toList()
-//             ..add(newEntry));
-//     } else {
-//       // If not, create a new entry for this robot's match data
-//       // This creates a new Map for "matches" with the robotKey and matchData
-//       v.allBotMatchData2[robotKey] = {
-//         "matches": {matchKeyType: matchData[matchKeyType]}
-//       };
-//     }
-//   }
-// }
-
 // App Entry Point
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await firebaseInit(); //runs the firebaseInit, which initalizes Firebase for use.
+  await firebaseInit();
   if (const bool.fromEnvironment('USE_EMULATOR', defaultValue: false)) {
     FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
   }
-  runApp(const ScoutingApp()); // runs the app 
+  runApp(const ScoutingApp());
 }
 
 // Main App Widget
@@ -78,14 +50,14 @@ class ScoutingApp extends StatelessWidget {
       routes: <String, WidgetBuilder>{
         '/home': (context) => const HomePage(title: ''),
         '/admin': (context) => const admin.AdminPage(title: ''),
-        '/scouting' : (context) => const scouting.ScoutingPage(title: '',),
-        '/auto' : (context) => const scouting.AutoPage(title: ''),
+        '/scouting': (context) => const scouting.ScoutingPage(title: '',),
+        '/auto': (context) => const scouting.AutoPage(title: ''),
         '/teleop': (context) => const scouting.TeleopPage(title: ''),
         '/endgame': (context) => const scouting.EndgamePage(title: ''),
         '/analytics': (context) => const analytics.AnalyticsPage(title: ''),
         '/autostart': (context) => const scouting.AutoStartPage(title: ''),
         '/pitscouting': (context) => const pitscout.PitScoutingPage(title: ''),
-        
+        '/schedule': (context) => const schedule.SchedulePage(title: ''),
       },
       theme: ThemeData(
         primaryColor: Colors.white,
@@ -108,12 +80,12 @@ class ScoutingApp extends StatelessWidget {
           labelMedium: TextStyle(),
           labelSmall: TextStyle(),
         ).apply(
-          bodyColor: Colors.white, 
-          displayColor: Colors.white, 
+          bodyColor: Colors.white,
+          displayColor: Colors.white,
         ),
         scaffoldBackgroundColor: const Color.fromRGBO(65, 68, 73, 1),
         useMaterial3: true,
-      )
+      ),
     );
   }
 }
@@ -131,7 +103,7 @@ class _HomePageState extends State<HomePage> {
   final String _correctPassword = "itsnotpassword";
   List<dynamic> rankings = [];
   String _username = "Loading...";
-  String _role = ""; // Add a variable to store the user's role
+  String _role = "";
 
   @override
   void initState() {
@@ -141,30 +113,36 @@ class _HomePageState extends State<HomePage> {
       DeviceOrientation.portraitDown,
     ]);
     fetchRankings();
-    fetchUserDetails();  // Fetch user details when the widget initializes
+    fetchUserDetails();
   }
 
   Future<void> fetchRankings() async {
     const String eventCode = '2024tnkn';
     const String apiKey = 'XKgCGALe7EzYqZUeKKONsQ45iGHVUZYlN0F6qQzchKQrLxED5DFWrYi9pcjxIzGY';
 
-    final response = await http.get(
-      Uri.parse('https://www.thebluealliance.com/api/v3/event/$eventCode/rankings'),
-      headers: {
-        'X-TBA-Auth-Key': apiKey,
-      },
-    );
-
-    if (response.statusCode == 200) {
-      setState(() {
-        rankings = json.decode(response.body)['rankings'];
-      });
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Failed to load rankings."),
-        ),
+    try {
+      final response = await http.get(
+        Uri.parse('https://www.thebluealliance.com/api/v3/event/$eventCode/rankings'),
+        headers: {
+          'X-TBA-Auth-Key': apiKey,
+        },
       );
+
+      if (response.statusCode == 200) {
+        setState(() {
+          rankings = json.decode(response.body)['rankings'];
+        });
+      } else {
+        throw Exception('Failed to load rankings');
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Failed to load rankings."),
+          ),
+        );
+      }
     }
   }
 
@@ -176,11 +154,18 @@ class _HomePageState extends State<HomePage> {
         if (doc.exists) {
           setState(() {
             _username = doc['username'] ?? "Unknown User";
-            _role = doc['role'] ?? ""; // Update the role
+            _role = doc['role'] ?? "";
           });
         }
       } catch (e) {
         print("Error getting user details: $e");
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Failed to update user details."),
+            ),
+          );
+        }
       }
     }
   }
@@ -224,39 +209,49 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Container(
         color: const Color.fromRGBO(65, 68, 73, 1),
-        child: Column(
-          children: <Widget>[
-            const Gap(20),
-            _buildButton("Scouting", "/scouting", Icons.search, const Color.fromARGB(255, 190, 63, 63), const Color.fromARGB(255, 181, 8, 8)),
-            _buildButton("Analytics", "/analytics", Icons.analytics, const Color.fromARGB(255, 0, 72, 255), const Color.fromARGB(255, 8, 11, 181)),
-            if (_role == 'pitscouter' || _role == 'admin') // Show only if user is a pitscouter or admin
-              _buildButton("Pit Scouting", "/pitscouting", Icons.checklist, const Color.fromARGB(255, 85, 152, 56), const Color.fromARGB(255, 39, 87, 38)),
-            if (_role == 'admin') // Show only if user is an admin
-              _buildButton("Admin", "/admin", Icons.admin_panel_settings, const Color.fromARGB(255, 255, 193, 7), const Color.fromARGB(255, 255, 160, 0)),
-            const SizedBox(height: 20),
-            Expanded(
-              child: rankings.isNotEmpty
-                  ? Center(
-                      child: Container(
-                        width: 350,
-                        height: 500,
-                        decoration: BoxDecoration(
-                          color: const Color.fromRGBO(75, 79, 85, 1),
-                          borderRadius: BorderRadius.circular(15),
-                          border: Border.all(
-                            color: Colors.grey.shade300,
-                            width: 2,
-                          ),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Colors.black26,
-                              offset: Offset(0, 4),
-                              blurRadius: 5,
-                              spreadRadius: 1,
-                            )
-                          ],
-                        ),
-                        child: ListView.builder(
+        child: RefreshIndicator(
+          onRefresh: () async {
+            await Future.wait([
+              fetchRankings(),
+              fetchUserDetails(),
+            ]);
+          },
+          child: ListView(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            children: <Widget>[
+              const Gap(20),
+              Center(child: _buildButton("Scouting", "/scouting", Icons.search, const Color.fromARGB(255, 190, 63, 63), const Color.fromARGB(255, 181, 8, 8))),
+              Center(child: _buildButton("Analytics", "/analytics", Icons.analytics, const Color.fromARGB(255, 0, 72, 255), const Color.fromARGB(255, 8, 11, 181))),
+              Center(child: _buildButton("Schedule", "/schedule", Icons.schedule, const Color.fromARGB(255, 156, 33, 217), const Color.fromARGB(255, 123, 8, 181))),
+              if (_role == 'pitscouter' || _role == 'admin')
+                Center(child: _buildButton("Pit Scouting", "/pitscouting", Icons.checklist, const Color.fromARGB(255, 85, 152, 56), const Color.fromARGB(255, 39, 87, 38))),
+              if (_role == 'admin')
+                Center(child: _buildButton("Admin", "/admin", Icons.admin_panel_settings, const Color.fromARGB(255, 255, 193, 7), const Color.fromARGB(255, 255, 160, 0))),
+              const SizedBox(height: 20),
+              Center(
+                child: Container(
+                  width: 350,
+                  height: 500,
+                  decoration: BoxDecoration(
+                    color: const Color.fromRGBO(75, 79, 85, 1),
+                    borderRadius: BorderRadius.circular(15),
+                    border: Border.all(
+                      color: Colors.grey.shade300,
+                      width: 2,
+                    ),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.black26,
+                        offset: Offset(0, 4),
+                        blurRadius: 5,
+                        spreadRadius: 1,
+                      )
+                    ],
+                  ),
+                  child: rankings.isNotEmpty
+                      ? ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
                           itemCount: rankings.length,
                           itemBuilder: (context, index) {
                             final ranking = rankings[index];
@@ -275,14 +270,15 @@ class _HomePageState extends State<HomePage> {
                               ),
                             );
                           },
+                        )
+                      : const Center(
+                          child: CircularProgressIndicator(),
                         ),
-                      ),
-                    )
-                  : const Center(
-                      child: CircularProgressIndicator(),
-                    ),
-            ),
-          ],
+                ),
+              ),
+              const SizedBox(height: 20),
+            ],
+          ),
         ),
       ),
     );
@@ -297,7 +293,7 @@ class _HomePageState extends State<HomePage> {
         onExit: (_) => setState(() => _scale = 1.0),
         child: GestureDetector(
           onTap: () {
-            if (label == "Pit Scoutin") {
+            if (label == "Pit Scouting") {
               _showPasswordDialog(context, route);
             } else {
               Navigator.pushNamed(context, route);
@@ -312,6 +308,8 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   Container(
                     height: 70,
+                    width: 300,
+                    alignment: Alignment.center,
                     margin: const EdgeInsets.only(left: 1),
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -364,7 +362,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   const Positioned(
-                    right: 16,
+                    right: 15,
                     child: Icon(
                       Icons.arrow_forward_ios,
                       color: Colors.grey,
@@ -426,16 +424,5 @@ class _HomePageState extends State<HomePage> {
         );
       },
     );
-  }
-}
-
-
-
-void pitFirebasePush(Map<dynamic, dynamic> data) async {
-  if (data != {} && data.keys.isNotEmpty) {
-    DatabaseReference ref = FirebaseDatabase.instance.ref("Offseason2024/robots/pit");
-    for (String key in data.keys) {
-      ref.child(key).set(data[key]);
-    }
   }
 }

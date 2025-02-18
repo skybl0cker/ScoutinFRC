@@ -1,5 +1,5 @@
 // Add all your original imports
-// ignore_for_file: unused_import, depend_on_referenced_packages, use_build_context_synchronously, use_key_in_widget_constructors, library_private_types_in_public_api, prefer_const_constructors
+// ignore_for_file: unused_import, depend_on_referenced_packages, use_build_context_synchronously, use_key_in_widget_constructors, library_private_types_in_public_api, prefer_const_constructors, deprecated_member_use
 
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -12,6 +12,53 @@ import 'dart:convert';
 import 'package:scouting2024/team_comparison.dart' as team;
 import 'package:scouting2024/credits.dart' as credits;
 
+// Function to get dark dialog theme
+ThemeData getDarkDialogTheme(BuildContext context) {
+  final darkGray = Color.fromRGBO(65, 68, 73, 1);
+  return ThemeData.dark().copyWith(
+    useMaterial3: true,
+    // Set base colors
+    scaffoldBackgroundColor: darkGray,
+    dialogBackgroundColor: darkGray,
+    
+    // Configure color scheme
+    colorScheme: ColorScheme.dark(
+      surface: darkGray,
+      background: darkGray,
+      primary: Colors.white,
+      onPrimary: Colors.white,
+      onSurface: Colors.white,
+    ),
+    
+    // Configure dialog specific theme
+    dialogTheme: DialogTheme(
+      backgroundColor: darkGray,
+      surfaceTintColor: Colors.transparent,
+      elevation: 0,
+    ),
+    
+    // Text button theme
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        foregroundColor: Colors.white,
+      ),
+    ),
+    
+    // Input decoration theme
+    inputDecorationTheme: InputDecorationTheme(
+      filled: true,
+      fillColor: Color.fromRGBO(75, 78, 83, 1),
+      labelStyle: TextStyle(color: Colors.white),
+      hintStyle: TextStyle(color: Colors.white70),
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.white54),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.white),
+      ),
+    ),
+  );
+}
 
 // Function to delete Firebase account
 Future<void> deleteFirebaseAccount() async {
@@ -39,69 +86,59 @@ Future<void> updateUsername(BuildContext context) async {
   final TextEditingController usernameController = TextEditingController();
   showDialog(
     context: context,
+    barrierDismissible: true,
     builder: (BuildContext context) {
-      return Theme(
-        data: Theme.of(context).copyWith(
-          colorScheme: ColorScheme.fromSwatch().copyWith(
-            primary: Colors.white,
-            secondary: Colors.grey,
-            onPrimary: Colors.white,
-            onSurface: Colors.white,
-          ),
-          textTheme: const TextTheme(
-            bodyLarge: TextStyle(color: Colors.white),
-            bodyMedium: TextStyle(color: Colors.white),
-            bodySmall: TextStyle(color: Colors.white),
-          ),
-          dialogBackgroundColor: const Color.fromRGBO(65, 68, 73, 1),
-        ),
-        child: AlertDialog(
-          title: const Text('Change Username'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: usernameController,
-                decoration: const InputDecoration(
-                  labelText: 'New Username',
-                  border: OutlineInputBorder(),
+      return Material(
+        type: MaterialType.transparency,
+        child: Theme(
+          data: getDarkDialogTheme(context),
+          child: AlertDialog(
+            elevation: 0,
+            backgroundColor: Color.fromRGBO(65, 68, 73, 1),
+            title: Text('Change Username', style: TextStyle(color: Colors.white)),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: usernameController,
+                  style: TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    labelText: 'New Username',
+                  ),
+                  autofocus: true,
                 ),
-                autofocus: true,
+              ],
+            ),
+            actions: [
+              TextButton(
+                child: Text('Cancel'),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+              TextButton(
+                child: Text('Save'),
+                onPressed: () async {
+                  final newUsername = usernameController.text.trim();
+                  if (newUsername.isNotEmpty) {
+                    try {
+                      await FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(user.uid)
+                          .set({
+                        'username': newUsername,
+                      }, SetOptions(merge: true));
+                      Navigator.of(context).pop();
+                    } catch (e) {
+                      print('Failed to update username: $e');
+                    }
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Username cannot be empty')),
+                    );
+                  }
+                },
               ),
             ],
           ),
-          actions: [
-            TextButton(
-              child: const Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('Save'),
-              onPressed: () async {
-                final newUsername = usernameController.text.trim();
-                if (newUsername.isNotEmpty) {
-                  try {
-                    await FirebaseFirestore.instance.collection('users').doc(user.uid).set(
-                      {
-                        'username': newUsername,
-                      },
-                      SetOptions(merge: true),
-                    );
-                    print('Username updated successfully');
-                    Navigator.of(context).pop();
-                  } catch (e) {
-                    print('Failed to update username: $e');
-                  }
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Username cannot be empty')),
-                  );
-                }
-              },
-            ),
-          ],
         ),
       );
     },
@@ -143,46 +180,39 @@ class NavBar extends StatelessWidget {
             onTap: () {
               showDialog(
                 context: context,
+                barrierDismissible: true,
                 builder: (BuildContext context) {
-                  return Theme(
-                    data: Theme.of(context).copyWith(
-                      colorScheme: ColorScheme.fromSwatch().copyWith(
-                        primary: Colors.white,
-                        secondary: Colors.grey,
-                        onPrimary: Colors.white,
-                        onSurface: Colors.white,
-                      ),
-                      textTheme: const TextTheme(
-                        bodyLarge: TextStyle(color: Colors.white),
-                        bodyMedium: TextStyle(color: Colors.white),
-                        bodySmall: TextStyle(color: Colors.white),
-                      ),
-                      dialogBackgroundColor: const Color.fromRGBO(65, 68, 73, 1),
-                    ),
-                    child: AlertDialog(
-                      title: const Text('Delete your Account?'),
-                      content: const Text(
-                        '''If you select Delete we will delete your account on our server.
+                  return Material(
+                    type: MaterialType.transparency,
+                    child: Theme(
+                      data: getDarkDialogTheme(context),
+                      child: AlertDialog(
+                        elevation: 0,
+                        backgroundColor: Color.fromRGBO(65, 68, 73, 1),
+                        title: Text('Delete your Account?', 
+                          style: TextStyle(color: Colors.white)),
+                        content: Text(
+                          '''If you select Delete we will delete your account on our server.
 
 Your app data will also be deleted and you won't be able to retrieve it.
 
 Since this is a security-sensitive operation, you eventually are asked to login before your account can be deleted.''',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        actions: [
+                          TextButton(
+                            child: Text('Cancel'),
+                            onPressed: () => Navigator.of(context).pop(),
+                          ),
+                          TextButton(
+                            child: Text('Delete'),
+                            onPressed: () async {
+                              await deleteFirebaseAccount();
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
                       ),
-                      actions: [
-                        TextButton(
-                          child: const Text('Cancel'),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                        TextButton(
-                          child: const Text('Delete'),
-                          onPressed: () async {
-                            await deleteFirebaseAccount();
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ],
                     ),
                   );
                 },
@@ -195,6 +225,41 @@ Since this is a security-sensitive operation, you eventually are asked to login 
             title: const Text('Clear Data'),
             textColor: Colors.white,
             onTap: () {
+              showDialog(
+                context: context,
+                barrierDismissible: true,
+                builder: (BuildContext context) {
+                  return Material(
+                    type: MaterialType.transparency,
+                    child: Theme(
+                      data: getDarkDialogTheme(context),
+                      child: AlertDialog(
+                        elevation: 0,
+                        backgroundColor: Color.fromRGBO(65, 68, 73, 1),
+                        title: Text('Clear Data?', 
+                          style: TextStyle(color: Colors.white)),
+                        content: Text(
+                          'Are you sure you want to clear all local data? This action cannot be undone.',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        actions: [
+                          TextButton(
+                            child: Text('Cancel'),
+                            onPressed: () => Navigator.of(context).pop(),
+                          ),
+                          TextButton(
+                            child: Text('Clear'),
+                            onPressed: () {
+                              // Add your clear data logic here
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
             },
           ),
           ListTile(
@@ -205,7 +270,7 @@ Since this is a security-sensitive operation, you eventually are asked to login 
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                builder: (context) => team.TeamComparisonScreen(),
+                  builder: (context) => team.TeamComparisonScreen(),
                 ),
               );
             },
@@ -217,7 +282,9 @@ Since this is a security-sensitive operation, you eventually are asked to login 
             textColor: Colors.white,
             onTap: () {
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => credits.SponsorshipPage())
+                MaterialPageRoute(
+                  builder: (context) => credits.SponsorshipPage()
+                ),
               );
             },
           )
