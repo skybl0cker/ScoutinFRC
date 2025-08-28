@@ -1,10 +1,10 @@
-# HVA-FRC-SCOUTING2024
+# HVA-FRC-SCOUTINFRC
 
 FRC 3824's Scouting App, "ScoutinFRC"
 
 ## Short Introduction
 
-This is the repo for the HVA RoHAWKtics Scouting App "ScoutinFRC" This app is specifically for the 2023-2024 Season, but will be updated whenever the newest season begins.
+This is the repo for the HVA RoHAWKtics Scouting App "ScoutinFRC"
 
 ## Features
 
@@ -28,3 +28,4 @@ This is the repo for the HVA RoHAWKtics Scouting App "ScoutinFRC" This app is sp
 
 
 "2024" Edition designed by: Cash Egley
+"2025" Edition designed by: Cash Egley
